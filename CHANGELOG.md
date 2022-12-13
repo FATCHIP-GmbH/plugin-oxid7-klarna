@@ -1,3 +1,6 @@
+### 6.0.0
+* OXID 7 compatibility
+
 ### 5.5.3
 * Removed the shop name from the 'User-Agent' in the request
 * Added ireland as core country
