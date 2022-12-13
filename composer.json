@@ -1,18 +1,10 @@
 {
   "name": "fatchip-gmbh/oxid-klarna-6",
-  "description": "Klarna module for OXID eShop version 6.X",
+  "description": "Klarna module for OXID eShop version 7.X",
   "type": "oxideshop-module",
   "license": "Apache-2.0",
-  "extra": {
-    "oxideshop": {
-      "blacklist-filter": [
-        "documentation/**/*.*"
-      ],
-      "target-directory": "tc/tcklarna"
-    }
-  },
   "require": {
-    "php": ">=5.6",
+    "php": ">=8.0",
     "rmccue/requests": "^1.0"
   },
   "require-dev": {
