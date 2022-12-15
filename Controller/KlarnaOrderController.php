@@ -142,7 +142,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         $this->jsonResponse('ajax', 'read_only');
                     }
                 }
-                $this->_initUser();
+                $this->initUser();
                 $this->updateUserObject();
             }
         }
@@ -335,7 +335,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 return;
             }
 
-            $this->_validateUser($this->_aOrderData);
+            $this->validateUser($this->_aOrderData);
         } catch (StandardException $exception) {
             $this->_aResultErrors[] = $exception->getMessage();
             $this->logKlarnaData(
@@ -366,14 +366,14 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      * @return bool
      */
-    protected function _validateUser()
+    protected function validateUser()
     {
         switch ($this->_oUser->getType()) {
 
             case KlarnaUser::NOT_EXISTING:
             case KlarnaUser::NOT_REGISTERED:
                 // create regular account with password or temp account - empty password
-                $result = $this->_createUser();
+                $result = $this->createUser();
 
                 return $result;
 
@@ -390,7 +390,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @throws \oxUserException
      * @throws \oxSystemComponentException
      */
-    protected function _createUser()
+    protected function createUser()
     {
         $aBillingAddress  = KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address');
 
@@ -796,7 +796,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    protected function _initUser()
+    protected function initUser()
     {
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {
@@ -897,7 +897,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($paymentId === 'bestitamazon') {
             if ($this->_oUser->isCreatable()) {
                 // create user
-                $this->_createUser();
+                $this->createUser();
             }
 
             return Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);

@@ -172,7 +172,7 @@ class KlarnaBaseConfig extends ShopConfiguration
                 continue;
             }
 
-            $this->_performConfVarsSave($sType, $aConfVars);
+            $this->performConfVarsSaveParam($sType, $aConfVars);
         }
     }
 
@@ -182,11 +182,11 @@ class KlarnaBaseConfig extends ShopConfiguration
      * @param $sConfigType
      * @param $aConfVars
      */
-    protected function _performConfVarsSave($sConfigType, $aConfVars)
+    protected function performConfVarsSaveParam($sConfigType, $aConfVars)
     {
         $myConfig = Registry::getConfig();
         $sShopId  = $this->getEditObjectId();
-        $sModule  = $this->_getModuleForConfigVars();
+        $sModule  = $this->getModuleForConfigVars();
 
         foreach ($aConfVars as $sName => $sValue) {
             $oldValue = $myConfig->getConfigParam($sName);
@@ -194,7 +194,7 @@ class KlarnaBaseConfig extends ShopConfiguration
                 $myConfig->saveShopConfVar(
                     $sConfigType,
                     $sName,
-                    $this->_serializeConfVar($sConfigType, $sName, $sValue),
+                    $this->serializeConfVar($sConfigType, $sName, $sValue),
                     $sShopId,
                     $sModule
                 );
@@ -205,7 +205,7 @@ class KlarnaBaseConfig extends ShopConfiguration
     /**
      * @return string
      */
-    protected function _getModuleForConfigVars()
+    protected function getModuleForConfigVars()
     {
         return 'module:tcklarna';
     }

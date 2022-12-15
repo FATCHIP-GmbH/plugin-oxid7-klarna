@@ -6,9 +6,9 @@ namespace TopConcepts\Klarna\Core;
 
 class Config extends Config_parent
 {
-    protected function _setDefaults()
+    protected function setDefaults()
     {
-        parent::_setDefaults();
+        parent::setDefaults();
         $sessionStartRules = $this->getConfigParam('aRequireSessionWithParams');
         $sessionStartRules['fnc']['startSessionAjax'] = true;
         $this->setConfigParam('aRequireSessionWithParams', $sessionStartRules);

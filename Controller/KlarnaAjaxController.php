@@ -84,7 +84,7 @@ class KlarnaAjaxController extends FrontendController
                 return $this->jsonResponse('ajax', 'read_only');
             }
 
-            $this->_initUser();
+            $this->initUser();
             $this->updateUserObject();
 
         } else {
@@ -127,7 +127,7 @@ class KlarnaAjaxController extends FrontendController
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \oxSystemComponentException
      */
-    protected function _initUser()
+    protected function initUser()
     {
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {

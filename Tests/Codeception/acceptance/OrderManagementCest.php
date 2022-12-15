@@ -22,7 +22,7 @@ class OrderManagementCest
     public function capturePayment(AcceptanceTester $I)
     {
         $I->loadKlarnaAdminConfig('KCO');
-        $klarnaId = $this->_prepareNewOrder($I);
+        $klarnaId = $this->prepareNewOrder($I);
         $admin = $I->openShopAdminPanel();
         $admin->login();
         $admin->selectShop();
@@ -46,7 +46,7 @@ class OrderManagementCest
     public function cancelPayment(AcceptanceTester $I)
     {
         $I->loadKlarnaAdminConfig('KCO');
-        $klarnaId = $this->_prepareNewOrder($I);
+        $klarnaId = $this->prepareNewOrder($I);
         $admin = $I->openShopAdminPanel();
         $admin->login();
         $admin->selectShop();
@@ -70,7 +70,7 @@ class OrderManagementCest
     public function refundPayment(AcceptanceTester $I)
     {
         $I->loadKlarnaAdminConfig('KCO');
-        $klarnaId = $this->_prepareNewOrder($I);
+        $klarnaId = $this->prepareNewOrder($I);
         $admin = $I->openShopAdminPanel();
         $admin->login();
         $admin->selectShop();
@@ -130,7 +130,7 @@ class OrderManagementCest
 
     }
 
-    protected function _prepareNewOrder(AcceptanceTester $I) {
+    protected function prepareNewOrder(AcceptanceTester $I) {
         $I->clearShopCache();
         $homePage = $I->openShop();
         $I->waitForPageLoad();

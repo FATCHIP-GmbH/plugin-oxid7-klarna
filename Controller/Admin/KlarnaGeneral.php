@@ -66,7 +66,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
                 'sKlarnaFooterDisplay',
                 0,
                 $this->getEditObjectId(),
-                $this->_getModuleForConfigVars());
+                $this->getModuleForConfigVars());
         }
 
         parent::save();

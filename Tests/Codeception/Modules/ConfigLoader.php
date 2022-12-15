@@ -44,7 +44,7 @@ class ConfigLoader extends Module
     public function getKlarnaDataByName($varName)
     {
         if (!$varValue = getenv($varName)) {
-            $varValue = $this->_getArrayValueFromFile($varName, __DIR__ . '/../config/klarnaData.php');
+            $varValue = $this->getArrayValueFromFile($varName, __DIR__ . '/../config/klarnaData.php');
         }
 
         if (!$varValue) {
@@ -54,7 +54,7 @@ class ConfigLoader extends Module
         return $varValue;
     }
 
-    protected function _getArrayValueFromFile($sVarName, $sFilePath)
+    protected function getArrayValueFromFile($sVarName, $sFilePath)
     {
         $aData = null;
 

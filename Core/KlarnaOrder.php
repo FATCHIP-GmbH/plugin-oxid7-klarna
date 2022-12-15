@@ -302,7 +302,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function getSupportedShippingMethods(Basket $oBasket)
     {
-        $allSets  = $this->_getPayment()->getCheckoutShippingSets($this->_oUser);
+        $allSets  = $this->getPayment()->getCheckoutShippingSets($this->_oUser);
         $currency = Registry::getConfig()->getActShopCurrencyObject();
         $methods  = array();
         if (!is_array($allSets)) {
@@ -376,7 +376,7 @@ class KlarnaOrder extends BaseModel
      *
      * @return null|object
      */
-    protected function _getPayment()
+    protected function getPayment()
     {
         if ($this->_oPayment === null) {
             $this->_oPayment = oxNew(PaymentController::class);

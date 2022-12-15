@@ -80,7 +80,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
     }
 
 
-    protected function _getLogoutLink()
+    protected function getLogoutLink()
     {
 
         $oViewConfig = oxNew(ViewConfig::class);
@@ -92,7 +92,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
 
             return $sLogoutLink . '&amp;fnc=logout';
         } else {
-            return parent::_getLogoutLink();
+            return parent::getLogoutLink();
         }
     }
 

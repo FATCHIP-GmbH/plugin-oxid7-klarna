@@ -144,7 +144,7 @@ class KlarnaBasket extends KlarnaBasket_parent
             $this->klarnaOrderLines[] = $aProcessedItem;
         }
 
-        $this->_addServicesAsProducts($orderMgmtId);
+        $this->addServicesAsProducts($orderMgmtId);
         $this->_orderHash = md5(json_encode($this->klarnaOrderLines));
 
         $totals = $this->calculateTotals($this->klarnaOrderLines);
@@ -201,7 +201,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param bool $orderMgmtId
      * @return void
      */
-    protected function _addServicesAsProducts($orderMgmtId = false)
+    protected function addServicesAsProducts($orderMgmtId = false)
     {
         $iLang  = null;
         $oOrder = null;
@@ -222,15 +222,15 @@ class KlarnaBasket extends KlarnaBasket_parent
 
             $this->klarnaOrderLines[] = $this->getKlarnaPaymentDelivery($oDelivery, $oOrder, $oDeliverySet);
         }
-        $this->_addDiscountsAsProducts($oOrder, $iLang);
-        $this->_addGiftWrappingCost($iLang);
-        $this->_addGiftCardProducts($iLang);
+        $this->addDiscountsAsProducts($oOrder, $iLang);
+        $this->addGiftWrappingCost($iLang);
+        $this->addGiftCardProducts($iLang);
     }
 
     /**
      * @param null $iLang
      */
-    protected function _addGiftWrappingCost($iLang = null)
+    protected function addGiftWrappingCost($iLang = null)
     {
         /** @var \OxidEsales\Eshop\Core\Price $oWrappingCost */
         $oWrappingCost = $this->getWrappingCost();
@@ -260,7 +260,7 @@ class KlarnaBasket extends KlarnaBasket_parent
     /**
      * @param null $iLang
      */
-    protected function _addGiftCardProducts($iLang = null)
+    protected function addGiftCardProducts($iLang = null)
     {
         /** @var \OxidEsales\Eshop\Core\Price $oWrappingCost */
         $oGiftCardCost = $this->getCosts('oxgiftcard');
@@ -288,11 +288,11 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param null $iLang
      * @return void
      */
-    protected function _addDiscountsAsProducts($oOrder = null, $iLang = null)
+    protected function addDiscountsAsProducts($oOrder = null, $iLang = null)
     {
         $oDiscount = $this->getVoucherDiscount();
-        if ($this->_isServicePriceSet($oDiscount)) {
-            $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutVoucherDiscount($oDiscount, $iLang);
+        if ($this->isServicePriceSet($oDiscount)) {
+            $this->klarnaOrderLines[] = $this->getKlarnaCheckoutVoucherDiscount($oDiscount, $iLang);
         }
 
         $oDiscount = $this->getOxDiscount();
@@ -302,7 +302,7 @@ class KlarnaBasket extends KlarnaBasket_parent
 
             $oDiscount->setPrice($oOrder->getFieldData('oxdiscount'));
         }
-        if ($this->_isServicePriceSet($oDiscount)) {
+        if ($this->isServicePriceSet($oDiscount)) {
             $taxInfo = [];
             foreach ($this->klarnaOrderLines as $orderLine) {
                 $taxInfo[$orderLine['tax_rate']] += $orderLine['unit_price'];
@@ -314,13 +314,13 @@ class KlarnaBasket extends KlarnaBasket_parent
                 if(!empty($klarnaDiscounts)) {
                     foreach ($klarnaDiscounts as $discount) {
                         foreach ($taxInfo as $taxRate => $unitPrice) {
-                            $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutDiscount($oDiscount, $iLang,
+                            $this->klarnaOrderLines[] = $this->getKlarnaCheckoutDiscount($oDiscount, $iLang,
                                 ['taxRate' => $taxRate, 'unitPrice' => $unitPrice, 'discount' => $discount]);
                         }
                     }
                 }
             } else {
-                $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutDiscount($oDiscount, $iLang);
+                $this->klarnaOrderLines[] = $this->getKlarnaCheckoutDiscount($oDiscount, $iLang);
             }
         }
     }
@@ -363,7 +363,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      *
      * @return bool
      */
-    protected function _isServicePriceSet($oService)
+    protected function isServicePriceSet($oService)
     {
         return ($oService && $oService->getBruttoPrice() != 0);
     }
@@ -432,7 +432,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param null $iLang
      * @return array
      */
-    protected function _getKlarnaCheckoutVoucherDiscount(Price $oPrice, $iLang = null)
+    protected function getKlarnaCheckoutVoucherDiscount(Price $oPrice, $iLang = null)
     {
         $unit_price = -KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100);
         $tax_rate   = KlarnaUtils::parseFloatAsInt($this->_oProductsPriceList->getProportionalVatPercent() * 100);
@@ -459,7 +459,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param null $taxInfo
      * @return array
      */
-    protected function _getKlarnaCheckoutDiscount(Price $oPrice, $iLang = null, $taxInfo = null)
+    protected function getKlarnaCheckoutDiscount(Price $oPrice, $iLang = null, $taxInfo = null)
     {
         $value = $oPrice->getBruttoPrice();
         $type = 'discount';
@@ -492,7 +492,7 @@ class KlarnaBasket extends KlarnaBasket_parent
 
 
     /**
-     * Original OXID method _calcDeliveryCost
+     * Original OXID method calcDeliveryCost
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function tcklarna_calculateDeliveryCost()
@@ -500,16 +500,16 @@ class KlarnaBasket extends KlarnaBasket_parent
         $oDeliveryList = oxNew(DeliveryList::class);
         Registry::set(DeliveryList::class, $oDeliveryList);
 
-        return parent::_calcDeliveryCost();
+        return parent::calcDeliveryCost();
     }
 
     /**
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @return object
      */
-    protected function _calcDeliveryCost()
+    protected function calcDeliveryCost()
     {
-        return KlarnaUtils::isKlarnaPaymentsEnabled()?$this->tcklarna_calculateDeliveryCost():parent::_calcDeliveryCost();
+        return KlarnaUtils::isKlarnaPaymentsEnabled()?$this->tcklarna_calculateDeliveryCost():parent::calcDeliveryCost();
     }
 
     /**

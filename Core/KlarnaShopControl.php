@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Core\Registry;
 class KlarnaShopControl extends KlarnaShopControl_parent
 {
 
-    protected function _initializeViewObject($sClass, $sFunction, $aParams = null, $aViewsChain = null)
+    protected function initializeViewObject($sClass, $sFunction, $aParams = null, $aViewsChain = null)
     {
         // detect paypal button clicks
         $searchTerm = 'paypalExpressCheckoutButton';
@@ -22,6 +22,6 @@ class KlarnaShopControl extends KlarnaShopControl_parent
             KlarnaUtils::log('debug','Paypal button usage detected: ' . json_encode($found, 128));
         }
 
-        return parent::_initializeViewObject($sClass, $sFunction, $aParams, $aViewsChain);
+        return parent::initializeViewObject($sClass, $sFunction, $aParams, $aViewsChain);
     }
 }

@@ -60,9 +60,9 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @param null|KlarnaOrderManagementClient $client for UnitTest purpose
      * @return mixed
      */
-    protected function _setNumber($client = null)
+    protected function setNumber($client = null)
     {
-        if ($blUpdate = parent::_setNumber()) {
+        if ($blUpdate = parent::setNumber()) {
 
             if ($this->isKlarna()) {
 
@@ -242,15 +242,15 @@ class KlarnaOrder extends KlarnaOrder_parent
      *
      * @param $aArticleList
      */
-    protected function _setOrderArticles($aArticleList)
+    protected function setOrderArticles($aArticleList)
     {
 
-        parent::_setOrderArticles($aArticleList);
+        parent::setOrderArticles($aArticleList);
 
         if ($this->isKlarnaAnonymous()) {
             $oOrderArticles = $this->getOrderArticles();
             if ($oOrderArticles && count($oOrderArticles) > 0) {
-                $this->_setOrderArticleKlarnaInfo($oOrderArticles);
+                $this->setOrderArticleKlarnaInfo($oOrderArticles);
             }
         }
     }
@@ -258,7 +258,7 @@ class KlarnaOrder extends KlarnaOrder_parent
     /**
      * @param $oOrderArticles
      */
-    protected function _setOrderArticleKlarnaInfo($oOrderArticles)
+    protected function setOrderArticleKlarnaInfo($oOrderArticles)
     {
         $iIndex = 0;
         foreach ($oOrderArticles as $oOrderArticle) {
@@ -286,7 +286,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         return $this->_isLoaded;
     }
     
-    protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null) {
+    protected function sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null) {
 
         if (is_object($oPayment) && in_array($oPayment->oxpayments__oxid->value, KlarnaPayment::getKlarnaPaymentsIds())) {
             $oPayment->assign(
@@ -296,6 +296,6 @@ class KlarnaOrder extends KlarnaOrder_parent
             );
         }
 
-        return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
+        return parent::sendOrderByEmail($oUser, $oBasket, $oPayment);
     }
 }

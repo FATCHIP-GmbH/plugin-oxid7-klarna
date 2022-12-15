@@ -73,12 +73,12 @@ class KlarnaOrderValidator extends Base
      */
     public function validateOrder()
     {
-        $aOrderItems = $this->_fetchOrderItems();
+        $aOrderItems = $this->fetchOrderItems();
         if (empty($aOrderItems)) {
             return $this->_bResult = false;
         }
 
-        $this->_validateItemsBuyable($aOrderItems);
+        $this->validateItemsBuyable($aOrderItems);
 
         return count($this->_aResultErrors) === 0 ? $this->_bResult = true : $this->_bResult = false;
     }
@@ -88,7 +88,7 @@ class KlarnaOrderValidator extends Base
      *
      * @return int|mixed
      */
-    protected function _fetchOrderItems()
+    protected function fetchOrderItems()
     {
         // remove services from articles list
         foreach ($this->aOrderData['order_lines'] as $index => $aItem) {
@@ -107,7 +107,7 @@ class KlarnaOrderValidator extends Base
      * @return void
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    protected function _validateItemsBuyable($aItems)
+    protected function validateItemsBuyable($aItems)
     {
         $mergedProducts = array();
         foreach ($aItems as $item) {
@@ -116,7 +116,7 @@ class KlarnaOrderValidator extends Base
             }
             $mergedProducts[$item['reference']] += $item['quantity'];
         }
-        $this->_validateOxidProductsBuyable($mergedProducts);
+        $this->validateOxidProductsBuyable($mergedProducts);
     }
 
     /**
@@ -125,7 +125,7 @@ class KlarnaOrderValidator extends Base
      * @param $mergedProducts
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    protected function _validateOxidProductsBuyable($mergedProducts)
+    protected function validateOxidProductsBuyable($mergedProducts)
     {
         $oArticleObject = oxNew(Article::class);
 
