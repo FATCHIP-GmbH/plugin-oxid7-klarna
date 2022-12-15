@@ -15,7 +15,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 class KlarnaGeneral extends KlarnaBaseConfig
 {
 
-    protected $_sThisTemplate = 'tcklarna_general.tpl';
+    protected $_sThisTemplate = 'tcklarna_general';
 
     protected $_aKlarnaCountryCreds = array();
 

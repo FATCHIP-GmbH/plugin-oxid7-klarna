@@ -45,7 +45,7 @@ class KlarnaExpressController extends FrontendController
     /**
      * @var string
      */
-    protected $_sThisTemplate = 'tcklarna_checkout.tpl';
+    protected $_sThisTemplate = 'tcklarna_checkout';
 
     /**
      * @var \TopConcepts\Klarna\Core\KlarnaOrder
