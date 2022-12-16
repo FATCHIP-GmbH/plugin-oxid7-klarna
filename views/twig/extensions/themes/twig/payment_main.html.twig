@@ -1,0 +1,7 @@
+{% extends 'payment_main.html.twig' %}
+
+{% block admin_payment_main_form %}
+    {% if sPaymentId != 'klarna_checkout' %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

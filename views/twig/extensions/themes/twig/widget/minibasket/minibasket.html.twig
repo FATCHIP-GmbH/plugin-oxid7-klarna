@@ -1,0 +1,24 @@
+{% extends 'widget/minibasket/minibasket.html.twig' %}
+
+{% block widget_minibasket %}
+    {% if oViewConf.isKlarnaCheckoutEnabled() %}
+        {% if not oViewConf.isActiveControllerKlarnaExpress() %}
+            {{ parent() }}
+            {% if _prefix == 'modal' %}
+                <script type="text/javascript">
+                    var button = '<a class="btn btn-primary submitButton largeButton" ' +
+                        'href="{{ seo_url({ ident: oViewConf.getSslSelfLink()|cat("cl=KlarnaExpress")|html_entity_decode }) }}">' +
+                        '{{ translate({ ident: "TCKLARNA_GO_TO_CHECKOUT" }) }}</a>';
+                </script>
+                {{ script({ add: '$(".modal-footer").append(button);', dynamic: __oxid_include_dynamic }) }}
+            {% else %}
+                <script type="text/javascript">
+                    var url = "{{ oViewConf.getSslSelfLink()|cat("cl=KlarnaExpress")|html_entity_decode }}";
+                </script>
+                {{ script({ add: '$("p.functions .btn-primary").attr("href", url);', dynamic: __oxid_include_dynamic }) }}
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'page/details/inc/productmain.html.twig' %}
+
+{% block checkout_thankyou_info %}
+    {% if sKlarnaIframe %}
+        {{ translate({ ident: "REGISTERED_YOUR_ORDER", args: klOrder.oxorder__oxordernr.value }) }}
+        <div class="klarna-iframe-container">
+            {{ sKlarnaIframe }}
+            {{ script({ include: oViewConf.getModuleUrl('tcklarna', 'out/src/js/tcklarna_checkout_handler.js'), priority: 10, dynamic: __oxid_include_dynamic }) }}
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

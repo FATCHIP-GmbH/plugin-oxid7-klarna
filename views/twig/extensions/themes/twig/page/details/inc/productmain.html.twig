@@ -1,0 +1,47 @@
+{% extends 'page/details/inc/productmain.html.twig' %}
+
+{% block details_productmain_variantselections %}
+
+    {{ parent() }}
+
+    {{ script({ add: "$('.selectorsBox a').on('change',refreshKlarnaMessage());", dynamic: __oxid_include_dynamic }) }}
+    <script>
+        function refreshKlarnaMessage() {
+            window.KlarnaOnsiteService = window.KlarnaOnsiteService || [];  // Making sure that data layer exists in case JavaScript Library is loaded later for any reason
+            window.KlarnaOnsiteService.push({eventName: 'refresh-placements'}); // Push the event to the data layer
+        }
+    </script>
+
+{% endblock %}
+
+{% block details_productmain_tobasket %}
+    {{ parent() }}
+    {% if not oDetailsProduct.isNotBuyable() and oViewConf.isKlarnaCheckoutEnabled() and oViewConf.addBuyNow() %}
+        <div>
+            <a class="btn btn-primary largeButton submitButton klarna-express-button {% if not blCanBuy %}disabled{% endif %}" href="#">
+                {{ translate({ ident: "TCKLARNA_BUY_NOW" }) }}
+            </a>
+        </div>
+        <div class="clear clearfix"></div>
+        {{ script({ add: '$(".klarna-express-button").KlarnaProceedAction( {sAction: "actionKlarnaExpressCheckoutFromDetailsPage"} );', dynamic: __oxid_include_dynamic }) }}
+    {% endif %}
+
+    {% set aKlPromotion = oViewConf.getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', %}
+    {% set sKlarnaMessagingScript = oViewConf.getOnSitePromotionInfo('sKlarnaMessagingScript') %}
+    {% if aKlPromotion and sKlarnaMessagingScript|trim %}
+        <div id="credit_promo">
+            {{ aKlPromotion }}
+        </div>
+        <div class="clear clearfix"></div>
+    {% endif %}
+
+    <style>
+        .klarna-express-button {
+            margin-bottom: 5px;
+        }
+
+        body.cl-details .tobasket .tobasketFunction{
+            display:inline-block;
+        }
+    </style>
+{% endblock %}

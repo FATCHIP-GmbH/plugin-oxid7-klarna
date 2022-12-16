@@ -1,0 +1,56 @@
+{% extends 'page/checkout/order.html.twig' %}
+
+{% block order_basket %}
+    {{ parent() }}
+
+    {% if oViewConf.isKlarnaPaymentsEnabled() and oView.loadKlarnaPaymentWidget  %}
+        <div class="loading" style="display: none;">Loading&#8230;</div>
+        <script>
+            var tcKlarnaClientToken = "{{ client_token }}";
+        </script>
+        {{ script({ include: oViewConf.getModuleUrl('tcklarna', 'out/src/js/tcklarna_payments_handler.js'), dynamic: __oxid_include_dynamic }) }}
+        {{ script({ include: "https://x.klarnacdn.net/kp/lib/v1/api.js", dynamic: __oxid_include_dynamic }) }}
+        {{ style({ include: oViewConf.getModuleUrl('tcklarna', 'out/src/css/tcklarna_payments.css') }) }}
+    {% endif %}
+{% endblock %}
+
+{% block shippingAndPayment %}
+    {{ parent() }}
+
+    {% if payment and payment.isKPPayment() %}
+        {% capture assign = "insertLogoJS" %}
+            var theme = '{{ oViewConf.getActiveTheme() }}';
+            if(theme is same as('flow'){)
+            var $parent = $('#orderPayment').find('.panel-body');
+            }
+            if(theme is same as('wave'){)
+            var $parent = $('#orderPayment').find('.card-body');
+            }
+
+            if(typeof $parent !== 'undefined') {
+            var parentStyle = getComputedStyle($parent[0]);
+            var offset = 5;
+            var height = parseInt(parentStyle.height) - offset * 2;
+            var margin = parseInt(parentStyle.paddingTop) - offset;
+            $('<img>')
+            .attr('src', "{{ payment.getBadgeUrl() }}")
+            .attr('height', height + 'px')
+            .css({'margin': '-' + margin + 'px 10px'})
+            .appendTo($parent)
+            }
+        {% endcapture %}
+        {{ script({ add: insertLogoJS, priority: 10, dynamic: __oxid_include_dynamic }) }}
+    {% endif %}
+
+{% endblock %}
+
+{% block checkout_order_next_step_bottom %}
+    {{ parent() }}
+
+    {% if payment.oxpayments__oxid.value != 'bestitamazon' %}
+        <script type="javascript/text">
+        if(typeof amazon !== 'undefined')
+            delete amazon;
+    </script>
+    {% endif %}
+{% endblock %}
