@@ -1,0 +1,53 @@
+{% capture append = "oxidBlock_content" %}
+    {% if not confError %}
+        {{ style({ include: oViewConf.getModuleUrl('tcklarna',, out/src/css/tcklarna_style.css'): 'out/src/css/tcklarna_style.css') }) }}
+
+        {% include 'tcklarna_country_select_popup.html.twig' %}
+        {% if sKlarnaIframe %}
+            {% set savedAddresses = oView.getFormattedUserAddresses() %}
+            <div class="container klarna-outside-forms">
+                <div class="row kco-style">
+                    {% if not oViewConf.isUserLoggedIn() %}
+                        {% include 'tcklarna_checkout_login_box.html.twig' %}
+                    {% else %}
+                        {% if savedAddresses and shippingAddressAllowed %}
+                            {% include 'tcklarna_checkout_address_box.html.twig' %}
+                        {% endif %}
+                    {% endif %}
+                    {% include 'tcklarna_checkout_voucher_box.html.twig' %}
+                </div>
+                {% if blShowCountryReset  %}
+                    <div class="row kco-style">
+                        <div class="col-md-6">
+                            <p id="resetCountry" style="margin-left: 0">
+                                {{ translate({ ident: "TCKLARNA_CHOOSE_YOUR_NOT_SUPPORTED_COUNTRY" }) }}
+                            </p>
+                        </div>
+                        {% if oView.getNonKlarnaCountries()|length > 0 %}
+                            <div class="col-md-6">
+                                <select class="form-control js-country-select" id="other-countries">
+                                    <option disabled selected>{{ translate({ ident: "TCKLARNA_MORE_COUNTRIES" }) }}</option>
+                                    {% for country in oView.getNonKlarnaCountries() %}
+                                        <option value="{{ country.oxcountry__oxisoalpha2.value }}">{{ country.oxcountry__oxtitle.value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="klarna-iframe-container">
+                {{ sKlarnaIframe }}
+                {# Add oxid js code. Once the snippet is injected we can use window._klarnaCheckout #}
+                {{ script({ include: oViewConf.getModuleUrl('tcklarna', 'out/src/js/tcklarna_checkout_handler.js'), priority: 10, dynamic: __oxid_include_dynamic }) }}
+            </div>
+        {% else %}
+            <div class="kco-placeholder"></div>
+            {{ script({ include: oViewConf.getModuleUrl('tcklarna', 'out/src/js/tcklarna_checkout_handler.js'), priority: 10, dynamic: __oxid_include_dynamic }) }}
+            {{ script({ add: "$('#myModal').modal('show');", dynamic: __oxid_include_dynamic }) }}
+        {% endif %}
+
+    {% endif %}
+{% endcapture %}
+
+{% include "layout/page.html.twig" %}

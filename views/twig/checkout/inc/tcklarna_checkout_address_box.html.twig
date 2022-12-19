@@ -3,15 +3,15 @@
         <div class="drop-trigger">
             <div class="klarna-label">
                 <span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>
-                <span class="klarna-address-label"> [{oxmultilang ident="TCKLARNA_CHOOSE_DELIVERY_ADDRESS"}]
+                <span class="klarna-address-label"> {{ translate({ ident: "TCKLARNA_CHOOSE_DELIVERY_ADDRESS" }) }}
                             </span>
                 <span class="glyphicon glyphicon-menu-down pull-right" aria-hidden="true"></span>
             </div>
         </div>
         <div class="drop-content fixed">
-            <form name="address" action="[{$oViewConf->getSslSelfLink()}]" method="post" role="form">
+            <form name="address" action="{{ oViewConf.getSslSelfLink() }}" method="post" role="form">
                 <div class="hidden">
-                    [{$oViewConf->getHiddenSid()}]
+                    {{ oViewConf.getHiddenSid() }}
                     <input type="hidden" name="cl" value="KlarnaExpress">
                     <input type="hidden" name="fnc" value="setKlarnaDeliveryAddress">
                     <input type="hidden" name="klarna_address_id" value="">
@@ -20,7 +20,7 @@
                     <div class="btn-group">
                         <button type="button"
                                 class="btn btn-default disabled js-klarna-selected-address">
-                            [{oxmultilang ident="TCKLARNA_CHOOSE_DELIVERY_ADDRESS"}]</button>
+                            {{ translate({ ident: "TCKLARNA_CHOOSE_DELIVERY_ADDRESS" }) }}</button>
                         <button type="button" class="btn btn-default dropdown-toggle"
                                 data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
@@ -28,21 +28,21 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu">
-                            [{foreach from=$savedAddresses name=delAddrList key=oxid item=address}]
+                            {% for oxid, address in savedAddresses %}
                                 <li class="js-klarna-address-list-item"
-                                    data-address-id="[{$oxid}]">
-                                    <div class="klarna-formatted-address">[{$address}]</div>
+                                    data-address-id="{{ oxid }}">
+                                    <div class="klarna-formatted-address">{{ address }}</div>
                                 </li>
-                                [{if !$smarty.foreach.delAddrList.last}]
+                                {% if not loop.last %}
                                     <li role="separator" class="divider"></li>
-                                [{/if}]
-                            [{/foreach}]
+                                {% endif %}
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
                 <div class="form-group">
                     <button type="submit" id="setDeliveryAddress"
-                            class="btn btn-primary">[{oxmultilang ident="TCKLARNA_USE_AS_DELIVERY_ADDRESS"}]
+                            class="btn btn-primary">{{ translate({ ident: "TCKLARNA_USE_AS_DELIVERY_ADDRESS" }) }}
                     </button>
                 </div>
             </form>

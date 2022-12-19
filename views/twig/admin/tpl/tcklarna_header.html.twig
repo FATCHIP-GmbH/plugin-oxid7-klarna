@@ -1,0 +1,20 @@
+<div class="klarna-header">
+    <div class="w7">
+        <h1>{{  title  }}</h1>
+        <p>{{  desc|sprintf(oView.getManualDownloadLink())  }}
+    </div>
+    <div class="w5">
+        <div class="klarna-logo">
+        </div>
+    </div>
+</div>
+<div>
+    {% if Errors|is_array and Errors.default|is_array and not empty(Errors.default) %}
+        {% for key, oEr in Errors.default %}
+            <div class="messagebox danger" style="display:block;">{{ oEr.getOxMessage() }}</div>
+        {% endfor %}
+    {% endif %}
+    {% if Errors.popup|is_array and not empty(Errors.popup) %}
+        {% include "message/errors_modal.html.twig" %}
+    {% endif %}
+</div>
