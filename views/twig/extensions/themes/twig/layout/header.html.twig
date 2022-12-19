@@ -3,7 +3,7 @@
 {% block header_main %}
     {% set aKlPromotion = oViewConf.getOnSitePromotionInfo('sKlarnaStripPromotion') %}
     {% set sKlarnaMessagingScript = oViewConf.getOnSitePromotionInfo('sKlarnaMessagingScript') %}
-    {% if aKlPromotion and oView.getClassName() is same as('start') and sKlarnaMessagingScript|trim %}
+    {% if aKlPromotion and oView.getClassKey() is same as('start') and sKlarnaMessagingScript|trim %}
         <div>
             {{ aKlPromotion }}
         </div>
