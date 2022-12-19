@@ -206,12 +206,12 @@ abstract class KlarnaClientBase extends Base
         $php    = phpversion();
         $phpVer = 'PHP' . $php;
 
-        $shopEdition = self::$instance->getConfig()->getActiveShop()->oxshops__oxedition->value;
-        $shopRev     = self::$instance->getConfig()->getActiveShop()->oxshops__oxversion->value;
+        $shopEdition = Registry::getConfig()->getActiveShop()->oxshops__oxedition->value;
+        $shopRev     = Registry::getConfig()->getActiveShop()->oxshops__oxversion->value;
         $shopVer     = 'OXID_' . $shopEdition . '_' . $shopRev;
 
         $module = oxNew(Module::class);
-        $module->loadByDir('tcklarna');
+        $module->load('tcklarna');
         $moduleTitlt = $module->getTitle();
         $moduleVer  = $module->getInfo('version');
         $moduleInfo = str_replace(' ', '_', $moduleTitlt . "_" . $moduleVer);

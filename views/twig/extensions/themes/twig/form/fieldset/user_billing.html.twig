@@ -31,7 +31,15 @@
             });
         {% endcapture %}
 
-        {{ script({ add='var: add='var, dropdown: dropdown, ("#invCountrySelect").parent();: ("#invCountrySelect").parent();, dropdown.removeClass("col-lg-9").addClass("col-lg-7");: dropdown.removeClass("col-lg-9").addClass("col-lg-7");, var: "var", otherCountry: otherCountry, .parseHTML(otherCountryButton);: .parseHTML("otherCountryButton");, dropdown.parent().append($otherCountry);: dropdown.parent().append(otherCountry);', priority: 10, dynamic: __oxid_include_dynamic }) }}
-            {{ script({ add: dataCollectionJS, priority: 10, dynamic: __oxid_include_dynamic }) }}
+        {% capture assign = "klarnaDropdownJS" %}
+            {% apply spaceless %}
+                var $dropdown = $("#invCountrySelect").parent();
+                $dropdown.removeClass("col-lg-9").addClass("col-lg-7");
+                var $otherCountry = $.parseHTML(otherCountryButton);
+                $dropdown.parent().append($otherCountry);
+            {% endapply %}
+        {% endcapture %}
+
+        {{ script({ add: klarnaDropdownJS, priority: 10, dynamic: __oxid_include_dynamic }) }}
     {% endif %}
 {% endblock %}
