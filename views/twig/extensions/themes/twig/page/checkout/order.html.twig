@@ -20,10 +20,10 @@
     {% if payment and payment.isKPPayment() %}
         {% capture assign = "insertLogoJS" %}
             var theme = '{{ oViewConf.getActiveTheme() }}';
-            if(theme is same as('flow'){)
+            if(theme === 'flow'){
             var $parent = $('#orderPayment').find('.panel-body');
             }
-            if(theme is same as('wave'){)
+            if(theme === 'wave'){
             var $parent = $('#orderPayment').find('.card-body');
             }
 

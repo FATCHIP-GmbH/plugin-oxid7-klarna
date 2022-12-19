@@ -18,6 +18,8 @@
 namespace TopConcepts\Klarna\Component\Widgets;
 
 
+use OxidEsales\Eshop\Core\Registry;
+
 /**
  * Class oxw_klarna_servicemenu extends service menu widget
  */
@@ -25,7 +27,7 @@ class KlarnaServiceMenu extends KlarnaServiceMenu_parent
 {
     public function init()
     {
-        $oActTopView = $this->getConfig()->getTopActiveView();
+        $oActTopView = Registry::getConfig()->getTopActiveView();
         if($oActTopView->getClassName() === 'klarnaexpress' && $oActTopView->isKlarnaFakeUser()){
             unset($this->_aComponentNames['oxcmp_user']);
         }

@@ -65,7 +65,7 @@
         var $input = $form.find('input[name="selected-country"]');
 
         $('button', $form).click(function (e) {
-            if (this.value is same as(loadedPurchaseCountry) {)
+            if (this.value === loadedPurchaseCountry) {
                 $modal.modal('hide');
                 return;
             }
@@ -75,7 +75,7 @@
         });
 
         $('.js-country-select').change(function () {
-            if (this.value is same as(loadedPurchaseCountry) {)
+            if (this.value === loadedPurchaseCountry) {
                 $modal.modal('hide');
                 return;
             }

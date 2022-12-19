@@ -47,18 +47,15 @@
 
         <script type="text/javascript">
             function embedKlarnaLogo(content) {
-                var theme = '{{ oViewConf.getActiveTheme() }}';
+                var theme = '[{$oViewConf->getActiveTheme()}]';
                 var $content = $(content)
-                if(theme is same as('flow'){
-                )
+                if(theme === 'flow'){
                     $('.footer-right-part div:first').append($content);
                 }
-                if(theme is same as('wave'){
-                )
+                if(theme === 'wave'){
                     $('.footer-box-newsletter').append($content);
                 }
-                if(theme is same as('azure'){
-                )
+                if(theme === 'azure'){
                     $('#footerCategories .list.categories').append($content);
                 }
 
@@ -78,7 +75,7 @@
     {{ parent() }}
 
     {% if oViewConf.getActiveTheme() is same as('azure') %}
-        {{ script({ include: oViewConf.getModuleUrl('tcklarna',, out/src/js/azure_patch.js'): 'out/src/js/azure_patch.js'), priority: 3, dynamic: __oxid_include_dynamic }) }}
+        {{ script({ include: "asdf", priority: 3, dynamic: __oxid_include_dynamic }) }}
     {% endif %}
     {% if oViewConf.showCheckoutTerms()  %}
         {% set klarnaLawNotifUrl = oViewConf.getLawNotificationsLinkKco() %}
@@ -168,13 +165,13 @@
                 $('a.klarna-notification').click(function (e) {
                     e.preventDefault();
                     $('#legalModal').modal('show');
-        });
-        }
+                });
+            }
         </script>
-        {% endif %}
+    {% endif %}
 
-        {% if oViewConf.getActiveTheme() is same as('wave') %}
-        <link rel="stylesheet" type="text/css" href="{{ oViewConf.getModuleUrl('tcklarna', 'out/src/css / tc_klarna_style_wave.css') }}"/>
+    {% if oViewConf.getActiveTheme() is same as('wave') %}
+        <link rel="stylesheet" type="text/css" href="{{ oViewConf.getModuleUrl('tcklarna', 'out/src/css/tc_klarna_style_wave.css') }}"/>
     {% endif %}
 {% endblock %}
 
