@@ -1,6 +1,6 @@
 {% capture append = "oxidBlock_content" %}
     {% if not confError %}
-        {{ style({ include: oViewConf.getModuleUrl('tcklarna',, out/src/css/tcklarna_style.css'): 'out/src/css/tcklarna_style.css') }) }}
+        {{ style({ include: oViewConf.getModuleUrl('tcklarna','out/src/css/tcklarna_style.css'): 'out/src/css/tcklarna_style.css') }) }}
 
         {% include 'tcklarna_country_select_popup.html.twig' %}
         {% if sKlarnaIframe %}
@@ -28,7 +28,7 @@
                                 <select class="form-control js-country-select" id="other-countries">
                                     <option disabled selected>{{ translate({ ident: "TCKLARNA_MORE_COUNTRIES" }) }}</option>
                                     {% for country in oView.getNonKlarnaCountries() %}
-                                        <option value="{{ country.oxcountry__oxisoalpha2.value }}">{{ country.oxcountry__oxtitle.value }}</option>
+                                        <option value="{{ country.oxcountry__oxisoalpha2.value|raw }}">{{ country.oxcountry__oxtitle.value|raw }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

@@ -14,12 +14,16 @@
                     {% for country_id, country in oViewConf.getCountryList(true) %}
                         {% set sCountrySelect = "" %}
                         {% if not blCountrySelected %}
-                            {% if (isset(deladr.oxaddress__oxcountryid) and deladr.oxaddress__oxcountryid == country.oxcountry__oxid.value) or                        (not isset(deladr.oxaddress__oxcountryid) and (delivadr.oxaddress__oxcountry.value == country.oxcountry__oxtitle.value or                        delivadr.oxaddress__oxcountry.value == country.oxcountry__oxid.value or                        delivadr.oxaddress__oxcountryid.value == country.oxcountry__oxid.value)) %}
+                            {% if (isset(deladr.oxaddress__oxcountryid)
+                                and deladr.oxaddress__oxcountryid == country.oxcountry__oxid.value|raw)
+                                or (not isset(deladr.oxaddress__oxcountryid) and (delivadr.oxaddress__oxcountry.value|raw == country.oxcountry__oxtitle.value|raw
+                                or delivadr.oxaddress__oxcountry.value|raw == country.oxcountry__oxid.value |raw
+                                or delivadr.oxaddress__oxcountryid.value|raw == country.oxcountry__oxid.value|raw)) %}
                                 {% set blCountrySelected = true %}
                                 {% set sCountrySelect = "selected" %}
                             {% endif %}
                         {% endif %}
-                        <option value="{{ country.oxcountry__oxid.value }}" {{ sCountrySelect }}>{{ country.oxcountry__oxtitle.value }}</option>
+                        <option value="{{ country.oxcountry__oxid.value|raw }}" {{ sCountrySelect }}>{{ country.oxcountry__oxtitle.value|raw }}</option>
                     {% endfor %}
                 </select>
                 {% if oView.isFieldRequired("oxaddress__oxcountryid") %}
@@ -32,7 +36,7 @@
             <label class="control-label col-lg-3"
                    for="{{ countrySelectId }}">{{ translate({ ident: "DD_USER_SHIPPING_LABEL_STATE" }) }}</label>
             <div class="col-lg-9">
-                {% include "form/fieldset/state.html.twig" with {countrySelectId: "delCountrySelect", stateSelectName: "deladr[oxaddress__oxstateid]", selectedStateIdPrim: deladr.oxaddress__oxstateid, selectedStateId: delivadr.oxaddress__oxstateid.value, class: "form-control selectpicker"} %}
+                {% include "form/fieldset/state.html.twig" with {countrySelectId: "delCountrySelect", stateSelectName: "deladr[oxaddress__oxstateid]", selectedStateIdPrim: deladr.oxaddress__oxstateid, selectedStateId: delivadr.oxaddress__oxstateid.value|raw, class: "form-control selectpicker"} %}
             </div>
         </div>
     {% else %}

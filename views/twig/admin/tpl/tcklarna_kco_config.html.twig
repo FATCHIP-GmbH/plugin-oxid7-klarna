@@ -57,9 +57,9 @@
                             <div class="selector__menu">
                                 <ul class="selector__choices">
                                     {% for oxCountry in activeCountries %}
-                                        <li class="selector__item{% if confstrs.sKlarnaDefaultCountry is same as(oxCountry.oxcountry__oxisoalpha2.value ) %}--selected{% endif %}">
-                                            <a href="#" data-value={{  oxCountry.oxcountry__oxisoalpha2.value  }}>
-                                                {{  oxCountry.oxcountry__oxtitle.value  }}
+                                        <li class="selector__item{% if confstrs.sKlarnaDefaultCountry is same as(oxCountry.oxcountry__oxisoalpha2.value|raw ) %}--selected{% endif %}">
+                                            <a href="#" data-value={{  oxCountry.oxcountry__oxisoalpha2.value|raw  }}>
+                                                {{  oxCountry.oxcountry__oxtitle.value|raw  }}
                                             </a>
                                         </li>
                                     {% endfor %}

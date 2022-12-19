@@ -17,9 +17,9 @@
                     </div>
                     {% for country in oView.getKlarnaModalFlagCountries() %}
                         <button type="button"
-                                class="btn btn-default" value="{{ country.oxcountry__oxisoalpha2.value }}">
-                            <div class="klarna-flag {{ country.oxcountry__oxisoalpha2.value|lower }}"></div>
-                            <span class="country-name">{{ country.oxcountry__oxtitle.value }}</span>
+                                class="btn btn-default" value="{{ country.oxcountry__oxisoalpha2.value|raw }}">
+                            <div class="klarna-flag {{ country.oxcountry__oxisoalpha2.value|raw|lower }}"></div>
+                            <span class="country-name">{{ country.oxcountry__oxtitle.value|raw }}</span>
                         </button>
                     {% endfor %}
                 </form>
@@ -30,7 +30,7 @@
                             {% set shopCountriesCount = 0 %}
                             {% for country in oView.getActiveShopCountries() %}
                                 {% set defaultCounter = ( defaultCounter | default(0) ) + 1 %} {% set shopCountriesCount = defaultCounter %}
-                                <option value="{{ country.oxcountry__oxisoalpha2.value }}">{{ country.oxcountry__oxtitle.value }}</option>
+                                <option value="{{ country.oxcountry__oxisoalpha2.value|raw }}">{{ country.oxcountry__oxtitle.value|raw }}</option>
                             {% endfor %}
                         </select>
                     </div>

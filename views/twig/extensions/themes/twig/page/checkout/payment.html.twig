@@ -2,7 +2,7 @@
 
 {% block select_payment %}
     {% if oViewConf.isKlarnaPaymentsEnabled() and oView.loadKlarnaPaymentWidget %}
-        {% if oView.getCheckedPaymentId() == paymentmethod.oxpayments__oxid.value %}
+        {% if oView.getCheckedPaymentId() == paymentmethod.oxpayments__oxid.value|raw %}
             {% set is_checked = true %}
         {% else %}
             {% set is_checked = false %}
@@ -15,7 +15,7 @@
                         <input class="kp-radio" id="kp-pl" data-payment_id="pay_later" type="radio" name="paymentid"
                                value="{{ sPaymentID }}"
                                {% if is_checked %}checked{% endif %}>
-                        <label for="kp-pl"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</b></label>
+                        <label for="kp-pl"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value|raw|raw) }}</b></label>
                         <img src="{{ paymentmethod.getBadgeUrl() }}">
 
                     </dt>
@@ -38,7 +38,7 @@
                                name="paymentid"
                                value="{{ sPaymentID }}"
                                {% if is_checked %}checked{% endif %}>
-                        <label for="kp-pot"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</b></label>
+                        <label for="kp-pot"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value|raw) }}</b></label>
                         <img src="{{ paymentmethod.getBadgeUrl() }}">
                     </dt>
                     <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_SLICE_IT_SUBTITLE" }) }}</dt>
@@ -60,7 +60,7 @@
                                name="paymentid"
                                value="{{ sPaymentID }}"
                                {% if is_checked %}checked{% endif %}>
-                        <label for="kp-dd"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</b></label>
+                        <label for="kp-dd"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value|raw) }}</b></label>
                         <img src="{{ paymentmethod.getBadgeUrl() }}">
                     </dt>
                     <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
@@ -82,7 +82,7 @@
                                name="paymentid"
                                value="{{ sPaymentID }}"
                                {% if is_checked %}checked{% endif %}>
-                        <label for="kp-dd"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</b></label>
+                        <label for="kp-dd"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value|raw) }}</b></label>
                         <img src="{{ paymentmethod.getBadgeUrl() }}">
                     </dt>
                     <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
@@ -104,7 +104,7 @@
                                name="paymentid"
                                value="{{ sPaymentID }}"
                                {% if is_checked %}checked{% endif %}>
-                        <label for="kp-so"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</b></label>
+                        <label for="kp-so"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value|raw) }}</b></label>
                         <img src="{{ paymentmethod.getBadgeUrl() }}">
                     </dt>
                     <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
@@ -126,7 +126,7 @@
                                name="paymentid"
                                value="{{ sPaymentID }}"
                                {% if is_checked %}checked{% endif %}>
-                        <label for="kp-pn"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</b></label>
+                        <label for="kp-pn"><b>{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value|raw) }}</b></label>
                         <img src="{{ paymentmethod.getBadgeUrl() }}">
                     </dt>
                     <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>

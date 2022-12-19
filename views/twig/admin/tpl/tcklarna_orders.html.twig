@@ -172,8 +172,8 @@
     <div class="alert {{  alertClass  }}">
         <span style='float: left'>{{ alertMessage }} {% if not wrongCredentials %}(Merchant Id: {{ sMid }}){% endif %}</span>
         <span style='float: right'>
-            {% if oOrder.oxorder__tcklarna_orderid.value  %}
-                {% set tcklarna_orderid = oOrder.oxorder__tcklarna_orderid.value %}
+            {% if oOrder.oxorder__tcklarna_orderid.value|raw  %}
+                {% set tcklarna_orderid = oOrder.oxorder__tcklarna_orderid.value|raw %}
             {% else %}
                 {% set tcklarna_orderid = " - " %}
             {% endif %}

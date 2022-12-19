@@ -47,7 +47,7 @@
 {% block checkout_order_next_step_bottom %}
     {{ parent() }}
 
-    {% if payment.oxpayments__oxid.value != 'bestitamazon' %}
+    {% if payment.oxpayments__oxid.value|raw != 'bestitamazon' %}
         <script type="javascript/text">
         if(typeof amazon !== 'undefined')
             delete amazon;
