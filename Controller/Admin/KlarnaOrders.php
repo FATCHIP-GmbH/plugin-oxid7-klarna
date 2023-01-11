@@ -200,7 +200,7 @@ class KlarnaOrders extends AdminDetailsController
             Registry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
         }
 
-        $this->getSession()->setVariable($this->getEditObjectId().'orderRefund', $result);
+        Registry::getSession()->setVariable($this->getEditObjectId().'orderRefund', $result);
     }
 
     /**
@@ -214,7 +214,7 @@ class KlarnaOrders extends AdminDetailsController
             $oOrder->cancelOrder();
         }
 
-        $this->getSession()->setVariable($oOrder->getId().'orderCancel', $result);
+        Registry::getSession()->setVariable($oOrder->getId().'orderCancel', $result);
     }
 
     /**

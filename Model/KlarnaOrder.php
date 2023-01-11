@@ -227,9 +227,9 @@ class KlarnaOrder extends KlarnaOrder_parent
             $this->reloadDiscount(false);
         }
 //        $this->recalculateOrder();
-        $oBasket = $this->_getOrderBasket();
+        $oBasket = $this->getOrderBasket();
         $oBasket->setKlarnaOrderLang($orderLang);
-        $this->_addOrderArticlesToBasket($oBasket, $this->getOrderArticles(true));
+        $this->addOrderArticlesToBasket($oBasket, $this->getOrderArticles(true));
 
         $oBasket->calculateBasket(true);
         $orderLines = $oBasket->getKlarnaOrderLines($this->getId());

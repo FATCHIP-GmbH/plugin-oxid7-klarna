@@ -81,7 +81,7 @@ class KlarnaBasket extends KlarnaBasket_parent
     {
         $this->calculateBasket(true);
         $this->klarnaOrderLines = array();
-        $this->_calcItemsPrice();
+        $this->calcItemsPrice();
 
         $iOrderLang = $this->getOrderLang($orderMgmtId);
 
@@ -626,6 +626,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function klarnaValidateVouchers()
     {
-        $this->_calcVoucherDiscount();
+        $this->calcVoucherDiscount();
     }
 }
