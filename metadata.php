@@ -137,33 +137,6 @@ $aModule = array(
         OxidEsales\Eshop\Application\Model\PaymentGateway::class => PaymentGateway::class,
         OxidEsales\Eshop\Core\ShopControl::class => KlarnaShopControl::class
     ),
-    'templates'   => array(
-
-        'tcklarna_checkout.tpl'                => 'views/tpl/checkout/tcklarna_checkout.tpl',
-        'tcklarna_amazon_login.tpl'            => 'views/tpl/checkout/tcklarna_amazon_login.tpl',
-        'tcklarna_checkout_voucher_data.tpl'   => 'views/tpl/checkout/inc/tcklarna_checkout_voucher_data.tpl',
-        'tcklarna_checkout_voucher_box.tpl'    => 'views/tpl/checkout/inc/tcklarna_checkout_voucher_box.tpl',
-        'tcklarna_checkout_voucher_errors.tpl' => 'views/tpl/checkout/inc/tcklarna_checkout_voucher_errors.tpl',
-        'tcklarna_json.tpl'                    => 'views/tpl/checkout/inc/tcklarna_json.tpl',
-        'tcklarna_country_select_popup.tpl'    => 'views/tpl/checkout/inc/tcklarna_country_select_popup.tpl',
-        'tcklarna_checkout_login_box.tpl'      => 'views/tpl/checkout/inc/tcklarna_checkout_login_box.tpl',
-        'tcklarna_checkout_address_box.tpl'    => 'views/tpl/checkout/inc/tcklarna_checkout_address_box.tpl',
-        //admin
-        'tcklarna_general.tpl'                 => 'views/admin/tpl/tcklarna_general.tpl',
-        'tcklarna_design.tpl'                  => 'views/admin/tpl/tcklarna_design.tpl',
-        'tcklarna_kco_config.tpl'              => 'views/admin/tpl/tcklarna_kco_config.tpl',
-        'tcklarna_kp_config.tpl'               => 'views/admin/tpl/tcklarna_kp_config.tpl',
-        'tcklarna_start.tpl'                   => 'views/admin/tpl/tcklarna_start.tpl',
-        'tcklarna_external_payments.tpl'       => 'views/admin/tpl/tcklarna_external_payments.tpl',
-        'tcklarna_emd_admin.tpl'               => 'views/admin/tpl/tcklarna_emd_admin.tpl',
-        'tcklarna_orders.tpl'                  => 'views/admin/tpl/tcklarna_orders.tpl',
-        'tcklarna_messaging.tpl'               => 'views/admin/tpl/tcklarna_messaging.tpl',
-        'tcklarna_shipping.tpl'                => 'views/admin/tpl/tcklarna_shipping.tpl',
-        //admin partial
-        'tcklarna_country_creds.tpl'           => 'views/admin/tpl/tcklarna_country_creds.tpl',
-        'tcklarna_header.tpl'                  => 'views/admin/tpl/tcklarna_header.tpl',
-        'tcklarna_lang_spec_conf.tpl'          => 'views/admin/tpl/tcklarna_lang_spec_conf.tpl',
-    ),
     'blocks'      => array(
         array(
             'template' => 'widget/minibasket/minibasket.tpl',
