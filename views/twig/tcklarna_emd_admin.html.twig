@@ -17,13 +17,13 @@
 
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
     <div class="main-container">
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_EXTRA_MERCHANT_DATA"|translate, desc: "TCKLARNA_EXTRA_MERCHANT_DATA_ADMIN_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header.html.twig" with {title: "TCKLARNA_EXTRA_MERCHANT_DATA"|translate, desc: "TCKLARNA_EXTRA_MERCHANT_DATA_ADMIN_DESC"|translate} %}
         <hr>
 
-        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink() }}"
+        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink()|raw }}"
               enctype="multipart/form-data">
             <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-            {{ oViewConf.getHiddenSid() }}
+            {{ oViewConf.getHiddenSid()|raw }}
             <input type="hidden" name="cl" value="KlarnaEmdAdmin">
             <input type="hidden" name="fnc" value="save">
             <table class="klarna-conf-table">
@@ -193,5 +193,5 @@
         </form>
     </div>
 </div>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_lib.js')  }}"></script>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_emd.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_emd.js')  }}"></script>

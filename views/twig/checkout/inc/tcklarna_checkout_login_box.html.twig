@@ -18,7 +18,7 @@
             <form class="form" name="login" action="{{ oViewConf.getSslSelfLink() }}"
                   method="post">
                 <div id="loginBox" class="" {% if bIsError %}style="display: block;" {% endif %}>
-                    {{ oViewConf.getHiddenSid() }}
+                    {{ oViewConf.getHiddenSid()|raw }}
                     {{ oViewConf.getNavFormParams() }}
                     <input type="hidden" name="fnc" value="login_noredirect">
                     <input type="hidden" name="cl" value="{{ oViewConf.getTopActiveClassName() }}">

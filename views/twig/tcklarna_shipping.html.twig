@@ -1,4 +1,4 @@
-{% set lang_tag = languages.$editlanguage.abbr|upper %}
+{% set lang_tag = languages.editlanguage.abbr|upper %}
 
 <link rel="stylesheet" href="{{ oViewConf.getResourceUrl() }}main.css">
 <link rel="stylesheet" href="{{ oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }}">
@@ -13,13 +13,13 @@
 
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
     <div class="main-container">
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_SHIPPING_KCO"|translate, desc: "TCKLARNA_SHIPPING_KCO_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header.html.twig" with {title: "TCKLARNA_SHIPPING_KCO"|translate, desc: "TCKLARNA_SHIPPING_KCO_DESC"|translate} %}
         <hr>
         <div class="klarna-expandable-list">
-            <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink() }}"
+            <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink()|raw }}"
                   enctype="multipart/form-data"
             <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-            {{ oViewConf.getHiddenSid() }}
+            {{ oViewConf.getHiddenSid()|raw }}
             <input type="hidden" name="cl" value="KlarnaShipping">
             <input type="hidden" name="fnc" value="save">
 
@@ -38,7 +38,7 @@
                                                     <div class="selector__menu">
                                                         <ul class="selector__choices">
                                                             {% for i, methodName in KCOShippingMethods %}
-                                                                <li class="selector__item{% if confaarrs.aarrKlarnaShippingMap.$shippingId is same as(methodName) %}--selected{% endif %}">
+                                                                <li class="selector__item{% if confaarrs.aarrKlarnaShippingMap.shippingId is same as(methodName) %}--selected{% endif %}">
                                                                     <a href="#" data-value="{{ methodName }}">
                                                                         {{ methodName }}
                                                                     </a>
@@ -47,7 +47,7 @@
                                                         </ul>
                                                         <input type="hidden"
                                                                name="confaarrs[aarrKlarnaShippingMap][{{ shippingId }}]"
-                                                               value="{{ confaarrs.aarrKlarnaShippingMap.$shippingId }}">
+                                                               value="{{ confaarrs.aarrKlarnaShippingMap.shippingId }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -75,7 +75,7 @@
 </div>
 
 
-<script src="{{ oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_lib.js') }}"></script>
+<script src="{{ oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }}"></script>
 
 <script>
 {% capture assign = "jsCode" %}

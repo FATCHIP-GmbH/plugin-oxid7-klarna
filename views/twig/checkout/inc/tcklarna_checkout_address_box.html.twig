@@ -11,7 +11,7 @@
         <div class="drop-content fixed">
             <form name="address" action="{{ oViewConf.getSslSelfLink() }}" method="post" role="form">
                 <div class="hidden">
-                    {{ oViewConf.getHiddenSid() }}
+                    {{ oViewConf.getHiddenSid()|raw }}
                     <input type="hidden" name="cl" value="KlarnaExpress">
                     <input type="hidden" name="fnc" value="setKlarnaDeliveryAddress">
                     <input type="hidden" name="klarna_address_id" value="">

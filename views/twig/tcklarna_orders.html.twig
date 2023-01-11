@@ -136,8 +136,8 @@
     {% set readonly = "" %}
 {% endif %}
 
-<form name="transfer" id="transfer" action="{{  oViewConf.getSelfLink()  }}" method="post">
-    {{  oViewConf.getHiddenSid()  }}
+<form name="transfer" id="transfer" action="{{  oViewConf.getSelfLink()|raw  }}" method="post">
+    {{  oViewConf.getHiddenSid()|raw  }}
     <input type="hidden" name="oxid" value="{{  oxid  }}">
     <input type="hidden" name="cl" value="KlarnaOrders">
 </form>
@@ -188,8 +188,8 @@
         <div>
             <h2>{{ translate({ ident: "KLARNA_CAPTURES" }) }}</h2>
             {% if canRefund and not aRefunds %}
-                <form name="refund" id="refund" action="{{  oViewConf.getSelfLink()  }}" method="post">
-                    {{  oViewConf.getHiddenSid()  }}
+                <form name="refund" id="refund" action="{{  oViewConf.getSelfLink()|raw  }}" method="post">
+                    {{  oViewConf.getHiddenSid()|raw  }}
                     <input type="hidden" name="cl" value="KlarnaOrders">
                     <input type="hidden" name="oxid" value="{{  oxid  }}">
                     <input type="hidden" name="fnc" value="refundFullOrder">
@@ -253,8 +253,8 @@
         {% endif %}
     {% elseif not cancelled and not wrongCredentials and not unauthorizedRequest and inSync  %}
         <div class="portal-button">
-            <form name="capture" id="capture" action="{{  oViewConf.getSelfLink()  }}" method="post">
-                {{  oViewConf.getHiddenSid()  }}
+            <form name="capture" id="capture" action="{{  oViewConf.getSelfLink()|raw  }}" method="post">
+                {{  oViewConf.getHiddenSid()|raw  }}
                 <input type="hidden" name="cl" value="KlarnaOrders">
                 <input type="hidden" name="oxid" value="{{  oxid  }}">
                 <input type="hidden" name="fnc" value="captureFullOrder">
@@ -263,8 +263,8 @@
             </form>
         </div>
         <div class="portal-button">
-            <form name="cancel" id="cancel" action="{{  oViewConf.getSelfLink()  }}" method="post">
-                {{  oViewConf.getHiddenSid()  }}
+            <form name="cancel" id="cancel" action="{{  oViewConf.getSelfLink()|raw  }}" method="post">
+                {{  oViewConf.getHiddenSid()|raw  }}
                 <input type="hidden" name="cl" value="KlarnaOrders">
                 <input type="hidden" name="oxid" value="{{  oxid  }}">
                 <input type="hidden" name="fnc" value="cancelOrder">

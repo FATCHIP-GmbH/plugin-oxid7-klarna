@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
     var tcklarna_countryCredsTemplate = '{{  country_creds|escape("js") }}';
-    var tcklarna_countriesList = JSON.parse('{{  tcklarna_countryList  }}');
+    var tcklarna_countriesList = JSON.parse('{{  tcklarna_countryList|raw  }}');
 </script>
 
 {% if readonly  %}
@@ -31,11 +31,11 @@
         <h4>{{ translate({ ident: "TCKLARNA_CHOOSE_KLARNA_MODULE_MODE" }) }}:</h4>
 
         <form name="myedit" id="myedit" method="post"
-              action="{{ oViewConf.getSelfLink() }}"
+              action="{{ oViewConf.getSelfLink()|raw }}"
               enctype="multipart/form-data"
-              data-langs="{{ oView.getLangs() }}">
-            <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-            {{ oViewConf.getHiddenSid() }}
+              data-langs="{{ oView.getLangs()|raw }}">
+            <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize|raw }}">
+            {{ oViewConf.getHiddenSid()|raw }}
             <input type="hidden" name="cl" value="KlarnaGeneral">
             <input type="hidden" name="fnc" value="save">
 

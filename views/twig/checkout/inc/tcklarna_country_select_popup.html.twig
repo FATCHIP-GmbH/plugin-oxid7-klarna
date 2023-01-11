@@ -11,7 +11,7 @@
                       action="{{ oViewConf.getSslSelfLink() }}"
                       method="post">
                     <div class="hidden">
-                        {{ oViewConf.getHiddenSid() }}
+                        {{ oViewConf.getHiddenSid()|raw }}
                         <input type="hidden" name="cl" value="KlarnaExpress">
                         <input type="hidden" name="selected-country" value="">
                     </div>

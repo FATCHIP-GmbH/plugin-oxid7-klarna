@@ -11,7 +11,7 @@
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
 
     <script type="text/javascript">
-        var tcklarna_countriesList = JSON.parse('{{  tcklarna_countryList  }}');
+        var tcklarna_countriesList = JSON.parse('{{  tcklarna_countryList|raw  }}');
     </script>
 
     {% if readonly  %}
@@ -22,7 +22,7 @@
 
     <div class="main-container">
         {% set tabName = "TCKLARNA_BASIC_SETTINGS"|translate %}
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_CONFIGURATION_KCO"|translate, desc: "TCKLARNA_CONFIGURATION_KCO_ADMIN_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header.html.twig" with {title: "TCKLARNA_CONFIGURATION_KCO"|translate, desc: "TCKLARNA_CONFIGURATION_KCO_ADMIN_DESC"|translate} %}
         <hr>
         {% if sslNotSet  %}
             <br>
@@ -38,12 +38,12 @@
             </div>
             <br>
         {% endif %}
-        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink() }}"
+        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink()|raw }}"
               enctype="multipart/form-data"
-              data-error="{{ oView.getErrorMessages() }}"
-              data-langs="{{ oView.getLangs() }}">
+              data-error="{{ oView.getErrorMessages()|raw }}"
+              data-langs="{{ oView.getLangs()|raw }}">
             <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-            {{ oViewConf.getHiddenSid() }}
+            {{ oViewConf.getHiddenSid()|raw }}
             <input type="hidden" name="cl" value="KlarnaConfiguration">
             <input type="hidden" name="fnc" value="save">
 
@@ -65,7 +65,7 @@
                                     {% endfor %}
                                 </ul>
                                 <input type="hidden" name="confstrs[sKlarnaDefaultCountry]"
-                                       value="{{ confstrs.sKlarnaDefaultCountry }}">
+                                       value="{{ confstrs.sKlarnaDefaultCountry|raw }}">
                             </div>
                         </div>
                     </td>
@@ -377,7 +377,7 @@
                                 <td>
                                 </td>
                             </tr>
-                            {% include "tcklarna_lang_spec_conf.html.twig" %}
+                            {% include "@tcklarna/tcklarna_lang_spec_conf.html.twig" %}
                         </table>
                     </td>
                 </tr>
@@ -400,5 +400,5 @@
     </div>
 </div>
 
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_lib.js')  }}"></script>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_configuration.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_configuration.js')  }}"></script>

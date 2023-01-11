@@ -16,15 +16,15 @@
 
     <div class="main-container">
         {% set tabName = "TCKLARNA_BASIC_SETTINGS"|translate %}
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_CONFIGURATION_KP"|translate, desc: "TCKLARNA_CONFIGURATION_KP_ADMIN_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header.html.twig" with {title: "TCKLARNA_CONFIGURATION_KP"|translate, desc: "TCKLARNA_CONFIGURATION_KP_ADMIN_DESC"|translate} %}
 
         <hr>
         <h2>{{ translate({ ident: "TCKLARNA_CHOOSE_KP_OPTIONS" }) }}</h2>
 
-        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink() }}"
+        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink()|raw }}"
               enctype="multipart/form-data">
             <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-            {{ oViewConf.getHiddenSid() }}
+            {{ oViewConf.getHiddenSid()|raw }}
             <input type="hidden" name="cl" value="KlarnaConfiguration">
             <input type="hidden" name="fnc" value="save">
 

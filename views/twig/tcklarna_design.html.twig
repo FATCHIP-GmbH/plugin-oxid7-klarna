@@ -1,4 +1,4 @@
-{% set lang_tag = languages.$editlanguage.abbr|upper %}
+{% set lang_tag = languages.editlanguage.abbr|upper %}
 
 <link rel="stylesheet" href="{{ oViewConf.getResourceUrl() }}main.css">
 <link rel="stylesheet" href="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')  }}">
@@ -9,19 +9,19 @@
         src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')  }}"></script>
 <script type="text/javascript"
         src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')  }}"></script>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs/jscolor / jscolor.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs/jscolor/jscolor.js')  }}"></script>
 
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
     <div class="main-container">
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_KLARNADESIGN"|translate, desc: "TCKLARNA_DESIGN_SETTINGS_ADMIN_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header.html.twig" with {title: "TCKLARNA_KLARNADESIGN"|translate, desc: "TCKLARNA_DESIGN_SETTINGS_ADMIN_DESC"|translate} %}
         <div class="klarna-expandable-list">
             <form name="myedit" id="myedit" method="post"
-                  action="{{ oViewConf.getSelfLink() }}"
+                  action="{{ oViewConf.getSelfLink()|raw }}"
                   enctype="multipart/form-data"
-                  data-langs="{{ oView.getLangs() }}">
+                  data-langs="{{ oView.getLangs()|raw }}">
 
                 <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-                {{ oViewConf.getHiddenSid() }}
+                {{ oViewConf.getHiddenSid()|raw }}
                 <input type="hidden" name="cl" value="KlarnaDesign">
                 <input type="hidden" name="fnc" value="save">
                 <!-- Footer -->
@@ -129,7 +129,8 @@
                                                                {% if (confstrs.sKlarnaFooterValue is same as('longBlack') ) %}checked{% endif %}>
                                                         <label class="kl-logo white" for="long-black">
                                                             <div class="">
-                                                                <img src="{{  locale|string_format(aKlarnaFooterImgUrls.longBlack)  }}">
+                                                                {{ locale }}
+                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.longBlack)  }}">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -139,7 +140,7 @@
                                                                {% if confstrs.sKlarnaFooterValue == 'longWhite'  %}checked{% endif %}>
                                                         <label class="kl-logo black" for="long-white">
                                                             <div class="">
-                                                                <img src="{{  locale|string_format(aKlarnaFooterImgUrls.longWhite)  }}">
+                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.longWhite)  }}">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -156,7 +157,7 @@
                                                                {% if confstrs.sKlarnaFooterValue == 'shortBlack'  %}checked{% endif %}>
                                                         <label class="kl-logo white" for="short-black">
                                                             <div class="">
-                                                                <img src="{{  locale|string_format(aKlarnaFooterImgUrls.shortBlack)  }}">
+                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.shortBlack)  }}">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -166,7 +167,7 @@
                                                                {% if confstrs.sKlarnaFooterValue == 'shortWhite'  %}checked{% endif %}>
                                                         <label class="kl-logo black" for="short-white">
                                                             <div class="">
-                                                                <img src="{{  locale|string_format(aKlarnaFooterImgUrls.shortWhite)  }}">
+                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.shortWhite)  }}">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -640,7 +641,7 @@
                                                style="border-radius: {{ confaarrs.aKlarnaDesign.radius_border }};"
                                                value="{{  confaarrs.aKlarnaDesign.radius_border  }}">
                                         <input class="range small pull-left" type="range" min="0" max="20"
-                                               value="{{ confaarrs.aKlarnaDesign.radius_border|substr(0, -2) }}"/>
+                                               value="{{ confaarrs.aKlarnaDesign.radius_border|number_format(0, -2) }}"/>
                                     </div>
                                     <script>
                                         (function () {
@@ -690,7 +691,7 @@
         </div>
     </div>
 </div>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_lib.js')  }}"></script>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_design.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_design.js')  }}"></script>
 
 

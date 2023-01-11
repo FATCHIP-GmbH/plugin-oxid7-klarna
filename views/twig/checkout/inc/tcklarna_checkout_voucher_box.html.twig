@@ -17,7 +17,7 @@
                 <form name="voucher" action="{{ oViewConf.getSslSelfLink() }}" method="post" role="form">
                     <div class="" id="coupon">
                         <div class="hidden">
-                            {{ oViewConf.getHiddenSid() }}
+                            {{ oViewConf.getHiddenSid()|raw }}
                             <input type="hidden" name="cl" value="KlarnaAjax">
                             <input type="hidden" name="fnc" value="addVoucher">
                             <input type="hidden" name="CustomError" value="basket">

@@ -7,18 +7,18 @@
 
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
     <div class="main-container">
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_EXTERNAL_PAYMENTS"|translate, desc: "TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header.html.twig" with {title: "TCKLARNA_EXTERNAL_PAYMENTS"|translate, desc: "TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC"|translate} %}
         <hr>
         {% if mode is same as('KCO' ) %}
         <div class="klarna-expandable-list">
-            <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink() }}" enctype="multipart/form-data">
+            <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink()|raw }}" enctype="multipart/form-data">
                 <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-                {{ oViewConf.getHiddenSid() }}
+                {{ oViewConf.getHiddenSid()|raw }}
                 <input type="hidden" name="cl" value="KlarnaExternalPayments">
                 <input type="hidden" name="fnc" value="save">
                 {% for payment in activePayments %}
-                    {% set paymentOn = payment.tcklarna_externalpayment|intval %}
-                    {% set checkoutOn = payment.tcklarna_externalcheckout|intval %}
+                    {% set paymentOn = payment.tcklarna_externalpayment|number_format %}
+                    {% set checkoutOn = payment.tcklarna_externalcheckout|number_format %}
 
                     <div class="klarna-row">
                         <div class="row-label">
@@ -274,8 +274,8 @@
                            id="form-save-button" {{ readonly }}>
                 </div>
             </form>
-            <script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_lib.js')  }}"></script>
-            <script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_external_payments.js')  }}"></script>
+            <script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')  }}"></script>
+            <script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_external_payments.js')  }}"></script>
         </div>
         {% else %}
             {{  "TCKLARNA_NO_OPTIONS_MODE"|translate  }}

@@ -1,7 +1,7 @@
-{% set lang_tag = languages.$editlanguage.abbr|upper %}
+{% set lang_tag = languages.editlanguage.abbr|upper %}
 
 <script type="text/javascript">
-    var tcklarna_countriesList = JSON.parse('{{  tcklarna_countryList  }}');
+    var tcklarna_countriesList = JSON.parse('{{  tcklarna_countryList|raw  }}');
 </script>
 
 {% if readonly  %}
@@ -21,13 +21,15 @@
 
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
     <div class="main-container">
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_ON_SITE_MESSAGING"|translate, desc: "TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header.html.twig" with {title: "TCKLARNA_ON_SITE_MESSAGING"|translate, desc: "TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC"|translate} %}
         <hr>
         <div class="klarna-header">
             <div class="w12">
                 <h1>{{ translate({ ident: "TCKLARNA_ON_SITE_MESSAGING_HEADER_TITLE" }) }}</h1>
                 <p>{{ translate({ ident: "TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC" }) }}</p>
-                <img src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/img/display-instant - financing_EN.png')  }}" height=270px" width="350px"><img src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/img/easy-to - customise_EN.png')  }}" height="270px" width="350px"><img src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/img/personalised - messaging_EN.png')  }}" height="270px" width="350px">
+                <img src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/img/display-instant-financing_EN.png')  }}" height=270px" width="350px">
+                <img src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/img/easy-to-customise_EN.png')  }}" height="270px" width="350px">
+                <img src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/img/personalised-messaging_EN.png')  }}" height="270px" width="350px">
                 <p style="margin-top: 10px;padding-top: 10px">{{ translate({ ident: "TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2" }) }}</p>
                 <a href="https://merchants.klarna.com/" target="_blank" class="btn-save saveButton" id="merchant-button">
                     {{ translate({ ident: "TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON" }) }}
@@ -35,10 +37,10 @@
             </div>
         </div>
         <hr>
-        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink() }}"
+        <form name="myedit" id="myedit" method="post" action="{{ oViewConf.getSelfLink()|raw }}"
               enctype="multipart/form-data">
             <input type="hidden" name="MAX_FILE_SIZE" value="{{ iMaxUploadFileSize }}">
-            {{ oViewConf.getHiddenSid() }}
+            {{ oViewConf.getHiddenSid()|raw }}
             <input type="hidden" name="cl" value="KlarnaMessaging">
             <input type="hidden" name="fnc" value="save">
 
@@ -110,5 +112,5 @@
         </form>
     </div>
 </div>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_lib.js')  }}"></script>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/jss/tcklarna_admin_emd.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_emd.js')  }}"></script>

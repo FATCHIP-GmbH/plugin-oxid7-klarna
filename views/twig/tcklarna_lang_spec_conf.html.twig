@@ -1,7 +1,7 @@
 {% if isset(iLang) %}
     {% set editlanguage = iLang %}
 {% endif %}
-{% set lang_tag = languages.$editlanguage.abbr|upper %}
+{% set lang_tag = languages.editlanguage.abbr|upper %}
 <tr>
     <td colspan="3" class="inner-table-wrapper">
         <table>
@@ -12,7 +12,7 @@
                     <div class="input">
                         <input type="text" class="url-input m-lang"
                                name="confstrs[sKlarnaTermsConditionsURI_{{ lang_tag }}]"
-                               value="{{ confstrs.$confVarName }}"
+                               value="{{ confstrs.confVarName }}"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
                     </div>
                 </td>
@@ -30,7 +30,7 @@
                     <div class="input">
                         <input type="text" class="url-input m-lang"
                                name="confstrs[sKlarnaCancellationRightsURI_{{ lang_tag }}]"
-                               value="{{ confstrs.$confVarName }}"
+                               value="{{ confstrs.confVarName }}"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
                     </div>
                 </td>
@@ -48,7 +48,7 @@
                     <div class="input">
                         <input type="text" class="m-lang"
                                name="confstrs[sKlarnaShippingDetails_{{ lang_tag }}]"
-                               value="{{ confstrs.$confVarName }}">
+                               value="{{ confstrs.confVarName }}">
                     </div>
                 </td>
                 <td>
