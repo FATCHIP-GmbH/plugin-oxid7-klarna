@@ -1,11 +1,11 @@
-{% set lang_tag = languages.$editlanguage.abbr|upper %}
+{% set lang_tag = languages.editlanguage.abbr|upper %}
 
 {% capture assign = "country_creds" %}
-    {% include "tcklarna_country_creds.html.twig" %}
+    {% include "@tcklarna/tcklarna_country_creds" %}
 {% endcapture %}
 
 <script type="text/javascript">
-    var tcklarna_countryCredsTemplate = '{{  country_creds|escape("javascript") }}';
+    var tcklarna_countryCredsTemplate = '{{  country_creds|escape("js") }}';
     var tcklarna_countriesList = JSON.parse('{{  tcklarna_countryList  }}');
 </script>
 
@@ -16,17 +16,17 @@
 {% endif %}
 
 <link rel="stylesheet" href="{{ oViewConf.getResourceUrl() }}main.css">
-<link rel="stylesheet" href="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css / tcklarna_admin2.css')  }}">
-<link rel="stylesheet" href="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css / tooltipster.bundle.min.css')  }}">
-<link rel="stylesheet" href="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip - light.min.css')  }}">
-<script type="text/javascript" src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs/jquery - 1.12.4.min.js')  }}"></script>
+<link rel="stylesheet" href="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')  }}">
+<link rel="stylesheet" href="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')  }}">
+<link rel="stylesheet" href="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')  }}">
+<script type="text/javascript" src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')  }}"></script>
 <script type="text/javascript"
-        src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs / tooltipster.bundle.min.js')  }}"></script>
+        src="{{  oViewConf.getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')  }}"></script>
 
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
     <div class="main-container">
         {% set tabName = "TCKLARNA_BASIC_SETTINGS"|translate %}
-        {% include "tcklarna_header.html.twig" with {title: "TCKLARNA_GENERAL_SETTINGS"|translate, desc: "TCKLARNA_GENERAL_SETTINGS_ADMIN_DESC"|translate} %}
+        {% include "@tcklarna/tcklarna_header" with {title: "TCKLARNA_GENERAL_SETTINGS"|translate, desc: "TCKLARNA_GENERAL_SETTINGS_ADMIN_DESC"|translate} %}
         <hr>
         <h4>{{ translate({ ident: "TCKLARNA_CHOOSE_KLARNA_MODULE_MODE" }) }}:</h4>
 
@@ -127,7 +127,7 @@
 
                     {% if tcklarna_countryCreds  %}
                         {% for sKey, aValues in tcklarna_countryCreds %}
-                            {% include "tcklarna_country_creds.html.twig" %}
+                            {% include "@tcklarna/tcklarna_country_creds" %}
                         {% endfor %}
                     {% endif %}
                     <tr class="bg-grey2" id="acc-separator">
@@ -351,7 +351,7 @@
                                                 {% set confVarName = "sKlarnaAnonymizedProductTitle_"|cat(lang_tag) %}
                                                 <input id="anonymized-value" type="text" class="" data-default-value=""
                                                        name="confstrs[{{ confVarName }}]"
-                                                       value="{% if confstrs.$confVarName != "" %}{{ confstrs.$confVarName }}{% endif %}">
+                                                       value="{% if confstrs.confVarName != "" %}{{ confstrs.confVarName }}{% endif %}">
                                             </div>
                                         </td>
                                         <td>
@@ -408,5 +408,5 @@
     </div>
 </div>
 <div style="height: 80px"></div>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js / tcklarna_admin_lib.js')  }}"></script>
-<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js / tcklarna_admin_general.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')  }}"></script>
+<script src="{{  oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_general.js')  }}"></script>

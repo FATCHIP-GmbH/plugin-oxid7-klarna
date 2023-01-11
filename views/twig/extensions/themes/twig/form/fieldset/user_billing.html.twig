@@ -11,7 +11,7 @@
             </div>
         {% endcapture %}
         <script type="text/javascript">
-            var otherCountryButton = '{{ otherCountry|trim|escape("javascript") }}';
+            var otherCountryButton = '{{ otherCountry|trim|escape("js") }}';
         </script>
         {% capture assign = "dataCollectionJS" %}
             function decodeEntities(encodedString) {

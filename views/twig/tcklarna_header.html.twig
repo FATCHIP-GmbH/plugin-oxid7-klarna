@@ -1,7 +1,7 @@
 <div class="klarna-header">
     <div class="w7">
         <h1>{{  title  }}</h1>
-        <p>{{  desc|sprintf(oView.getManualDownloadLink())  }}
+        <p>{{  desc|format(oView.getManualDownloadLink())  }}</p>>
     </div>
     <div class="w5">
         <div class="klarna-logo">
@@ -15,6 +15,6 @@
         {% endfor %}
     {% endif %}
     {% if Errors.popup|is_array and not empty(Errors.popup) %}
-        {% include "message/errors_modal.html.twig" %}
+        {% include "@tcklana/tcklarna_errors_modal.html.twig" %}
     {% endif %}
 </div>

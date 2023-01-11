@@ -68,7 +68,7 @@
                 }
             }
         </script>
-        {% set klFooterContent = klFooterContent|escape("javascript") %}
+        {% set klFooterContent = klFooterContent|escape("js") %}
         {{ script({ add: "embedKlarnaLogo('$klFooterContent');", dynamic: __oxid_include_dynamic }) }}
     {% endif %}
 
@@ -147,7 +147,7 @@
 
             function insertKlarnaNotifications() {
 
-                var $noticeBox = $("{{ lawNoticeTemplate|escape("javascript") }}");
+                var $noticeBox = $("{{ lawNoticeTemplate|escape("js") }}");
 
                 // my account
                 var $loginForm = $('form[name=login]');
