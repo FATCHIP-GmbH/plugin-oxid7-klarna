@@ -6,7 +6,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaMessaging extends KlarnaBaseConfig
 {
-    protected $_sThisTemplate = 'tcklarna_messaging';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_messaging';
 
     /**
      * @codeCoverageIgnore

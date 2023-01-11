@@ -26,7 +26,7 @@ use OxidEsales\Eshop\Application\Controller\FrontendController;
  */
 class KlarnaEpmDispatcher extends FrontendController
 {
-    protected $_sThisTemplate = 'tcklarna_amazon_login';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_amazon_login';
 
     /**
      * @throws \oxFileException

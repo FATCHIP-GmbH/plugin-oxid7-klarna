@@ -20,7 +20,7 @@ class KlarnaOrders extends AdminDetailsController
     const KLARNA_PORTAL_PLAYGROUND_URL = 'https://playground.eu.portal.klarna.com/orders/merchants/%s/orders/%s';
     const KLARNA_PORTAL_LIVE_URL       = 'https://eu.portal.klarna.com/orders/merchants/%s/orders/%s';
 
-    protected $_sThisTemplate = 'tcklarna_orders';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_orders';
 
     public    $orderLang;
     protected $client;

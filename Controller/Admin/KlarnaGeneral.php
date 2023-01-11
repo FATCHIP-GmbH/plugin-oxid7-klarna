@@ -4,6 +4,7 @@ namespace TopConcepts\Klarna\Controller\Admin;
 
 
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\TableViewNameGenerator;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Registry;
@@ -15,7 +16,9 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 class KlarnaGeneral extends KlarnaBaseConfig
 {
 
-    protected $_sThisTemplate = 'tcklarna_general';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_general';
+
+    protected $tableViewNameGenerator = null;
 
     protected $_aKlarnaCountryCreds = array();
 
@@ -130,7 +133,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
         if ($this->_aKlarnaCountries) {
             return $this->_aKlarnaCountries;
         }
-        $sViewName = getViewName('oxcountry', $this->getViewDataElement('adminlang'));
+        $sViewName = $this->getViewName('oxcountry', $this->getViewDataElement('adminlang'));
         $isoList   = KlarnaConsts::getKlarnaCoreCountries();
 
         /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $db */
@@ -148,5 +151,11 @@ class KlarnaGeneral extends KlarnaBaseConfig
         return $this->_aKlarnaCountries;
     }
 
+    protected function getViewName($table) {
+        if($this->tableViewNameGenerator == null) {
+            $this->tableViewNameGenerator = oxNew(TableViewNameGenerator::class);
+        }
 
+        return $this->tableViewNameGenerator->getViewName($table);
+    }
 }

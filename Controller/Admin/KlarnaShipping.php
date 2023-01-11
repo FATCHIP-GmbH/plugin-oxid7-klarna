@@ -21,7 +21,7 @@ class KlarnaShipping extends KlarnaBaseConfig
     const DIGITAL = 'Digital';
     const POSTAL_WITH_DHL_PACK_STATION = 'Postal + DHLPackstation';    
     
-    protected $_sThisTemplate = 'tcklarna_shipping';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_shipping';
     
     public function getKCOShippingMethods() {
         return array(

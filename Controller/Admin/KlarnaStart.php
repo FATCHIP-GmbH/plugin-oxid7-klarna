@@ -13,7 +13,7 @@ use OxidEsales\Eshop\Core\Registry;
 class KlarnaStart extends KlarnaBaseConfig
 {
 
-    protected $_sThisTemplate = 'tcklarna_start';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_start';
 
     /**
      * Render logic

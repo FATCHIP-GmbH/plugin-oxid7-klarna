@@ -16,7 +16,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 class KlarnaExternalPayments extends KlarnaBaseConfig
 {
 
-    protected $_sThisTemplate = 'tcklarna_external_payments';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_external_payments';
 
     /**
      * Render logic

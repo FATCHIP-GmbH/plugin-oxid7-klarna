@@ -233,7 +233,7 @@ class KlarnaAjaxController extends FrontendController
      */
     public function updateVouchers()
     {
-        $this->_sThisTemplate = 'tcklarna_json';
+        $this->_sThisTemplate = '@tcklarna/tcklarna_json';
         $includes             = array(
             'vouchers' => 'tcklarna_checkout_voucher_data',
             'error'    => 'tcklarna_checkout_voucher_errors',

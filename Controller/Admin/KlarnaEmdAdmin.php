@@ -14,7 +14,7 @@ use OxidEsales\Eshop\Core\Field;
 class KlarnaEmdAdmin extends KlarnaBaseConfig
 {
 
-    protected $_sThisTemplate = 'tcklarna_emd_admin';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_emd_admin';
 
     /**
      * Render logic

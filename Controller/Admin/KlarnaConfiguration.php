@@ -17,7 +17,7 @@ use OxidEsales\Eshop\Core\Registry;
 class KlarnaConfiguration extends KlarnaBaseConfig
 {
 
-    protected $_sThisTemplate = 'tcklarna_kco_config';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_kco_config';
 
     /** @inheritdoc */
     protected $MLVars = ['sKlarnaTermsConditionsURI_', 'sKlarnaCancellationRightsURI_', 'sKlarnaShippingDetails_'];
@@ -63,10 +63,10 @@ class KlarnaConfiguration extends KlarnaBaseConfig
             $this->addTplParam('tcklarna_countryList', json_encode(KlarnaUtils::getKlarnaGlobalActiveShopCountries($this->getViewDataElement('adminlang'))));
 
 
-            $this->_sThisTemplate = 'tcklarna_kco_config';
+            $this->_sThisTemplate = '@tcklarna/tcklarna_kco_config';
         }
         if ($klarnaMode === KlarnaConsts::MODULE_MODE_KP) {
-            $this->_sThisTemplate = 'tcklarna_kp_config';
+            $this->_sThisTemplate = '@tcklarna/tcklarna_kp_config';
         }
 
         return $this->_sThisTemplate;

@@ -16,7 +16,7 @@ use OxidEsales\Eshop\Core\Field;
 class KlarnaDesign extends KlarnaBaseConfig
 {
 
-    protected $_sThisTemplate = 'tcklarna_design';
+    protected $_sThisTemplate = '@tcklarna/tcklarna_design';
 
     /**
      * Render logic

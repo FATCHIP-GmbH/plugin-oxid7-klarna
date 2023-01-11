@@ -70,7 +70,7 @@ class KlarnaBaseConfig extends ShopConfiguration
         parent::render();
         $confaarrs = $this->getViewDataElement('confaarrs');
         foreach ($confaarrs as $key => $arr) {
-            $confaarrs[$key] = $this->_multilineToAarray(html_entity_decode($arr));
+            $confaarrs[$key] = $this->multilineToAarray(html_entity_decode($arr));
         }
         $this->addTplParam('confaarrs', $confaarrs);
     }
@@ -114,7 +114,7 @@ class KlarnaBaseConfig extends ShopConfiguration
         if (is_array($nestedArray)) {
             foreach ($nestedArray as $key => $arr) {
                 /*** serialize all assoc arrays ***/
-                $nestedArray[$key] = $this->_aarrayToMultiline($arr);
+                $nestedArray[$key] = $this->aarrayToMultiline($arr);
             }
         }
 
@@ -270,7 +270,7 @@ class KlarnaBaseConfig extends ShopConfiguration
         $langTag = Registry::getLang()->getLanguageAbbr($this->getViewDataElement('adminlang'));
         $versionList = Registry::getConfig()->getConfigParam( 'aModuleVersions' );
         $version = '4.0.0';
-        if(key_exists('tcklarna', $versionList))
+        if($versionList && key_exists('tcklarna', $versionList))
         {
             $version = $versionList['tcklarna'];
         }
