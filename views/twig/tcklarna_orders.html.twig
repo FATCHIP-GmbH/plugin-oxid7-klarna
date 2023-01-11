@@ -169,18 +169,18 @@
             {% set alertClass = "alert-warning" %}
         {% endif %}
     {% endif %}
-    <div class="alert {{  alertClass  }}">
-        <span style='float: left'>{{ alertMessage }} {% if not wrongCredentials %}(Merchant Id: {{ sMid }}){% endif %}</span>
+    <div class="alert {{  alertClass|raw  }}">
+        <span style='float: left'>{{ alertMessage|raw }} {% if not wrongCredentials %}(Merchant Id: {{ sMid }}){% endif %}</span>
         <span style='float: right'>
             {% if oOrder.oxorder__tcklarna_orderid.value|raw  %}
                 {% set tcklarna_orderid = oOrder.oxorder__tcklarna_orderid.value|raw %}
             {% else %}
                 {% set tcklarna_orderid = " - " %}
             {% endif %}
-            {% if sKlarnaRef == '' %}
+            {% if sKlarnaRef|raw == '' %}
                 {% set sKlarnaRef = " - " %}
             {% endif %}
-            <strong>Klarna order ID:</strong> <i>{{ tcklarna_orderid }}</i> <strong>Klarna reference:</strong> <i>{{ sKlarnaRef }}</i>
+            <strong>Klarna order ID:</strong> <i>{{ tcklarna_orderid|raw }}</i> <strong>Klarna reference:</strong> <i>{{ sKlarnaRef|raw }}</i>
         </span>
         <div style='clear:both'></div>
     </div>
@@ -209,16 +209,16 @@
                 {% for capture in aCaptures %}
                     <tr>
                         <td>
-                            {{ capture.capture_id }}
+                            {{ capture.capture_id|raw }}
                         </td>
                         <td>
-                            {{ capture.klarna_reference }}
+                            {{ capture.klarna_reference|raw }}
                         </td>
                         <td>
-                            {{ oView.formatPrice(capture.captured_amount) }}
+                            {{ oView.formatPrice(capture.captured_amount)|raw }}
                         </td>
                         <td>
-                            {{ capture.captured_at }}
+                            {{ capture.captured_at|raw }}
                         </td>
                     </tr>
                 {% endfor %}
@@ -244,7 +244,7 @@
                                 {{ refund.description }}
                             </td>
                             <td>
-                                {{ refund.refunded_at|date_format("%Y-%m- % d) %H:%M: % S" }}
+                                {{ refund.refunded_at|date_format("%Y-%m-%d %H:%M: %S") }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -275,11 +275,11 @@
     {% endif %}
 {% else %}
     {% if wrongCredentials %}
-        <div class="alert {{  alertClass  }}">
+        <div class="alert {{  alertClass|raw  }}">
             {{ alertMessage }}
         </div>
     {% else %}
-        <div class="messagebox">{{ sMessage }}</div>
+        <div class="messagebox">{{ sMessage|raw }}</div>
     {% endif %}
 {% endif %}
 
