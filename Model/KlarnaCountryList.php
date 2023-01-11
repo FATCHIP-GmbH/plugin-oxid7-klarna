@@ -19,10 +19,13 @@ namespace TopConcepts\Klarna\Model;
 
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\TableViewNameGenerator;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 
 class KlarnaCountryList extends KlarnaCountryList_parent
 {
+    protected $tableViewNameGenerator = null;
+
     /**
      * Selects and loads all active countries that are assigned to klarna_checkout
      *
@@ -31,7 +34,7 @@ class KlarnaCountryList extends KlarnaCountryList_parent
      */
     public function loadActiveKlarnaCheckoutCountries($iLang = null, $filterKcoList = true)
     {
-        $sViewName = getViewName('oxcountry', $iLang);
+        $sViewName = $this->getViewName('oxcountry', $iLang);
         $isoList   = KlarnaConsts::getKlarnaGlobalCountries();
         $isoList   = implode("','", $isoList);
         $sSelect   = "SELECT {$sViewName}.oxid, {$sViewName}.oxtitle, {$sViewName}.oxisoalpha2 FROM {$sViewName}
@@ -55,7 +58,7 @@ class KlarnaCountryList extends KlarnaCountryList_parent
      */
     public function loadActiveNonKlarnaCheckoutCountries($iLang = null)
     {
-        $sViewName = getViewName('oxcountry', $iLang);
+        $sViewName = $this->getViewName('oxcountry', $iLang);
         $isoList   = KlarnaConsts::getKlarnaGlobalCountries();
         $isoList   = implode("','", $isoList);
         $sSelect   = "SELECT oxid, oxtitle, oxisoalpha2 FROM {$sViewName}
@@ -74,7 +77,7 @@ class KlarnaCountryList extends KlarnaCountryList_parent
      */
     public function loadActiveKCOGlobalCountries($iLang = null)
     {
-        $sViewName = getViewName('oxcountry', $iLang);
+        $sViewName = $this->getViewName('oxcountry', $iLang);
         $isoList   = KlarnaConsts::getKlarnaGlobalCountries();
         $isoList   = implode("','", $isoList);
         $sSelect   = "SELECT {$sViewName}.oxid, {$sViewName}.oxtitle, {$sViewName}.oxisoalpha2 FROM {$sViewName}
@@ -85,7 +88,7 @@ class KlarnaCountryList extends KlarnaCountryList_parent
 
     public function getKalarnaCountriesTitles($iLang, $isoList)
     {
-        $sViewName = getViewName('oxcountry', $iLang);
+        $sViewName = $this->getViewName('oxcountry', $iLang);
         $sSelect   = "SELECT {$sViewName}.oxisoalpha2, {$sViewName}.oxtitle FROM {$sViewName}
             WHERE {$sViewName}.oxisoalpha2 IN ('".implode("','", $isoList)."')";
 
@@ -101,7 +104,7 @@ class KlarnaCountryList extends KlarnaCountryList_parent
     public function loadActiveKlarnaCountriesByPaymentId($paymentId)
     {
         $paymentId = DatabaseProvider::getDb()->quote($paymentId);
-        $sViewName = getViewName('oxcountry');
+        $sViewName = $this->getViewName('oxcountry');
         $isoList   = KlarnaConsts::getKlarnaGlobalCountries();
         $isoList   = implode("','", $isoList);
         $sSelect   = "SELECT {$sViewName}.oxid, {$sViewName}.oxtitle, {$sViewName}.oxisoalpha2 FROM {$sViewName}
@@ -114,5 +117,13 @@ class KlarnaCountryList extends KlarnaCountryList_parent
         $sSelect.= " AND {$sViewName}.oxisoalpha2 IN ('{$isoList}')";
 
         $this->selectString($sSelect);
+    }
+
+    protected function getViewName($table) {
+        if($this->tableViewNameGenerator == null) {
+            $this->tableViewNameGenerator = oxNew(TableViewNameGenerator::class);
+        }
+
+        return $this->tableViewNameGenerator->getViewName($table);
     }
 }
