@@ -3,11 +3,11 @@
     {% if payment.isKlarnaPayment() %}
         <h3 class="underline">{{ translate({ ident: "PAYMENT_METHOD" }) }}</h3>
         <img src="http:{{ payment.getBadgeUrl() }}"
-             style="padding: 0 10px 10px {% if payment.oxuserpayments__oxpaymentsid.value|raw === 'klarna_checkout' %}0 {% else %}10px{% endif %};{% if payment.oxuserpayments__oxpaymentsid.value|raw === 'klarna_checkout' %} width: 117px;{% endif %}" width="117">
+             style="padding: 0 10px 10px {% if payment.oxuserpayments__oxpaymentsid.value|raw is same as ('klarna_checkout') %}0 {% else %}10px{% endif %};{% if payment.oxuserpayments__oxpaymentsid.value|raw is same as ('klarna_checkout') %} width: 117px;{% endif %}" width="117">
         <br>
-        {% if payment.oxuserpayments__oxpaymentsid.value|raw === 'klarna_checkout' %}<br>{% endif %}
+        {% if payment.oxuserpayments__oxpaymentsid.value|raw is same as ('klarna_checkout') %}<br>{% endif %}
         <p>
-            <b>{% payment.oxpayments__oxdesc.value|raw %} {% if basket.getPaymentCosts() %}({% basket.getFPaymentCosts() %} {% currency.sign %}){% endif %}</b>
+            <b>{{ payment.oxpayments__oxdesc.value|raw }} {% if basket.getPaymentCosts() %}({{ basket.getFPaymentCosts()|raw }} {{ currency.sign|raw }}){% endif %}</b>
         </p>
         <br>
         <br>
