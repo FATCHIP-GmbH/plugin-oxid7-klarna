@@ -10,9 +10,13 @@ namespace TopConcepts\Klarna\Tests\Unit;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\FileCache;
+use OxidEsales\Eshop\Core\Module\ModuleVariablesLocator;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ConfigFile;
 
+use OxidEsales\Eshop\Core\ShopIdCalculator;
+use OxidEsales\EshopCommunity\Core\SubShopSpecificFileCache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\UnitTestCase;
@@ -37,9 +41,25 @@ class ModuleUnitTestCase extends UnitTestCase
     {
         parent::setUp();
 
-        oxAddClassModule(\oxUtilsHelper::class, \OxidEsales\Eshop\Core\Utils::class);
+        $aModules = $this->getModuleVariablesLocator()->getModuleVariable('aModules');
+        $sClass = \OxidEsales\Eshop\Core\Utils::class;
+        $sModuleClass = \oxUtilsHelper::class;
+
+        $sModuleClass = $aModules[$sClass] . '&' . $sModuleClass;
+
+        $aModules[strtolower($sClass)] = $sModuleClass;
+
+        $this->getModuleVariablesLocator()->setModuleVariable("aModules", $aModules);
     }
 
+    private function getModuleVariablesLocator(): ModuleVariablesLocator
+    {
+        $shopIdCalculator = new ShopIdCalculator(
+            new FileCache()
+        );
+        $subShopSpecificCache = new SubShopSpecificFileCache($shopIdCalculator);
+        return new ModuleVariablesLocator($subShopSpecificCache, $shopIdCalculator);
+    }
 
     /**
      * ModuleUnitTestCase constructor.
@@ -77,7 +97,6 @@ class ModuleUnitTestCase extends UnitTestCase
         parent::tearDown();
 
         \oxUtilsHelper::$sRedirectUrl = null;
-        oxRemClassModule(\oxUtilsHelper::class, \OxidEsales\Eshop\Core\Utils::class);
     }
 
     protected function setupKlarnaExternals()

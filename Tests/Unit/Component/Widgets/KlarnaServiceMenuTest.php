@@ -9,38 +9,40 @@
 namespace TopConcepts\Klarna\Tests\Unit\Component\Widgets;
 
 
-use OxidEsales\Eshop\Application\Component\Widget\ServiceMenu;
-use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Core\Config;
+use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Component\Widgets\KlarnaServiceMenu;
+use TopConcepts\Klarna\Controller\KlarnaExpressController;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaServiceMenuTest extends ModuleUnitTestCase {
     public function testInit() {
-        $topViewAny = $this->getMockBuilder(FrontendController::class)->setMethods(['getClassName', 'isKlarnaFakeUser'])->getMock();
-        $topViewAny->expects($this->once())->method('getClassName')->willReturn('test');
-        $topViewAny->expects($this->any())->method('isKlarnaFakeUser')->willReturn(true);
-        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock();
-        $config->expects($this->any())->method('getTopActiveView')->willReturn($topViewAny);
-        $serviceMenuMock = $this->getMockBuilder(ServiceMenu::class)->setMethods(['getConfig'])->getMock();
-        $serviceMenuMock->expects($this->any())->method('getConfig')->willReturn($config);
-        $serviceMenuMock->init();
+        $topViewAny = $this->getMockBuilder(KlarnaExpressController::class)->disableOriginalConstructor()->getMock();
+        $topViewAny->method('getActionClassName')->willReturn('test');
+        $topViewAny->method('isKlarnaFakeUser')->willReturn(true);
 
-        $componentNames = $this->getProtectedClassProperty($serviceMenuMock, '_aComponentNames');
-        $this->assertArrayHasKey('oxcmp_user', $componentNames);
+        $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $config->method('getTopActiveView')->willReturn($topViewAny);
+        Registry::set(Config::class, $config);
+
+        $serviceMenu = new KlarnaServiceMenu();
+        $serviceMenu->init();
+
+        self::assertArrayHasKey('oxcmp_user',$serviceMenu->getComponentNames());
 
 
-        $topViewKlarnaExpress = $this->getMockBuilder(FrontendController::class)
-            ->setMethods(['getClassName', 'isKlarnaFakeUser'])
-            ->getMock();
-        $topViewKlarnaExpress->expects($this->once())->method('getClassName')->willReturn('klarnaexpress');
-        $topViewKlarnaExpress->expects($this->once())->method('isKlarnaFakeUser')->willReturn(true);
-        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock();
-        $config->expects($this->once())->method('getTopActiveView')->willReturn($topViewKlarnaExpress);
-        $serviceMenuMock = $this->getMockBuilder(ServiceMenu::class)->setMethods(['getConfig'])->getMock();
-        $serviceMenuMock->expects($this->any())->method('getConfig')->willReturn($config);
-        $serviceMenuMock->init();
+        $topViewKlarna = $this->getMockBuilder(KlarnaExpressController::class)->disableOriginalConstructor()->getMock();
+        $topViewKlarna->method('getActionClassName')->willReturn('klarnaexpress');
+        $topViewKlarna->method('isKlarnaFakeUser')->willReturn(true);
 
-        $componentNames = $this->getProtectedClassProperty($serviceMenuMock, '_aComponentNames');
-        $this->assertEmpty($componentNames);
+        $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $config->method('getTopActiveView')->willReturn($topViewKlarna);
+        Registry::set(Config::class, $config);
+
+        $serviceMenu = new KlarnaServiceMenu();
+        $serviceMenu->init();
+
+        self::assertEmpty($serviceMenu->getComponentNames());
     }
 }
