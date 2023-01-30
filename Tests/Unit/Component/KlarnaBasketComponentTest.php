@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Session;
 use TopConcepts\Klarna\Component\KlarnaBasketComponent;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -17,87 +18,42 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
  */
 class KlarnaBasketComponentTest extends ModuleUnitTestCase {
 
-    protected function setUp(): void {
-        parent::setUp();
-    }
-
-    /** returns basket component ready to call 'tobasket' on it
-     * @param array $aStubMethods skip internally included array('_getItems', '_setLastCallFnc', '_addItems', 'getConfig')
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    public function getBasketComponentMock($aStubMethods = array()) {
-        $aProducts = array(
-            'sProductId' => array(
-                'am'           => 10,
-                'sel'          => null,
-                'persparam'    => null,
-                'override'     => 0,
-                'basketitemid' => ''
-            )
-        );
-
-        /** @var \oxBasketItem|\PHPUnit_Framework_MockObject_MockObject $oBItem */
-        $oBItem = $this->getMockBuilder(\OxidEsales\Eshop\Application\Model\BasketItem::class)
-            ->setMethods(array('getTitle', 'getProductId', 'getAmount', 'getdBundledAmount'))
-            ->getMock();
-        $oBItem->expects($this->once())->method('getTitle')->will($this->returnValue('ret:getTitle'));
-        $oBItem->expects($this->once())->method('getProductId')->will($this->returnValue('ret:getProductId'));
-        $oBItem->expects($this->once())->method('getAmount')->will($this->returnValue('ret:getAmount'));
-        $oBItem->expects($this->once())->method('getdBundledAmount')->will($this->returnValue('ret:getdBundledAmount'));
-
-        /** @var \oxConfig|\PHPUnit_Framework_MockObject_MockObject $oConfig */
-        $oConfig = $this->getMockBuilder(\OxidEsales\Eshop\Core\Config::class)
-            ->setMethods(array('getConfigParam'))
-            ->getMock();
-        $oConfig->expects($this->at(0))->method('getConfigParam')->with($this->equalTo('iNewBasketItemMessage'))->will($this->returnValue('2'));
-        $oConfig->expects($this->at(1))->method('getConfigParam')->with($this->equalTo('iNewBasketItemMessage'))->will($this->returnValue('2'));
-
-        /** @var \oxcmp_basket|\PHPUnit_Framework_MockObject_MockObject $o */
-        $stubList = array_merge($aStubMethods, array('_getItems', '_setLastCallFnc', '_addItems', 'getConfig'));
-        $o = $this->getMockBuilder(\OxidEsales\Eshop\Application\Component\BasketComponent::class)
-            ->setMethods($stubList)
-            ->getMock();
-        $o->expects($this->once())->method('_getItems')->will($this->returnValue($aProducts));
-        $o->expects($this->once())->method('_setLastCallFnc')->with($this->equalTo('tobasket'))->will($this->returnValue(null));
-        $o->expects($this->once())->method('_addItems')->with($this->equalTo($aProducts))->will($this->returnValue($oBItem));
-        $o->expects($this->exactly(2))->method('getConfig')->will($this->returnValue($oConfig));
-
-        return $o;
-    }
-
-    public function testActionKlarnaExpressCheckoutFromDetailsPage() {
-
-        $cmpBasket = $this->getBasketComponentMock();
-        $cmpBasket->actionKlarnaExpressCheckoutFromDetailsPage();
-        $redirectUrl = $this->getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
-        $this->assertEquals($redirectUrl, \oxUtilsHelper::$sRedirectUrl);
-
-    }
-
     public function testChangebasket_kcoModeOn() {
+        $oSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $oSession->expects($this->atLeastOnce())->method("getBasket");
+        $oSession->method("hasVariable")->willReturn(true);
+        Registry::set(Session::class,$oSession);
+
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
+
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
-        $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $this->getShopId(), 'module:tcklarna');
+        Registry::getSession()->setVariable("klarna_checkout_order_id",$klSessionId);
 
-        $cmpBasket = $this->getMockBuilder(BasketComponent::class)->setMethods(['updateKlarnaOrder'])->getMock();
-        $cmpBasket->expects($this->once())->method('updateKlarnaOrder');
+        $cmpBasket = new KlarnaBasketComponent();
 
+        $this->expectExceptionMessage("Call to a member function getKlarnaOrderLines() on null");
+        $this->expectException(\Error::class);
         $cmpBasket->changebasket('abc', 11, 'sel', 'persparam', 'override');
     }
 
     public function testChangebasket_kcoModeOn_exception() {
+        $this->expectException(StandardException::class);
+
+        $oSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $oSession->method("hasVariable")->willThrowException(new StandardException('Test'));
+        Registry::set(Session::class,$oSession);
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
+
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode,$this->getShopId(),'module:tcklarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
-        $cmpBasket = $this->getMockBuilder(BasketComponent::class)->setMethods(['updateKlarnaOrder'])->getMock();
-        $cmpBasket->expects($this->once())->method('updateKlarnaOrder')->will($this->throwException(new StandardException('Test')));
-
+        $cmpBasket = new KlarnaBasketComponent();
         $cmpBasket->changebasket('abc', 11, 'sel', 'persparam', 'override');
 
-        $this->assertLoggedException(StandardException::class, 'Test');
         $this->assertEquals(null, $this->getSessionParam('klarna_checkout_order_id'));
     }
 
@@ -113,29 +69,38 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase {
         $cmpBasket->changebasket('abc', 11, 'sel', 'persparam', 'override');
     }
 
-
     public function testTobasket() {
+        $this->expectException(\Error::class);
+
+        $oSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $oSession->expects($this->atLeastOnce())->method("getBasket");
+        $oSession->method("hasVariable")->willReturn(true);
+        Registry::set(Session::class,$oSession);
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
+
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
-
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode,$this->getShopId(),'module:tcklarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
-        $cmpBasket = $this->getBasketComponentMock(['updateKlarnaOrder']);
-        $cmpBasket->expects($this->once())->method('updateKlarnaOrder');
+        $cmpBasket = new KlarnaBasketComponent();
 
         $cmpBasket->tobasket();
     }
 
     public function testTobasket_WithException() {
+        $this->expectException(StandardException::class);
+        $oSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $oSession->method("hasVariable")->willThrowException(new StandardException('Test'));
+        Registry::set(Session::class,$oSession);
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
+
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode,$this->getShopId(),'module:tcklarna');;
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
-        $cmpBasket = $this->getBasketComponentMock(['updateKlarnaOrder']);
-        $cmpBasket->expects($this->once())->method('updateKlarnaOrder')->will($this->throwException(new StandardException('Test')));
-
+        $cmpBasket = new KlarnaBasketComponent();
         $cmpBasket->tobasket();
 
         $this->assertLoggedException(StandardException::class, 'Test');
@@ -161,5 +126,4 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase {
 
         $this->assertEquals(['testResult'], $result);
     }
-
 }

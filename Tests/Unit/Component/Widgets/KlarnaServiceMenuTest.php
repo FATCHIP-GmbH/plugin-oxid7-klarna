@@ -14,7 +14,6 @@ use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Component\Widgets\KlarnaServiceMenu;
 use TopConcepts\Klarna\Controller\KlarnaExpressController;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
-use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaServiceMenuTest extends ModuleUnitTestCase {
     public function testInit() {
