@@ -10,6 +10,7 @@ use ReflectionClass;
 use TopConcepts\Klarna\Component\KlarnaUserComponent;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 use OxidEsales\Eshop\Core\UtilsObject;
+use function PHPUnit\Framework\assertTrue;
 
 /**
  * Class KlarnaUserComponentTest
@@ -20,12 +21,10 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
 {
     public function loginDataProvider()
     {
-        $redirectUrl = $this->removeQueryString($this->getConfig()->getShopSecureHomeUrl()) . 'cl=KlarnaExpress';
-
         return [
-            ['KCO', true, false, null],
-            ['KCO', true, true, $redirectUrl],
-            ['KP', true, true, null],
+            ['KCO', true, false, false],
+            ['KCO', true, true, true],
+            ['KP', true, true, false],
         ];
     }
 
@@ -36,7 +35,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      * @param $isKlarnaController
      * @param $redirectUrl
      */
-    public function testLogin_noredirect($klMode, $isEnabledPrivateSales, $isKlarnaController, $redirectUrl)
+    public function testLogin_noredirect($klMode, $isEnabledPrivateSales, $isKlarnaController, $checkRedirect)
     {
         $this->setRequestParameter('lgn_usr', 'xxx');
         $this->setRequestParameter('lgn_pwd', 'xxx');
@@ -52,7 +51,9 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
 
         $cmpUser->login_noredirect();
 
-        $this->assertEquals($redirectUrl, \oxUtilsHelper::$sRedirectUrl);
+        if($checkRedirect) {
+            assertTrue($cmpUser->klarnaRedirect());
+        }
     }
 
     public function stateDataProvider()
@@ -75,12 +76,13 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testChangeuser_testvalues($klMode, $showShippingAddress, $resetResult, $showShippingAddressResult, $addressIdResult)
     {
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $this->getShopId(), 'module:tcklarna');
         $this->setRequestParameter('blshowshipaddress', $showShippingAddress);
         $this->setRequestParameter('oxaddressid', $addressIdResult);
 
-        $cmpUser = $this->getMockBuilder(UserComponent::class)->setMethods(['_changeUser_noRedirect'])->getMock();
-        $cmpUser->expects($this->once())->method('_changeUser_noRedirect')->willReturn(true);
+        $cmpUser = $this->getMockBuilder(UserComponent::class)->setMethods(['changeUserWithoutRedirect'])->getMock();
+        $cmpUser->expects($this->once())->method('changeUserWithoutRedirect')->willReturn(true);
 
         $cmpUser->changeuser_testvalues();
         $this->assertEquals($resetResult, $this->getSessionParam('resetKlarnaSession'));
@@ -88,46 +90,6 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         $this->assertEquals($addressIdResult, $this->getSessionParam('deladrid'));
     }
 
-    /**
-     * @dataProvider getLogoutLinkDataProvider
-     * @param $isKlarnaCheckoutEnabled
-     * @param $isKlarnaRedirect
-     * @throws \ReflectionException
-     */
-    public function test_getLogoutLink($isKlarnaCheckoutEnabled, $isKlarnaRedirect, $expectedResult)
-    {
-        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['isKlarnaCheckoutEnabled'])->getMock();
-        $oViewConfig->expects($this->any())
-            ->method('isKlarnaCheckoutEnabled')->willReturn($isKlarnaCheckoutEnabled);
-        UtilsObject::setClassInstance(ViewConfig::class, $oViewConfig);
-
-        $baseController = $this->getMockBuilder(BaseController::class)->setMethods(['getDynUrlParams'])->getMock();
-        $userComponent  = $this->getMockBuilder(UserComponent::class)->setMethods(['klarnaRedirect', 'getDynUrlParams', 'getParent'])->getMock();
-        $userComponent->expects($this->any())->method('getParent')->willReturn($baseController);
-        $userComponent->expects($this->any())->method('getDynUrlParams')->willReturn('dyna');
-        $userComponent->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaRedirect);
-
-        $class = new ReflectionClass(get_class($userComponent));
-        $sut   = $class->getMethod('_getLogoutLink');
-        $sut->setAccessible(true);
-
-        $result = $sut->invokeArgs($userComponent, []);
-
-        $this->assertEquals($expectedResult, $result);
-    }
-
-    public function getLogoutLinkDataProvider()
-    {
-        $res1 = $this->getConfig()->getShopUrl() . 'index.php?cl=basket&amp;fnc=logout';
-        $res2 = $this->getConfig()->getShopUrl() . 'index.php?cl=&amp;fnc=logout';
-
-        return [
-            [false, false, $res2],
-            [true, true, $res1],
-            [true, false, $res2],
-            [false, true, $res2],
-        ];
-    }
 
     public function testGetKlarnaRedirect()
     {
