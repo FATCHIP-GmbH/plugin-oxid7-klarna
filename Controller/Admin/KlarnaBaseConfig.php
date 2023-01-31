@@ -132,11 +132,12 @@ class KlarnaBaseConfig extends ShopConfiguration
     {
         /** @var Database $db */
         $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $shopId = Registry::getConfig()->getShopId();
 
         $sql = "DELETE 
                 FROM oxconfig
                 WHERE oxvarname IN ('" . implode("','", $aKeys) . "')
-                AND oxshopid = '{$this->getConfig()->getShopId()}'";
+                AND oxshopid = '{$shopId}'";
 
         return $db->execute($sql);
     }

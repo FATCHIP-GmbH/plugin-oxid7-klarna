@@ -24,7 +24,7 @@ class KlarnaOrderAddressTest extends ModuleUnitTestCase
         $orderAddress = oxNew(KlarnaOrderAddress::class);
         $orderAddress->addTplParam('edit', $order);
         $result = $orderAddress->render();
-        $this->assertEquals("order_address.tpl", $result);
+        $this->assertEquals("order_address", $result);
         $this->assertEquals($order, $orderAddress->getViewDataElement('edit'));
         $this->assertEquals($expectedResult, $orderAddress->getViewDataElement('readonly'));
     }
