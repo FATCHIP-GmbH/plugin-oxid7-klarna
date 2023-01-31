@@ -112,7 +112,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
                     unset($aCountrySpecificCredsConfigKeys[array_search($key, $aCountrySpecificCredsConfigKeys)]);
                 }
                 /*** serialize all assoc arrays ***/
-                $nestedArray[$key] = $this->_aarrayToMultiline($arr);
+                $nestedArray[$key] = $this->aarrayToMultiline($arr);
             }
         }
 
