@@ -30,11 +30,11 @@ class KlarnaOrderList extends KlarnaOrderList_parent
      *
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
-    public function storno()
+    public function cancelOrder()
     {
         $result = $this->cancelKlarnaOrder();
         if ($result) {
-            parent::storno();
+            parent::cancelOrder();
         }
     }
 
