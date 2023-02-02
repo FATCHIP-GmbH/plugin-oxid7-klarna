@@ -1,6 +1,7 @@
 {% if isset(iLang) %}
     {% set editlanguage = iLang %}
 {% endif %}
+{% set lang_tag = "" %}
 
 {% for key,value in languages %}
     {% if editlanguage == key %}

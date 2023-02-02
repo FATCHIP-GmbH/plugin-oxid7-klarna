@@ -1,3 +1,5 @@
+{% set lang_tag = "" %}
+
 {% for key,value in languages %}
     {% if editlanguage == key %}
         {% set lang_tag = value.abbr|upper %}
