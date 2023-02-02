@@ -1,4 +1,8 @@
-{% set lang_tag = languages.editlanguage.abbr|upper %}
+{% for key,value in languages %}
+    {% if editlanguage == key %}
+        {% set lang_tag = value.abbr|upper %}
+    {% endif %}
+{% endfor %}
 
 {% capture assign = "country_creds" %}
     {% include "@tcklarna/tcklarna_country_creds" %}

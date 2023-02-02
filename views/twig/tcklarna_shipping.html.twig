@@ -1,4 +1,8 @@
-{% set lang_tag = languages.editlanguage.abbr|upper %}
+{% for key,value in languages %}
+    {% if editlanguage == key %}
+        {% set lang_tag = value.abbr|upper %}
+    {% endif %}
+{% endfor %}
 
 <link rel="stylesheet" href="{{ oViewConf.getResourceUrl() }}main.css">
 <link rel="stylesheet" href="{{ oViewConf.getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }}">
