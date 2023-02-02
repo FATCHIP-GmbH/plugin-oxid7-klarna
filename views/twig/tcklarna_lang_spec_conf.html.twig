@@ -9,17 +9,27 @@
     {% endif %}
 {% endfor %}
 
+{% set confVarNameConditions = "" %}
+{% set confVarNameCancellation = "" %}
+{% for key,value in confstrs %}
+    {% if "sKlarnaTermsConditionsURI_"|cat(lang_tag) == key %}
+        {% set confVarNameConditions = value %}
+    {% endif %}
+    {% if "sKlarnaCancellationRightsURI_"|cat(lang_tag) == key %}
+        {% set confVarNameCancellation = value %}
+    {% endif %}
+{% endfor %}
+
 <tr>
     <td colspan="3" class="inner-table-wrapper">
         <table>
             <tr>
                 <td class="conf-label-2">{{ translate({ ident: "TCKLARNA_SET_TAC_URI" }) }}</td>
                 <td class="lang-input">
-                    {% set confVarName = "sKlarnaTermsConditionsURI_"|cat(lang_tag) %}
                     <div class="input">
                         <input type="text" class="url-input m-lang"
                                name="confstrs[sKlarnaTermsConditionsURI_{{ lang_tag }}]"
-                               value="{{ confstrs.confVarName }}"
+                               value="{{ confVarNameConditions }}"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
                     </div>
                 </td>
@@ -33,11 +43,10 @@
             <tr>
                 <td class="conf-label-2">{{ translate({ ident: "TCKLARNA_SET_CANCEL_URI" }) }}</td>
                 <td class="lang-input">
-                    {% set confVarName = "sKlarnaCancellationRightsURI_"|cat(lang_tag) %}
                     <div class="input">
                         <input type="text" class="url-input m-lang"
                                name="confstrs[sKlarnaCancellationRightsURI_{{ lang_tag }}]"
-                               value="{{ confstrs.confVarName }}"
+                               value="{{ confVarNameCancellation }}"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
                     </div>
                 </td>
