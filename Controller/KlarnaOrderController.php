@@ -774,7 +774,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected function updateKlarnaOrder()
     {
         if ($this->_oUser) {
-            $oSession = $this->getSession();
+            $oSession = Registry::getSession();
             /** @var Basket|\TopConcepts\Klarna\Model\KlarnaBasket $oBasket */
             $oBasket = $oSession->getBasket();
             $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
