@@ -297,7 +297,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $this->kcoBeforeExecute();
                 $iSuccess = $this->kcoExecute($oBasket);
 
-                return $this->_getNextStep($iSuccess);
+                return $this->getNextStep($iSuccess);
             }
 
             if ($sAuthToken = Registry::get(Request::class)->getRequestEscapedParameter('sAuthToken')) {
