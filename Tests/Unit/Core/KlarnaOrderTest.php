@@ -76,9 +76,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         Registry::set(PaymentList::class, $oPaymentList);
 
         $user = $this->getMockBuilder(User::class)
-            ->setMethods(['getKlarnaData'])
+            ->setMethods(['getKlarnaData','resolveCountry'])
             ->getMock();
         $user->expects($this->any())->method('getKlarnaData')->willReturn(['test' => 'test']);
+        $user->expects($this->any())->method('resolveCountry')->willReturn("DE");
         $basket = $this->getMockBuilder(Basket::class)
             ->setMethods(['getBasketCurrency', 'getKlarnaOrderLines', 'getShippingId', 'tcklarna_calculateDeliveryCost', 'getPriceForPayment'])
             ->getMock();
@@ -95,9 +96,9 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         //setup mock
         $order = $this->getMockBuilder(KlarnaOrder::class)
             ->disableOriginalConstructor()
-            ->setMethods(['_getPayment', 'doesShippingMethodSupportKCO'])
+            ->setMethods(['getPayment', 'doesShippingMethodSupportKCO'])
             ->getMock();
-        $order->expects($this->once())->method('_getPayment')->willReturn($payment);
+        $order->expects($this->once())->method('getPayment')->willReturn($payment);
         $order->expects($this->once())->method('doesShippingMethodSupportKCO')->willReturn(true);
 
         $oDeliveryList = $this->getMockBuilder(DeliveryList::class)->setMethods(['hasDeliveries'])->getMock();
@@ -133,9 +134,9 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                 "test",
             'shipping_countries'       =>
                 [
+                    "DE",
                     "AD",
                     "AT",
-                    "DE",
                 ],
             'shipping_options'         =>
                 [
@@ -157,7 +158,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AD", "AT", "DE"],
+                    'countries'    => ["DE", "AD", "AT"],
                 ],
                 [
                     'name'         => null,
@@ -165,7 +166,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AD", "AT", "DE"],
+                    'countries'    => ["DE", "AD", "AT"],
                 ],
             ],
             'external_checkouts'       => [
@@ -175,7 +176,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AD", "AT", "DE"],
+                    'countries'    => ["DE", "AD", "AT"],
                 ],
                 [
                     'name'         => null,
@@ -183,22 +184,22 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AD", "AT", "DE"],
+                    'countries'    => ["DE", "AD", "AT"],
                 ],
             ],
             'options'                  =>
                 [
                     'additional_checkbox'               => null,
                     'allow_separate_shipping_address'   => true,
-                    'phone_mandatory'                   => true,
-                    'date_of_birth_mandatory'           => true,
+                    'phone_mandatory'                   => false,
+                    'date_of_birth_mandatory'           => false,
                     'require_validate_callback_success' => false,
-                    'shipping_details'                  => "Wir kümmern uns schnellstens um den Versand!",
+                    'shipping_details'                  => "",
                     'allowed_customer_types'            => ['person']
                 ],
             'gui'                      => ['options' => ['disable_autofocus']],
             'merchant_data'            => 'To be implemented by the merchant.',
-            'billing_countries' => ["AD", "AT", "DE"],
+            'billing_countries' => ["DE", "AD", "AT"],
             'customer' => ['type' => 'person']
         ];
 
@@ -219,7 +220,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
     }
 
     public function test_getPayment() {
-        $methodReflection = new \ReflectionMethod(KlarnaOrder::class, '_getPayment');
+        $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'getPayment');
         $methodReflection->setAccessible(true);
 
         $order = $this->getMockBuilder(KlarnaOrder::class)->disableOriginalConstructor()->getMock();
@@ -317,10 +318,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
 
         //setup mock
         $order = $this->getMockBuilder(KlarnaOrder::class)
-            ->setMethods(['_getPayment', 'doesShippingMethodSupportKCO'])
+            ->setMethods(['getPayment', 'doesShippingMethodSupportKCO'])
             ->disableOriginalConstructor()
             ->getMock();
-        $order->expects($this->once())->method('_getPayment')->willReturn($payment);
+        $order->expects($this->once())->method('getPayment')->willReturn($payment);
         $order->expects($this->once())->method('doesShippingMethodSupportKCO')->willReturn(false);
         $user = $this->getMockBuilder(User::class)
             ->setMethods(['getActiveCountry'])
