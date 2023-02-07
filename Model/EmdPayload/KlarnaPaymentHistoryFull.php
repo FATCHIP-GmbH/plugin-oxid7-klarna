@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Model\EmdPayload;
 
 
+use OxidEsales\Eshop\Core\TableViewNameGenerator;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Model\KlarnaEMD;
 use OxidEsales\Eshop\Application\Model\PaymentList;
@@ -52,6 +53,8 @@ class KlarnaPaymentHistoryFull
      * @var array
      */
     protected $paymentStatistics = array();
+
+    protected $tableViewNameGenerator = null;
 
     /**
      * Gets full payment history
@@ -116,7 +119,7 @@ class KlarnaPaymentHistoryFull
         if (!isset($this->paymentStatistics[$payment->getId()])) {
             $this->paymentStatistics[$payment->getId()] = false;
 
-            $orderTable = getViewName('oxorder');
+            $orderTable = $this->getViewName('oxorder');
 
             $query = "
               SELECT
@@ -145,6 +148,14 @@ class KlarnaPaymentHistoryFull
         return $this->paymentStatistics[$payment->getId()];
     }
 
+    protected function getViewName($table) {
+        if($this->tableViewNameGenerator == null) {
+            $this->tableViewNameGenerator = oxNew(TableViewNameGenerator::class);
+        }
+
+        return $this->tableViewNameGenerator->getViewName($table);
+    }
+
     /**
      * Gets parameters for where condition in SQL query
      *
@@ -159,7 +170,7 @@ class KlarnaPaymentHistoryFull
         $data_back = self::DATA_MONTHS_BACK_FULL_HISTORY;
         $dateBack  = new \DateTime("-{$data_back}months");
 
-        $orderTable = getViewName('oxorder');
+        $orderTable = $this->getViewName('oxorder');
 
         $whereCondition = " {$orderTable}.OXUSERID = " . $oDb->quote($userId) .
                           " AND {$orderTable}.OXPAYMENTTYPE =" . $oDb->quote($payment->getId()) .
@@ -234,7 +245,7 @@ class KlarnaPaymentHistoryFull
      */
     protected function getPaymentList()
     {
-        $sTable = getViewName('oxpayments');
+        $sTable = $this->getViewName('oxpayments');
         $query  = "SELECT {$sTable}.* FROM {$sTable} WHERE {$sTable}.oxactive = 1 ";
 
         /** @var PaymentList  $paymentList */
