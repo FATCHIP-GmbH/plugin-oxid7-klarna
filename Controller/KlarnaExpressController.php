@@ -183,7 +183,7 @@ class KlarnaExpressController extends FrontendController
         }
         $orderData = $oKlarnaOrder->getOrderData();
 
-        if (!KlarnaUtils::isCountryActiveInKlarnaCheckout(strtoupper($orderData['purchase_country']))) {
+        if (!$this->isCountryActiveInKlarnaCheckout(strtoupper($orderData['purchase_country']))) {
 
             $sUrl = Registry::getConfig()->getShopHomeURL() . 'cl=user';
             Registry::getUtils()->redirect($sUrl, false, 302);
@@ -214,6 +214,10 @@ class KlarnaExpressController extends FrontendController
         $this->addTemplateParameters();
 
         return $result;
+    }
+
+    public function isCountryActiveInKlarnaCheckout($sCountryISO) {
+        return KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO);
     }
 
     /**
@@ -294,25 +298,6 @@ class KlarnaExpressController extends FrontendController
             if ($country->oxcountry__oxactive->value == 1) {
                 $result[] = $country;
             }
-        }
-
-        return $result;
-    }
-
-    /**
-     *
-     */
-    public function getKlarnaModalOtherCountries()
-    {
-        $flagCountries               = KlarnaConsts::getKlarnaPopUpFlagCountries();
-        $activeKlarnaGlobalCountries = KlarnaUtils::getKlarnaGlobalActiveShopCountries();
-
-        $result = array();
-        foreach ($activeKlarnaGlobalCountries as $country) {
-            if (in_array($country->oxcountry__oxisoalpha2->value, $flagCountries)) {
-                continue;
-            }
-            $result[] = $country;
         }
 
         return $result;
@@ -563,7 +548,6 @@ class KlarnaExpressController extends FrontendController
 
     /**
      * @param Request $oRequest
-     * @return string
      */
     protected function checkSsl($oRequest)
     {
@@ -572,7 +556,6 @@ class KlarnaExpressController extends FrontendController
         $oUtils              = Registry::getUtils();
         if ($oConfig->getCurrentShopURL() != $oConfig->getSSLShopURL() && !$blAlreadyRedirected) {
             $sUrl = $oConfig->getShopSecureHomeUrl() . 'sslredirect=forced&cl=KlarnaExpress';
-
             $oUtils->redirect($sUrl, false, 302);
         }
     }
