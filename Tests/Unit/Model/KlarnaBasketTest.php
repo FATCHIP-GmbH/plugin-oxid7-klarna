@@ -145,8 +145,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
                 ],
 
             ],
-            'order_amount'     => 26320.0,
-            'order_tax_amount' => 4203,
+            'order_amount'     => 32900,
+            'order_tax_amount' => 5253,
         ];
 
         if ($anonOn) {

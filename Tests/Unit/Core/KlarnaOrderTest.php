@@ -193,8 +193,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                 [
                     'additional_checkbox'               => null,
                     'allow_separate_shipping_address'   => true,
-                    'phone_mandatory'                   => false,
-                    'date_of_birth_mandatory'           => false,
+                    'phone_mandatory'                   => true,
+                    'date_of_birth_mandatory'           => true,
                     'require_validate_callback_success' => false,
                     'shipping_details'                  => "",
                     'allowed_customer_types'            => ['person']
