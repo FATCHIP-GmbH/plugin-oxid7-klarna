@@ -207,7 +207,6 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
             ->method("redirect")
             ->willReturn("test")
             ->withConsecutive(
-                [$this->equalTo(Registry::getConfig()->getShopSecureHomeUrl() . "cl=user&non_kco_global_country=DE")],
                 [$this->equalTo(Registry::getConfig()->getShopSecureHomeUrl() . "cl=basket")]
             );
         Registry::set(Utils::class,$utilsMock);
