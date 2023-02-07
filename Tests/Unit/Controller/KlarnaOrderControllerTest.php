@@ -1255,7 +1255,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testGetDeliveryAddressMD5()
     {
         $userEncodedAddress = 'test';
-        $deliveryEncodedAddress = 'd41d8cd98f00b204e9800998ecf8427e';
+        $deliveryEncodedAddress = '0be02ac66a490e0183d722ed8e5d128a';
         $oUser = $this->getMockBuilder(User::class)->setMethods(['getEncodedDeliveryAddress'])->getMock();
         $oUser->expects($this->any())->method('getEncodedDeliveryAddress')->willReturn($userEncodedAddress);
         $this->setSessionParam('deladrid', '41b545c65fe99ca2898614e563a7108a');
