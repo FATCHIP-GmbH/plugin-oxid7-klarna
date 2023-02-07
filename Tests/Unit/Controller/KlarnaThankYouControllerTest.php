@@ -58,7 +58,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
         // check client
         // base code will log KlarnaWrongCredentialsException in this case, because getOrder will be called on not configured client
         $thankYouController->render();
-        $this->assertLoggedException(KlarnaOrderNotFoundException::class, '');
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, '');
         $this->assertInstanceOf(KlarnaCheckoutClient::class, $this->getProtectedClassProperty($thankYouController, 'client'));
     }
 
