@@ -40,6 +40,7 @@ class ModuleUnitTestCase extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setModuleConfVar('sKlarnaB2Option', 'B2C');
 
         $aModules = $this->getModuleVariablesLocator()->getModuleVariable('aModules');
         $sClass = \OxidEsales\Eshop\Core\Utils::class;

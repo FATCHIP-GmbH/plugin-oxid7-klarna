@@ -133,11 +133,15 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
      */
     public function test__construct($aPost, $results)
     {
+        $this->setConfigParam('sSSLShopURL', 'https://test.de');
+        $this->setModuleConfVar('sKlarnaB2Option', 'B2C');
+
         $this->getConfig()->setActShopCurrency($results['currencyid']);
         $this->setLanguage(1);
 
         $oBasket = oxNew(Basket::class);
         $oUser = oxNew(User::class);
+        $oUser->oxuser__oxcountryid = new Field("a7c40f631fc920687.20179984");
 
         $this->setSessionParam('sAuthToken', $results['authTokenValue']);
         $this->setSessionParam('finalizeRequired', $results['finalizeRequired']);
@@ -420,6 +424,8 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oUser = oxNew(User::class);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
 
+        $this->setProtectedClassProperty($oKlarnaOrder,'errors',[]);
+
         $this->setLanguage(0);
         $oKlarnaOrder->addErrorMessage('TCKLARNA_KP_INVALID_TOKEN');
         $expectedErrors = ['Ungültiger Authorization Token. Bitte probieren Sie es noch einmal.'];
@@ -515,6 +521,8 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oUser = oxNew(User::class);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
 
+        $this->setProtectedClassProperty($oKlarnaOrder,'errors',[]);
+
         $this->setSessionParam('klarna_session_data', ['client_token' => 'the_token']);
         $this->assertTrue($oKlarnaOrder->validateClientToken('the_token'));
 
@@ -526,6 +534,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
     public function testValidateKlarnaUserData()
     {
+        $this->setConfigParam('sSSLShopURL', 'https://test.de');
 
         $oBasket = oxNew(Basket::class);
         $oUser = oxNew(User::class);
@@ -536,6 +545,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $expectedError = 'In order to being able to use Klarna payments, both person and country in billing and shipping address must match.';
 
         // valid
+        $this->setModuleConfVar('sKlarnaB2Option', 'B2C');
         $oUser->oxuser__oxlname = new Field('Dabrowski', Field::T_RAW);
         $oUser->oxuser__oxfname = new Field('Gregory', Field::T_RAW);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
