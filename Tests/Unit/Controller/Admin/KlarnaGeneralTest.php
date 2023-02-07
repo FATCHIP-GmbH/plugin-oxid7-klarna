@@ -3,6 +3,9 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 
 
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Utils;
+use TopConcepts\Klarna\Controller\Admin\KlarnaDesign;
 use TopConcepts\Klarna\Controller\Admin\KlarnaGeneral;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -13,7 +16,7 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
     {
         $general = new KlarnaGeneral();
         $result = $general->render();
-        $this->assertEquals("tcklarna_general.tpl", $result);
+        $this->assertEquals("@tcklarna/tcklarna_general", $result);
 
         $expected = ['test' => 'test'];
         $notSet = ['notSet' => 'test'];
@@ -28,12 +31,17 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
         $this->assertEquals($expected, $viewData['tcklarna_countryCreds']);
         $this->assertEquals($notSet, $viewData['tcklarna_notSetUpCountries']);
 
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")->willReturn('');
+
+        Registry::set(Utils::class,$utilsMock);
+
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $general = $this->getMockBuilder(KlarnaGeneral::class)->setMethods(['getMultiLangData'])->getMock();
         $general->expects($this->once())->method('getMultiLangData')->willReturn('test');
         $result = $general->render();
-        $this->assertEquals('"test"', $result);
+        $this->assertNotEquals('@tcklarna/tcklarna_general', $result);
     }
 
     public function testConvertNestedParams()

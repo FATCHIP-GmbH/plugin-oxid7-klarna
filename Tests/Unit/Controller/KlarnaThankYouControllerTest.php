@@ -8,7 +8,9 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Utils;
 use TopConcepts\Klarna\Controller\KlarnaThankYouController;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
@@ -46,6 +48,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
         return $thankYouController;
     }
+
     /**
      * @throws \Exception
      */
@@ -55,7 +58,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
         // check client
         // base code will log KlarnaWrongCredentialsException in this case, because getOrder will be called on not configured client
         $thankYouController->render();
-        $this->assertLoggedException(KlarnaWrongCredentialsException::class, '');
+        $this->assertLoggedException(KlarnaOrderNotFoundException::class, '');
         $this->assertInstanceOf(KlarnaCheckoutClient::class, $this->getProtectedClassProperty($thankYouController, 'client'));
     }
 

@@ -302,7 +302,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $id     = $this->prepareKlarnaOrder(); //klarna_checkout
         $order  = $this->getMockBuilder(Order::class)->setMethods(['isKlarna', 'isKP', 'isKCO'])->getMock();
         $class  = new ReflectionClass(get_class($order));
-        $method = $class->getMethod('_setNumber');
+        $method = $class->getMethod('setNumber');
         $method->setAccessible(true);
 
         $order->expects($this->any())->method('isKlarna')->willReturn(true);
@@ -359,7 +359,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $id = $this->prepareKlarnaOrder($payID);
         $order = $this->getMockBuilder(Order::class)->setMethods(['isKlarna', 'isKP', 'isKCO', 'isKIS'])->getMock();
         $class = new ReflectionClass(get_class($order));
-        $method = $class->getMethod('_setNumber');
+        $method = $class->getMethod('setNumber');
         $method->setAccessible(true);
 
         $order->expects($this->any())->method('isKlarna')->willReturn(true);
@@ -389,7 +389,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $oBasket = $this->prepareBasketWithProduct();
 
         $class  = new ReflectionClass(get_class($order));
-        $method = $class->getMethod('_setOrderArticles');
+        $method = $class->getMethod('setOrderArticles');
         $method->setAccessible(true);
 
         $this->setProtectedClassProperty($order, 'isAnonymous', true);

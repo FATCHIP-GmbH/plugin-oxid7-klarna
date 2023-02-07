@@ -18,6 +18,15 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrdersTest extends ModuleUnitTestCase {
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setModuleConfVar('aKlarnaCreds_DE', '');
+        $this->setModuleConfVar('sKlarnaMerchantId', '');
+        $this->setModuleConfVar('sKlarnaPassword', '');
+    }
+
     /**
      * @param int $oxstorno
      * @return \PHPUnit_Framework_MockObject_MockObject
@@ -51,9 +60,9 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
         $this->setOrder();
         $controller = $this->getMockBuilder(
             KlarnaOrders::class)->setMethods(
-            ['_authorize', 'getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid']
+            ['authorize', 'getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid']
         )->getMock();
-        $controller->expects($this->any())->method('_authorize')->willReturn(true);
+        $controller->expects($this->any())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->any())->method('retrieveKlarnaOrder')->will($this->throwException($exception));
@@ -109,7 +118,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
         $orderMain->expects($this->once())->method('isKlarnaOrder')->willReturn(true);
         $orderMain->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $result = $orderMain->render();
-        $this->assertEquals('tcklarna_orders.tpl', $result);
+        $this->assertEquals('@tcklarna/tcklarna_orders', $result);
         $warningMessage = $orderMain->getViewData()['wrongCredentials'];
         $this->assertEquals('<strong>Wrong credentials!</strong> This order has been placed using <strong>smid</strong> merchant id. Currently configured merchant id for <strong></strong> is <strong></strong>.',
             $warningMessage

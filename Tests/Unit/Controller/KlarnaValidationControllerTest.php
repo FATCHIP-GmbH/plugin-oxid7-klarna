@@ -3,6 +3,8 @@
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Utils;
 use ReflectionClass;
 use TopConcepts\Klarna\Controller\KlarnaValidationController;
 use TopConcepts\Klarna\Core\KlarnaLogs;
@@ -39,7 +41,12 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
      */
     public function testInit($requestBody, $isValid, $errors, $eRes)
     {
-        \oxUtilsHelper::$iCode = null;
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->expects($this->any())->method("redirect")
+            ->with($this->stringContains("https"),true,$eRes['code'])
+            ->willReturn("test");
+        Registry::set(Utils::class,$utilsMock);
+
         $data                  = json_decode($requestBody, true);
         $validator             = $this->getMockBuilder(KlarnaOrderValidator::class)
             ->setMethods(['validateOrder', 'isValid', 'getResultErrors'])
@@ -68,8 +75,6 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
         $this->setProtectedClassProperty($validationController, 'order_id', $data['order_id']);
 
         $validationController->init();
-
-        $this->assertEquals($eRes['code'], \oxUtilsHelper::$iCode);
     }
 
     public function initDataProvider()
@@ -85,6 +90,12 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
 
     public function testInit_errorsAndLogs()
     {
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->expects($this->any())->method("redirect")
+            ->with($this->stringContains("klarnaInvalid=1&MY_ERROR=33&CANT_BUY=10"),true,303)
+            ->willReturn("test");
+        Registry::set(Utils::class,$utilsMock);
+
         $errors    = ['MY_ERROR' => 33, 'CANT_BUY' => 10];
         $validator = $this->getMockBuilder(KlarnaOrderValidator::class)
             ->setMethods(['validateOrder', 'isValid', 'getResultErrors',])
@@ -112,9 +123,6 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
 
         $result = $this->getDb()->select("SELECT * FROM `tcklarna_logs` WHERE `TCKLARNA_ORDERID` = '$randId'");
         $this->assertNotEmpty($result->count());
-
-        $this->assertEquals(303, \oxUtilsHelper::$iCode);
-        $this->doAssertContains('klarnaInvalid=1&MY_ERROR=33&CANT_BUY=10', \oxUtilsHelper::$sRedirectUrl);
     }
 
 

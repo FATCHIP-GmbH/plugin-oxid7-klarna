@@ -102,7 +102,8 @@ update oxconfig set oxvarvalue='a:0:{}' where oxvarname='aKlarnaDesign' and oxsh
 
 update oxcountry set oxactive = '1' where oxcountry.oxid = 'a7c40f631fc920687.20179984'; # DE
 update oxcountry set oxactive = '1' where oxcountry.oxid = 'a7c40f6320aeb2ec2.72885259'; # AT
-update oxcountry set oxactive = '1' where oxcountry.oxid = '8f241f11095363464.89657222';
+update oxcountry set oxactive = '1' where oxcountry.oxid = '8f241f11095363464.89657222'; # AD
+update oxcountry set oxactive = '1' where oxcountry.oxid = '8f241f11095306451.36998225'; # AF
 
 Replace into oxobject2payment set oxid = 'a91137a798f381fc9ff3186a8118edeb',oxpaymentid = 'klarna_checkout',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';
 Replace into oxobject2payment set oxid = 'e667f3a2469ce4b0e4cfde8a3c87a31f',oxpaymentid = 'klarna_slice_it',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';

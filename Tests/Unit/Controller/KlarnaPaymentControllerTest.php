@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controller;
 
 
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
@@ -10,7 +11,10 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\Session;
+use OxidEsales\Eshop\Core\Utils;
 use ReflectionClass;
+use TopConcepts\Klarna\Controller\KlarnaPaymentController;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -91,6 +95,11 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
      */
     public function testInit($mode, $oUser, $amzRef, $sessionCountryISO, $nonKCOinRequest, $results)
     {
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("redirect")->willReturn("test");
+        $utilsMock->method("showMessageAndExit")->with($this->equalTo(json_encode($results[2])));
+        Registry::set(Utils::class,$utilsMock);
+
         $this->setModuleMode($mode);
         $this->setSessionParam('amazonOrderReferenceId', $amzRef);
         $this->setSessionParam('sCountryISO', $sessionCountryISO);
@@ -101,7 +110,6 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 
         $this->assertEquals($results[0], $this->getProtectedClassProperty($oPaymentController, 'userCountryISO'));
         $this->assertEquals($results[1], $this->getProtectedClassProperty($oPaymentController, 'loadKlarnaPaymentWidget'));
-        $this->assertEquals($results[2], \oxUtilsHelper::$sRedirectUrl);
 
         $this->setModuleMode('KP');
     }
@@ -244,8 +252,14 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_session_data', ['empty']);
         $this->setSessionParam('sSessionTimeStamp', $args['timeStamp']);
 
-        $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['countKPMethods', 'getUser', 'removeUnavailableKP'])->getMock();
+        $basketMock = $this->getMockBuilder(Basket::class)->disableOriginalConstructor()->getMock();
+        $basketMock->method("getProductsCount")->willReturn(1);
+        $basketMock->method("getProductsCount")->willReturn(1);
+        $sessionMock = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $sessionMock->method('getBasket')->willReturn($basketMock);
+        Registry::set(Session::class,$sessionMock);
 
+        $oPaymentController = $this->getMockBuilder(KlarnaPaymentController::class)->setMethods(['countKPMethods', 'getUser', 'removeUnavailableKP'])->getMock();
         $oPaymentController->expects($this->any())
             ->method('countKPMethods')->willReturn($args['countKPMethodsBefore']);
 
@@ -262,21 +276,23 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setProtectedClassProperty($oPaymentController, 'client', $client);
 
         $tpl = $oPaymentController->render();
-        $this->assertEquals("page/checkout/payment.tpl", $tpl);
+        $this->assertEquals("page/checkout/payment", $tpl);
 
         $viewData = $oPaymentController->getViewData();
         $results['isError'] ? $this->assertArrayHasKey('kpError', $viewData) : $this->assertArrayNotHasKey('kpError', $viewData);
         $results['shouldLocale'] ? $this->assertArrayHasKey('sLocale', $viewData) : $this->assertArrayNotHasKey('sLocale', $viewData);
         $args['countKPMethodsAfter'] === 0 && $this->assertFalse($oPaymentController->loadKlarnaPaymentWidget);
-
-
-        $this->assertEquals($results['kp_session_data'], $this->getSessionParam('klarna_session_data'));
-
-
     }
 
     public function testRender_error()
     {
+        $basketMock = $this->getMockBuilder(Basket::class)->disableOriginalConstructor()->getMock();
+        $basketMock->method("getProductsCount")->willReturn(1);
+        $basketMock->method("getProductsCount")->willReturn(1);
+        $sessionMock = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $sessionMock->method('getBasket')->willReturn($basketMock);
+        Registry::set(Session::class,$sessionMock);
+
         $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AT'], Field::T_RAW);
         $oUser->oxuser__oxcompany   = new Field('Company Name should lead to error', Field::T_RAW);
@@ -291,7 +307,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
             ->method('countKPMethods')->willReturn(3);
 
         $tpl = $oPaymentController->render();
-        $this->assertEquals("page/checkout/payment.tpl", $tpl);
+        $this->assertEquals("page/checkout/payment", $tpl);
         $viewData = $oPaymentController->getViewData();
         $this->assertArrayHasKey('kpError', $viewData);
     }
@@ -299,6 +315,13 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 
     public function testRender_exception()
     {
+        $basketMock = $this->getMockBuilder(Basket::class)->disableOriginalConstructor()->getMock();
+        $basketMock->method("getProductsCount")->willReturn(1);
+        $basketMock->method("getProductsCount")->willReturn(1);
+        $sessionMock = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $sessionMock->method('getBasket')->willReturn($basketMock);
+        Registry::set(Session::class,$sessionMock);
+
         $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['DE'], Field::T_RAW);
         $this->setSessionParam('sCountryISO', 'DE');

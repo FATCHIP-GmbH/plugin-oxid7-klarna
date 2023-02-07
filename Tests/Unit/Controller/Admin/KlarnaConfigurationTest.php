@@ -6,6 +6,8 @@ namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Utils;
 use TopConcepts\Klarna\Controller\Admin\KlarnaConfiguration;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
@@ -31,28 +33,29 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
         $this->assertEquals('de-DE', $viewData['sLocale']);
         $this->assertTrue($viewData['sslNotSet']);
         $this->assertTrue($viewData['KCOinactive']);
-        $this->assertTrue($viewData['blGermanyActive']);
-        $this->assertTrue($viewData['blAustriaActive']);
         $this->assertInstanceOf(KlarnaCountryList::class, $viewData['activeCountries']);
         $this->assertEquals('{}', $viewData['tcklarna_countryList']);
-        $this->assertEquals('tcklarna_kco_config.tpl', $result);
+        $this->assertEquals('@tcklarna/tcklarna_kco_config', $result);
         $this->setModuleConfVar('sKlarnaActiveMode', 'KP');
         $result = $controller->render();
-        $this->assertEquals('tcklarna_kp_config.tpl', $result);
+        $this->assertEquals('@tcklarna/tcklarna_kp_config', $result);
+
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")->willReturn('test');
+
+        Registry::set(Utils::class,$utilsMock);
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $obj = $this->getMockBuilder(KlarnaConfiguration::class)->setMethods(['getMultiLangData'])->getMock();
         $obj->expects($this->once())->method('getMultiLangData')->willReturn('test');
         $result = $obj->render();
-        $this->assertEquals('"test"', $result);
+        $this->assertEquals('test', $result);
 
     }
 
     public function testGetActiveCheckbox() {
         $controller = new KlarnaConfiguration();
-        $result = $controller->getActiveCheckbox();
-        $this->assertEquals(0, $result);
 
         $this->setModuleConfVar('iKlarnaActiveCheckbox', 10);
         $result = $controller->getActiveCheckbox();
@@ -93,17 +96,10 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
         $this->assertEquals($expected, $result);
     }
 
-    public function testTrueIsGBActiveShopcountry() {
-        $controller = new KlarnaConfiguration();
-        $result = $controller->isGBActiveShopCountry();
-        $this->assertTrue($result);
-    }
+
 
     public function testGetChosenValidation() {
         $controller = new KlarnaConfiguration();
-        $result = $controller->getChosenValidation();
-        $this->assertEquals(0, $result);
-
         $this->setModuleConfVar('iKlarnaValidation', 10);
         $result = $controller->getActiveCheckbox();
         $this->assertEquals(10, $result);

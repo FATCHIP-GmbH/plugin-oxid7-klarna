@@ -37,7 +37,7 @@ class KlarnaOrderListTest extends ModuleUnitTestCase {
      * @dataProvider stornoAndDeleteDataProvider
      * @param $method
      */
-    public function testStornoAndDelete($method) {
+    public function testDelete($method) {
         $order = $this->setOrder();
         $controller = $this->getMockBuilder(KlarnaOrderList::class)->setMethods(['getEditObjectId', 'cancelOrder', 'init'])->getMock();
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
@@ -48,29 +48,20 @@ class KlarnaOrderListTest extends ModuleUnitTestCase {
         $controller->$method();
         $this->assertEquals(new Field(1), $order->oxorder__tcklarna_sync);
 
-        if ($method == 'storno') {
-            $mockException = $this->getMockBuilder(StandardException::class)
-                ->setConstructorArgs(['is canceled.'])
-                ->getMock();
-            $this->setOrder($mockException);
-            $controller->storno();
-        }
+        $mockException = $this->getMockBuilder(StandardException::class)
+            ->setConstructorArgs(['test'])
+            ->getMock();
+        $this->setOrder($mockException);
+        $controller->$method();
 
-//        $mockException = $this->getMockBuilder(StandardException::class)
-//            ->setConstructorArgs(['test'])
-//            ->getMock();
-//        $this->setOrder($mockException);
-//        $controller->$method();
-//
-//        $result = unserialize($this->getSessionParam('Errors')['default'][0]);
-//        $this->assertInstanceOf(ExceptionToDisplay::class, $result);
-//        $this->assertEquals('test', $result->getOxMessage());
+        $result = unserialize($this->getSessionParam('Errors')['default'][0]);
+        $this->assertInstanceOf(ExceptionToDisplay::class, $result);
+        $this->assertEquals('test', $result->getOxMessage());
 
     }
 
     public function stornoAndDeleteDataProvider() {
         return [
-            ['storno'],
             ['deleteEntry'],
         ];
 

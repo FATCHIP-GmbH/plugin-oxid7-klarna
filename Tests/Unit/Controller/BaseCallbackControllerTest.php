@@ -2,6 +2,8 @@
 
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Utils;
 use oxUtilsHelper;
 use TopConcepts\Klarna\Controller\BaseCallbackController;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -10,6 +12,11 @@ class BaseCallbackControllerTest extends ModuleUnitTestCase
 {
     public function testInit()
     {
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")->willReturn('');
+
+        Registry::set(Utils::class,$utilsMock);
+
         $controller = $this->getMockBuilder(BaseCallbackController::class)
             ->setMethods(['getFncName', 'validateRequestData'])->getMockForAbstractClass();
 
@@ -30,7 +37,7 @@ class BaseCallbackControllerTest extends ModuleUnitTestCase
 
         $controller->expects($this->once())->method('validateRequestData')->willReturn(false);
         $controller->init();
-        $this->assertSame(oxUtilsHelper::$response, '');
+        $this->assertSame(oxUtilsHelper::$response, null);
     }
 
     public function testValidateRequestData()
@@ -66,12 +73,18 @@ class BaseCallbackControllerTest extends ModuleUnitTestCase
 
     public function testSendResponse()
     {
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")
+            ->will($this->returnCallback(function($response) {
+                $this->assertEquals(json_encode(["test" => "data"]), $response);
+            }));
+
+        Registry::set(Utils::class,$utilsMock);
+
         $controller = $this->getMockBuilder(BaseCallbackController::class)->getMockForAbstractClass();
 
         $sendResponse = self::getMethod('sendResponse', BaseCallbackController::class);
         $sendResponse->invokeArgs($controller, [["test" => "data"]]);
-
-        $this->assertEquals(json_encode(["test" => "data"]), oxUtilsHelper::$response);
     }
 
 }

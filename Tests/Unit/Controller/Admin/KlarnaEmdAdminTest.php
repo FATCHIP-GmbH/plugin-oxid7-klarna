@@ -19,7 +19,7 @@ class KlarnaEmdAdminTest extends ModuleUnitTestCase
         $result = $emd->render();
         $activePayment = $emd->getViewDataElement('activePayments');
 
-        $this->assertEquals('tcklarna_emd_admin.tpl', $result);
+        $this->assertEquals('@tcklarna/tcklarna_emd_admin', $result);
         $this->assertNotEmpty($activePayment);
     }
 

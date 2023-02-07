@@ -214,6 +214,8 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testIsKlarnaCheckoutEnabled($mode, $expectedResult)
     {
+        Registry::getConfig()->setConfigParam("sSSLShopURL","https://test.de");
+
         $this->setModuleMode($mode);
 
         $oViewConfig = oxNew(ViewConfig::class);
@@ -284,6 +286,8 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $klScript, $expectedResult)
     {
+        Registry::getConfig()->setConfigParam("sSSLShopURL","https://test.de");
+
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterDisplay', $klFooterType, $this->getShopId(), 'module:tcklarna');
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterValue', $klFooterValue, $this->getShopId(), 'module:tcklarna');
 
@@ -397,6 +401,8 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testIsCheckoutNonKlarnaCountry($iso, $expectedResult)
     {
+        Registry::getConfig()->setConfigParam("sSSLShopURL","https://test.de");
+
         $this->setSessionParam('sCountryISO', $iso);
         $oViewConfig = oxNew(ViewConfig::class);
         $result = $oViewConfig->isCheckoutNonKlarnaCountry();

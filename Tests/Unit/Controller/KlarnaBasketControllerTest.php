@@ -22,6 +22,6 @@ class KlarnaBasketControllerTest extends ModuleUnitTestCase
         $basketController = $this->getMockBuilder(KlarnaBasketController::class)->setMethods(['displayKlarnaValidationErrors'])->getMock();
         $basketController->expects($this->once())->method('displayKlarnaValidationErrors')->willReturn(true);
         $result = $basketController->render();
-        $this->assertEquals('page/checkout/basket.tpl', $result);
+        $this->assertEquals('page/checkout/basket', $result);
     }
 }

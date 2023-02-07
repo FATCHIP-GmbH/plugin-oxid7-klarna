@@ -6,7 +6,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Controller\Admin\KlarnaOrderMain;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -15,12 +15,20 @@ use OxidEsales\Eshop\Application\Controller\Admin\OrderMain;
 
 class KlarnaOrderMainTest extends ModuleUnitTestCase {
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setModuleConfVar('aKlarnaCreds_DE', '');
+        $this->setModuleConfVar('sKlarnaMerchantId', '');
+        $this->setModuleConfVar('sKlarnaPassword', '');
+    }
+
     public function testInit() {
         $order = $this->setOrder();
 
         $controller = $this->getMockBuilder(OrderMain::class)
-            ->setMethods(['_authorize', 'getEditObjectId', 'isCredentialsValid'])->getMock();
-        $controller->expects($this->once())->method('_authorize')->willReturn(true);
+            ->setMethods(['authorize', 'getEditObjectId', 'isCredentialsValid'])->getMock();
+        $controller->expects($this->once())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(false);
 
@@ -28,8 +36,8 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase {
         $this->assertEquals(new Field(0), $order->oxorder__tcklarna_sync);
 
         $controller = $this->getMockBuilder(OrderMain::class)
-            ->setMethods(['_authorize', 'getEditObjectId', 'isCredentialsValid', 'retrieveKlarnaOrder'])->getMock();
-        $controller->expects($this->once())->method('_authorize')->willReturn(true);
+            ->setMethods(['authorize', 'getEditObjectId', 'isCredentialsValid', 'retrieveKlarnaOrder'])->getMock();
+        $controller->expects($this->once())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn(['status' => 'CANCEL']);
@@ -38,12 +46,12 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase {
 
         $orderData = [
             'order_amount'                => 10000,
-            'remaining_authorized_amount' => 10000,
+            'remainingauthorized_amount' => 10000,
             'status'                      => 'AUTHORIZED',
         ];
         $controller = $this->getMockBuilder(OrderMain::class)
-            ->setMethods(['_authorize', 'getEditObjectId', 'isCredentialsValid', 'retrieveKlarnaOrder'])->getMock();
-        $controller->expects($this->once())->method('_authorize')->willReturn(true);
+            ->setMethods(['authorize', 'getEditObjectId', 'isCredentialsValid', 'retrieveKlarnaOrder'])->getMock();
+        $controller->expects($this->once())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn($orderData);
@@ -62,8 +70,8 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase {
     public function testInitExceptions($exception, $expected) {
         $this->setOrder();
         $controller = $this->getMockBuilder(OrderMain::class)
-            ->setMethods(['_authorize', 'getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid'])->getMock();
-        $controller->expects($this->any())->method('_authorize')->willReturn(true);
+            ->setMethods(['authorize', 'getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid'])->getMock();
+        $controller->expects($this->any())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->any())->method('retrieveKlarnaOrder')->will($this->throwException($exception));
@@ -112,7 +120,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase {
         $orderMain = $this->getMockBuilder(OrderMain::class)->setMethods(['isKlarnaOrder'])->getMock();
         $orderMain->expects($this->once())->method('isKlarnaOrder')->willReturn(true);
         $result = $orderMain->render();
-        $this->assertEquals('order_main.tpl', $result);
+        $this->assertEquals('order_main', $result);
         $warningMessage = $orderMain->getViewDataElement('sWarningMessage');
         $this->assertEquals($warningMessage, '<strong>Wrong credentials!</strong> This order has been placed using <strong>smid</strong> merchant id. Currently configured merchant id for <strong></strong> is <strong></strong>.');
 
@@ -166,7 +174,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase {
     }
 
 
-    public function testSendorder() {
+    public function testOnOrderSend() {
         $this->setOrder(1);
         $controller = $this->getMockBuilder(OrderMain::class)->setMethods(['getEditObjectId'])->getMock();
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
@@ -175,9 +183,9 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase {
         $this->assertEquals(' Die Bestellung konnte nicht abgebucht werden, da sie bereits storniert wurde.', $result);
 
 
-        $order = $this->setOrder(0);
+        $order = $this->setOrder();
         $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
-        $controller = $this->getMockBuilder(OrderMain::class)->setMethods(['getEditObjectId', 'retrieveKlarnaOrder'])->getMock();
+        $controller = $this->getMockBuilder(KlarnaOrderMain::class)->setMethods(['getEditObjectId', 'retrieveKlarnaOrder'])->getMock();
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->any())->method('retrieveKlarnaOrder')->willReturn('test');
         $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['remaining_authorized_amount' => 1]);

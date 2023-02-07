@@ -14,6 +14,14 @@ use OxidEsales\Eshop\Application\Controller\Admin\OrderOverview;
 
 class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setModuleConfVar('aKlarnaCreds_DE', '');
+        $this->setModuleConfVar('sKlarnaMerchantId', '');
+        $this->setModuleConfVar('sKlarnaPassword', '');
+    }
+
     protected function setOrder($oxstorno = 0) {
         $order = $this->getMockBuilder(
             Order::class)->setMethods(
@@ -40,12 +48,12 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
 
         $controller = $this->getMockBuilder(OrderOverview::class)
             ->setMethods([
-                '_authorize',
+                'authorize',
                 'getEditObjectId',
                 'isCredentialsValid'
             ])
             ->getMock();
-        $controller->expects($this->once())->method('_authorize')->willReturn(true);
+        $controller->expects($this->once())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(false);
         $controller->init();
@@ -53,13 +61,13 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
 
         $controller = $this->getMockBuilder(OrderOverview::class)
             ->setMethods([
-                '_authorize',
+                'authorize',
                 'getEditObjectId',
                 'isCredentialsValid',
                 'retrieveKlarnaOrder'
             ])
             ->getMock();
-        $controller->expects($this->once())->method('_authorize')->willReturn(true);
+        $controller->expects($this->once())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn(['status' => 'CANCEL']);
@@ -73,13 +81,13 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         ];
         $controller = $this->getMockBuilder(OrderOverview::class)
             ->setMethods([
-                '_authorize',
+                'authorize',
                 'getEditObjectId',
                 'isCredentialsValid',
                 'retrieveKlarnaOrder'
             ])
             ->getMock();
-        $controller->expects($this->once())->method('_authorize')->willReturn(true);
+        $controller->expects($this->once())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn($orderData);
@@ -96,9 +104,9 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
 
         $this->setOrder();
         $controller = $this->getMockBuilder(OrderOverview::class)
-            ->setMethods(['_authorize', 'getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid'])
+            ->setMethods(['authorize', 'getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid'])
             ->getMock();
-        $controller->expects($this->any())->method('_authorize')->willReturn(true);
+        $controller->expects($this->any())->method('authorize')->willReturn(true);
         $controller->expects($this->any())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->any())->method('retrieveKlarnaOrder')->will($this->throwException($exception));
@@ -129,7 +137,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         $orderMain->expects($this->once())->method('isKlarnaOrder')->willReturn(true);
         $result = $orderMain->render();
 
-        $this->assertEquals('order_overview.tpl', $result);
+        $this->assertEquals('order_overview', $result);
 
         $warningMessage = $orderMain->getViewData()['sWarningMessage'];
         $this->assertEquals(

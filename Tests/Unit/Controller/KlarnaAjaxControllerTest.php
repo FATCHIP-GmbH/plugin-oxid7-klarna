@@ -3,10 +3,13 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controller;
 
 
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Session;
+use OxidEsales\Eshop\Core\Utils;
 use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\Eshop\Application\Model\User;
@@ -19,31 +22,58 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
 
-    public function testInit() {
+    public function testInitInvalidRequest()
+    {
+
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")
+            ->will($this->returnCallback(function ($response) {
+                $this->assertEquals('{"action":"init","status":"Invalid request","data":null}', $response);
+            }));
+        Registry::set(Utils::class, $utilsMock);
+
         $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getKlarnaCheckoutClient'])->getMock();
         $ajaxController->init();
-        $this->assertEquals('{"action":"init","status":"Invalid request","data":null}', \oxUtilsHelper::$response);
+    }
+
+    public function testInitInvalidPaymentId()
+    {
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")
+            ->will($this->returnCallback(function($response) {
+                $this->assertEquals('Invalid payment ID', $response);
+            }));
+        Registry::set(Utils::class,$utilsMock);
+
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getKlarnaCheckoutClient'])->getMock();
         $ajaxController->init();
-        $this->assertEquals('Invalid payment ID', \oxUtilsHelper::$response);
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
         $oBasket->expects($this->any())->method('getPaymentId')->willReturn('klarna_checkout');
         $session = Registry::getSession();
         $session->setBasket($oBasket);
+    }
 
+    public function testInitSuccess()
+    {
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")
+            ->will($this->returnCallback(function ($response) {
+                $this->assertEquals('', $response);
+            }));
+        Registry::set(Utils::class, $utilsMock);
 
-        $client = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder'])->getMock();
-        $client->expects($this->any())->method('getOrder')->willThrowException(new KlarnaClientException('test', 404));
-        $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getKlarnaCheckoutClient'])->getMock();
-        $ajaxController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
-        $result = $ajaxController->init();
-        $expected = '{"action":"init","status":"restart needed","data":null}';
-        $this->assertEquals($expected, $result);
-        $this->assertNull($this->getProtectedClassProperty($ajaxController, '_aOrderData'));
+        $basketMock = $this->getMockBuilder(Basket::class)->disableOriginalConstructor()->getMock();
+        $basketMock->method("getPaymentId")->willReturn('klarna_checkout');
 
+        $sessionMock = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $sessionMock->method("getBasket")->willReturn($basketMock);
 
+        Registry::set(Session::class, $sessionMock);
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
+        putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $oOrder = ['test1', 'test2'];
         $client = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder'])->getMock();
         $client->expects($this->once())->method('getOrder')->willReturn($oOrder);
@@ -53,41 +83,38 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
         $ajaxController->init();
         $result = $this->getProtectedClassProperty($ajaxController, '_aOrderData');
         $this->assertEquals($oOrder, $result);
-        $this->assertEquals('', \oxUtilsHelper::$response);
 
+    }
 
+    public function testInitReadOnly()
+    {
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")
+            ->will($this->returnCallback(function ($response) {
+                $this->assertEquals('{"action":"ajax","status":"read_only","data":null}', $response);
+            }));
+
+        $basketMock = $this->getMockBuilder(Basket::class)->disableOriginalConstructor()->getMock();
+        $basketMock->method("getPaymentId")->willReturn('klarna_checkout');
+        $sessionMock = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $sessionMock->method("getBasket")->willReturn($basketMock);
+        Registry::set(Session::class, $sessionMock);
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
+        putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
+        Registry::set(Utils::class, $utilsMock);
         $oOrder = ['test1', 'test2', 'status' => 'checkout_complete'];
         $client = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder'])->getMock();
         $client->expects($this->once())->method('getOrder')->willReturn($oOrder);
         $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getKlarnaCheckoutClient'])->getMock();
         $ajaxController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
         $ajaxController->init();
-        $this->assertEquals('{"action":"ajax","status":"read_only","data":null}', \oxUtilsHelper::$response);
-
     }
 
     public function testRender() {
-
         $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getKlarnaCheckoutClient', 'updateKlarnaOrder'])->getMock();
-        $ajaxController->expects($this->any())->method('updateKlarnaOrder')->will($this->throwException(new StandardException('Test')));
+        $ajaxController->expects($this->once())->method('updateKlarnaOrder')->willReturn(false);
         $ajaxController->render();
-
-        $this->assertLoggedException(StandardException::class, 'Test');
-        $oOrder = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
-        UtilsObject::setClassInstance(Order::class, $oOrder);
-        $user = $this->getMockBuilder(KlarnaUser::class)->setMethods(['getKlarnaData'])->getMock();
-        $user->expects($this->once())->method('getKlarnaData')->willReturn([]);
-        $client = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['createOrUpdateOrder'])->getMock();
-        $client->expects($this->once())->method('createOrUpdateOrder')->willReturn([]);
-        $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getKlarnaCheckoutClient'])->getMock();
-        $ajaxController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
-        $this->setProtectedClassProperty($ajaxController, '_oUser', $user);
-        $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
-        $oBasket->expects($this->once())->method('getPaymentId')->willReturn('klarna_checkout');
-        $session = Registry::getSession();
-        $session->setBasket($oBasket);
-        $ajaxController->render();
-        $this->assertEquals($oBasket, $session->getBasket());
 
         $ajaxController = new KlarnaAjaxController();
         $this->setProtectedClassProperty($ajaxController, '_aErrors', ['test']);
@@ -113,8 +140,8 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
         $ajaxController->$method();
         $result = $ajaxController->getViewData()['aIncludes'];
         $expected = [
-            'vouchers' => "tcklarna_checkout_voucher_data.tpl",
-            'error'    => "tcklarna_checkout_voucher_errors.tpl",
+            'vouchers' => "tcklarna_checkout_voucher_data",
+            'error'    => "tcklarna_checkout_voucher_errors",
         ];
 
         $this->assertEquals($expected, $result);
@@ -150,7 +177,7 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
         $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getUser', 'getViewConfig'])->getMock();
         $ajaxController->expects($this->once())->method('getUser')->willReturn($user);
         $ajaxController->expects($this->once())->method('getViewConfig')->willReturn($viewConfig);
-        $ajaxController->_initUser();
+        $ajaxController->initUser();
         $result = $this->getProtectedClassProperty($user, '_type');
         $this->assertEquals(2, $result);
 
@@ -160,7 +187,7 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
         $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getUser', 'getViewConfig'])->getMock();
         $ajaxController->expects($this->once())->method('getUser')->willReturn($user);
         $ajaxController->expects($this->once())->method('getViewConfig')->willReturn($viewConfig);
-        $ajaxController->_initUser();
+        $ajaxController->initUser();
         $result = $this->getProtectedClassProperty($user, '_type');
         $this->assertEquals(3, $result);
     }

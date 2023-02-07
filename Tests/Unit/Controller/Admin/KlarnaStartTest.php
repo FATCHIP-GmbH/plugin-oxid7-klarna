@@ -14,7 +14,7 @@ class KlarnaStartTest extends ModuleUnitTestCase
     {
         $start = oxNew(KlarnaStart::class);
         $result = $start->render();
-        $this->assertEquals('tcklarna_start.tpl', $result);
+        $this->assertEquals('@tcklarna/tcklarna_start', $result);
 
     }
 

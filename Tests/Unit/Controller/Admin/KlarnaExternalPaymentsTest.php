@@ -4,7 +4,9 @@ namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 
 
 use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\Utils;
 use TopConcepts\Klarna\Controller\Admin\KlarnaExternalPayments;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -18,7 +20,7 @@ class KlarnaExternalPaymentsTest extends ModuleUnitTestCase {
 
         $viewData = $controller->getViewData();
 
-        $this->assertEquals('tcklarna_external_payments.tpl', $result);
+        $this->assertEquals('@tcklarna/tcklarna_external_payments', $result);
         $this->assertEquals('test', $viewData['mode']);
         $this->assertNotEmpty($viewData['activePayments']);
         $this->assertEquals(KlarnaConsts::getKlarnaExternalPaymentNames(), $viewData['paymentNames']);
@@ -27,9 +29,16 @@ class KlarnaExternalPaymentsTest extends ModuleUnitTestCase {
 
     public function testGetMultilangUrls() {
         $controller = new KlarnaExternalPayments();
-        $result = $controller->getMultilangUrls();
-        $this->assertNotEmpty($result);
-        $this->assertJson($result);
+
+        $utilsMock = $this->getMockBuilder(Utils::class)->disableOriginalConstructor()->getMock();
+        $utilsMock->method("showMessageAndExit")
+            ->will($this->returnCallback(function($patient) {
+                $this->assertNotEmpty($patient);
+                $this->assertJson($patient);
+            }));
+
+        Registry::set(Utils::class,$utilsMock);
+        $controller->getMultilangUrls();
     }
 
     public function testSave() {

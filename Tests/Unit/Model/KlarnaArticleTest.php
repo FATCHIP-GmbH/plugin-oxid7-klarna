@@ -13,6 +13,8 @@ class KlarnaArticleTest extends ModuleUnitTestCase
 
     public function testTcklarna_getArticleUrl()
     {
+        $this->setModuleConfVar('blKlarnaSendProductUrls', true, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
         $articleClass = oxNew(Article::class);
         $result = $articleClass->tcklarna_getArticleUrl();
         $this->assertNotNull($result);
@@ -84,6 +86,8 @@ class KlarnaArticleTest extends ModuleUnitTestCase
 
     public function testTcklarna_getArticleImageUrl()
     {
+        $this->setModuleConfVar('blKlarnaSendImageUrls', true, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
         $articleClass = oxNew(Article::class);
         $result = $articleClass->tcklarna_getArticleImageUrl();
         $this->assertNotNull($result);

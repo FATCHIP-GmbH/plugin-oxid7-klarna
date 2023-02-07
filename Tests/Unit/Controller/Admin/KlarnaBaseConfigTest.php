@@ -13,15 +13,15 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
  */
 class KlarnaBaseConfigTest extends ModuleUnitTestCase {
     public function testGetAllActiveOxPaymentIds() {
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
-        $stub->expects($this->any())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['authorize'])->getMock();
+        $stub->expects($this->any())->method('authorize')->willReturn(true);
         $result = $stub->getAllActiveOxPaymentIds();
         $this->assertInstanceOf(ResultSet::class, $result);
     }
 
     public function testRender() {
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize', 'getEditObjectId', 'getViewDataElement'])->getMock();
-        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['authorize', 'getEditObjectId', 'getViewDataElement'])->getMock();
+        $stub->expects($this->once())->method('authorize')->willReturn(true);
         $stub->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $stub->expects($this->once())->method('getViewDataElement')->willReturn(['aKlarnaDesign' =>
                                                                                      'color_button =&gt; #D5FF4D
@@ -52,22 +52,22 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
     }
 
     public function testSave() {
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
-        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['authorize'])->getMock();
+        $stub->expects($this->once())->method('authorize')->willReturn(true);
         $stub->init();
         $stub->save();
         $this->assertNull($stub->getParameter('confaarrs'));
 
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize', 'getParameter', '_aConfParams'])->getMock();
-        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['authorize', 'getParameter', '_aConfParams'])->getMock();
+        $stub->expects($this->once())->method('authorize')->willReturn(true);
         $stub->expects($this->any())->method('getParameter')->willReturn(['test' => 'test']);
         $this->setProtectedClassProperty($stub, '_aConfParams', ['test' => 'test']);
         $stub->init();
         $stub->save();
 
         $this->assertEquals(['test' => 'test'], $stub->getParameter('confaarrs'));
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize', 'getParameter', '_aConfParams'])->getMock();
-        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['authorize', 'getParameter', '_aConfParams'])->getMock();
+        $stub->expects($this->once())->method('authorize')->willReturn(true);
         $stub->expects($this->any())->method('getParameter')->willReturn(['test' => 'test']);
         $this->setProtectedClassProperty($stub, '_aConfParams', ['test' => 'test']);
         $stub->init();
@@ -97,8 +97,8 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
     }
 
     public function testInit() {
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
-        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['authorize'])->getMock();
+        $stub->expects($this->once())->method('authorize')->willReturn(true);
         $this->assertNull($this->getProtectedClassProperty($stub, '_oRequest'));
         $stub->init();
         $this->assertNotEmpty($this->getProtectedClassProperty($stub, '_oRequest'));

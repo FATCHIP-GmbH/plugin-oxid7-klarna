@@ -65,6 +65,8 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testSave($mode, $expectedISO)
     {
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
+
         $this->setModuleMode($mode);
         $this->setSessionParam('sCountryISO', null);
         $oUser                      = oxNew(User::class);
@@ -206,6 +208,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testResolveCountry($countryId, $iso)
     {
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
         $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
 
@@ -358,18 +361,6 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser->updateDeliveryAddress($aAddressData);
     }
 
-//    /**
-//     * @covers       \TopConcepts\Klarna\Models\KlarnaUser::buildAddress()
-//     * @dataProvider updateDeliveryAddressDataProvider
-//     * @param $aAddressData
-//     */
-//    public function testBuildAddress($aAddressData)
-//    {
-//        $oUser = oxNew(User::class);
-//        $oUser->updateDeliveryAddress($aAddressData);
-//
-//    }
-
     /**
      * @dataProvider isFakeDataProvider
      * @param $type
@@ -401,6 +392,8 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaDeliveryCountry($mode, $countryISO, $userCountryId, $expectedId)
     {
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
+
         $this->setModuleMode($mode);
         $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
         $this->setSessionParam('sCountryISO', $countryISO);
@@ -485,6 +478,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testChangeUserData($mode, $expectedResult)
     {
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
 
         $this->setModuleMode($mode);
         $oUser = oxNew(User::class);
@@ -674,6 +668,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaPaymentCurrency($countryId, $expectedCurrency)
     {
+        $this->getConfig()->setConfigParam("sSSLShopURL","Test");
 
         $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
