@@ -111,6 +111,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $this->setModuleConfVar('blKlarnaEnableAutofocus', false);
         $this->setModuleConfVar('blKlarnaAllowSeparateDeliveryAddress', true);
         $this->setConfigParam('sSSLShopURL', 'https://testurl');
+        $this->setModuleConfVar('aKlarnaDesign', null);
+        $this->setModuleConfVar('iKlarnaActiveCheckbox', null);
 
         //call constructor
         $order->__construct($basket, $user);
