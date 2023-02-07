@@ -132,8 +132,6 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
                 $this->addTplParam('sErrorMessage', Registry::getLang()->translateString("TCKLARNA_CAPUTRE_FAIL_ORDER_CANCELLED"));
             }
 
-            var_dump($this->klarnaOrderData['remaining_authorized_amount']);
-
             if ($inSync && $this->klarnaOrderData['remaining_authorized_amount'] != 0) {
                 $orderLang   = (int)$oOrder->getFieldData('oxlang');
                 $orderLines  = $oOrder->getNewOrderLinesAndTotals($orderLang, true);
