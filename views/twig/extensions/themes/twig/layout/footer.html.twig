@@ -12,7 +12,7 @@
 
     {% if aKlFooter %}
 
-        {% capture assign = "klFooterContent" %}
+        {% set klFooterContent %}
             {% if aKlFooter.url %}
                 {% if oViewConf.getActiveTheme() == 'azure'  %}
                     <li class="klarna-logo">
@@ -43,36 +43,35 @@
                     </section>
                 {% endif %}
             {% endif %}
-        {% endcapture %}
+        {% endset %}
+        {% set klFooterContent = klFooterContent|escape("js") %}
 
         <script type="text/javascript">
-            function embedKlarnaLogo(content) {
-                var theme = '[{$oViewConf->getActiveTheme()}]';
-                var $content = $(content)
+            function embedKlarnaLogo() {
+                var theme = '{{oViewConf.getActiveTheme()|raw}}';
+                var content = $('{{ klFooterContent }}');
+                console.log(content);
                 if(theme === 'flow'){
-                    $('.footer-right-part div:first').append($content);
+                    $('.footer-right-part div:first').append(content);
                 }
-                if(theme === 'wave'){
-                    $('.footer-box-newsletter').append($content);
+                if(theme === 'wave' || theme === 'twig'){
+                    $('.footer-box-newsletter').append(content);
                 }
                 if(theme === 'azure'){
-                    $('#footerCategories .list.categories').append($content);
+                    $('#footerCategories .list.categories').append(content);
                 }
 
                 // get logo in natural size
-                var $img = $content.find('img');
+                var $img = content.find('img');
                 var parsedUrl = $img.attr('src').split('width=');
                 if(parsedUrl.length > 1) {
-                    var prevStyle = getComputedStyle($content.prev().children().first()[0]);
+                    var prevStyle = getComputedStyle(content.prev().children().first()[0]);
                     $img.attr('src', parsedUrl[0] + 'width=' + parseInt(prevStyle.width));
                 }
             }
         </script>
-        {% set klFooterContent = klFooterContent|escape("js") %}
-        {{ script({ add: "embedKlarnaLogo('$klFooterContent');", dynamic: __oxid_include_dynamic }) }}
+        {{ script({ add: "embedKlarnaLogo();", dynamic: __oxid_include_dynamic }) }}
     {% endif %}
-
-    {{ parent() }}
 
     {% if oViewConf.getActiveTheme() is same as('azure') %}
         {{ script({ include: "asdf", priority: 3, dynamic: __oxid_include_dynamic }) }}
@@ -135,7 +134,7 @@
         {% capture assign = "lawNoticeTemplate" %}
             <div class="klarna-law-notice">
                 {% set klarnaLawNoticeMessage = "TCKLARNA_LAW_NOTICE"|translate(oViewConf.getLawNotificationsLinkKco()) %}
-                {{ klarnaLawNoticeMessage }}
+                {{ klarnaLawNoticeMessage|raw }}
             </div>
         {% endcapture %}
         <script>
