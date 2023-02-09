@@ -11,7 +11,7 @@
         </div>
         <div class="drop-content" {% if couponUsed_1 and couponUsed_2  %}style="display: block;"{% endif %}">
             <div class="voucherData">
-                {% include 'tcklarna_checkout_voucher_data.html.twig' %}
+                {% include '@tcklarna/checkout/inc/tcklarna_checkout_voucher_data.html.twig' %}
             </div>
             <div>
                 <form name="voucher" action="{{ oViewConf.getSslSelfLink() }}" method="post" role="form">

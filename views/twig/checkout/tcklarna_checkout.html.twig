@@ -1,20 +1,20 @@
 {% capture append = "oxidBlock_content" %}
     {% if not confError %}
-        {{ style({ include: oViewConf.getModuleUrl('tcklarna','out/src/css/tcklarna_style.css'): 'out/src/css/tcklarna_style.css') }) }}
+        {{ style({ include: oViewConf.getModuleUrl('tcklarna','out/src/css/tcklarna_style.css') }) }}
 
-        {% include 'tcklarna_country_select_popup.html.twig' %}
+        {% include '@tcklarna/checkout/inc/tcklarna_country_select_popup.html.twig' %}
         {% if sKlarnaIframe %}
             {% set savedAddresses = oView.getFormattedUserAddresses() %}
             <div class="container klarna-outside-forms">
                 <div class="row kco-style">
                     {% if not oViewConf.isUserLoggedIn() %}
-                        {% include 'tcklarna_checkout_login_box.html.twig' %}
+                        {% include '@tcklarna/checkout/inc/tcklarna_checkout_login_box.html.twig' %}
                     {% else %}
                         {% if savedAddresses and shippingAddressAllowed %}
-                            {% include 'tcklarna_checkout_address_box.html.twig' %}
+                            {% include '@tcklarna/checkout/inc/tcklarna_checkout_address_box.html.twig' %}
                         {% endif %}
                     {% endif %}
-                    {% include 'tcklarna_checkout_voucher_box.html.twig' %}
+                    {% include '@tcklarna/checkout/inc/tcklarna_checkout_voucher_box.html.twig' %}
                 </div>
                 {% if blShowCountryReset  %}
                     <div class="row kco-style">
@@ -37,7 +37,7 @@
                 {% endif %}
             </div>
             <div class="klarna-iframe-container">
-                {{ sKlarnaIframe }}
+                {{ sKlarnaIframe|raw }}
                 {# Add oxid js code. Once the snippet is injected we can use window._klarnaCheckout #}
                 {{ script({ include: oViewConf.getModuleUrl('tcklarna', 'out/src/js/tcklarna_checkout_handler.js'), priority: 10, dynamic: __oxid_include_dynamic }) }}
             </div>

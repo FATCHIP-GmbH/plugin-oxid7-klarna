@@ -285,7 +285,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             // Are we in the KCO context
             if ($paymentId === 'klarna_checkout') {
-                if (!$this->getSession()->checkSessionChallenge()) {
+                if (!Registry::getSession()->checkSessionChallenge()) {
                     return;
                 }
 
