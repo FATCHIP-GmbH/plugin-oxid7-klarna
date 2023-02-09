@@ -33,7 +33,15 @@
                 <tr class="bg-grey">
                     <td colspan="3" class="inner-table-wrapper">
                         {% if KCOShippingSets|length > 0 %}
+
                             {% for shippingId, oDelSet in KCOShippingSets %}
+                                {% set currentMethodName = "" %}
+                                {% for currentShippingIdKey, currentShippingIdValue in confaarrs.aarrKlarnaShippingMap %}
+                                    {% if currentShippingIdKey == shippingId %}
+                                        {% set currentMethodName = currentShippingIdValue %}
+                                    {% endif %}
+                                {% endfor %}
+
                                 <table class="inner">
                                     <tbody>
                                     <tr class="dark">
@@ -44,16 +52,16 @@
                                                     <div class="selector__menu">
                                                         <ul class="selector__choices">
                                                             {% for i, methodName in KCOShippingMethods %}
-                                                                <li class="selector__item{% if confaarrs.aarrKlarnaShippingMap.shippingId is same as(methodName) %}--selected{% endif %}">
-                                                                    <a href="#" data-value="{{ methodName }}">
-                                                                        {{ methodName }}
+                                                                <li class="selector__item{% if currentMethodName is same as(methodName) %}--selected{% endif %}">
+                                                                    <a href="#" data-value="{{ methodName|raw }}">
+                                                                        {{ methodName|raw }}
                                                                     </a>
                                                                 </li>
                                                             {% endfor %}
                                                         </ul>
                                                         <input type="hidden"
-                                                               name="confaarrs[aarrKlarnaShippingMap][{{ shippingId }}]"
-                                                               value="{{ confaarrs.aarrKlarnaShippingMap.shippingId }}">
+                                                               name="confaarrs[aarrKlarnaShippingMap][{{ shippingId|raw }}]"
+                                                               value="{{ currentMethodName|raw }}">
                                                     </div>
                                                 </div>
                                             </div>
