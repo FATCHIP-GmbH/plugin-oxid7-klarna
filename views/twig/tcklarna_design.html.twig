@@ -135,8 +135,7 @@
                                                                {% if (confstrs.sKlarnaFooterValue is same as('longBlack') ) %}checked{% endif %}>
                                                         <label class="kl-logo white" for="long-black">
                                                             <div class="">
-                                                                {{ locale }}
-                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.longBlack)  }}">
+                                                                <img src="{{  aKlarnaFooterImgUrls.longBlack|format(locale) }}">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -146,7 +145,7 @@
                                                                {% if confstrs.sKlarnaFooterValue == 'longWhite'  %}checked{% endif %}>
                                                         <label class="kl-logo black" for="long-white">
                                                             <div class="">
-                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.longWhite)  }}">
+                                                                <img src="{{  aKlarnaFooterImgUrls.longWhite|format(locale)  }}">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -163,7 +162,7 @@
                                                                {% if confstrs.sKlarnaFooterValue == 'shortBlack'  %}checked{% endif %}>
                                                         <label class="kl-logo white" for="short-black">
                                                             <div class="">
-                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.shortBlack)  }}">
+                                                                <img src="{{  aKlarnaFooterImgUrls.shortBlack|format(locale)  }}">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -173,7 +172,7 @@
                                                                {% if confstrs.sKlarnaFooterValue == 'shortWhite'  %}checked{% endif %}>
                                                         <label class="kl-logo black" for="short-white">
                                                             <div class="">
-                                                                <img src="{{  locale|format(aKlarnaFooterImgUrls.shortWhite)  }}">
+                                                                <img src="{{  aKlarnaFooterImgUrls.shortWhite|format(locale)  }}">
                                                             </div>
                                                         </label>
                                                     </td>
