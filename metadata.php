@@ -137,6 +137,32 @@ $aModule = array(
         OxidEsales\Eshop\Application\Model\PaymentGateway::class => PaymentGateway::class,
         OxidEsales\Eshop\Core\ShopControl::class => KlarnaShopControl::class
     ),
+    'templates'   => array(
+        '@tcklarna/templates/tcklarna_checkout.tpl'                => 'views/smarty/templates/checkout/tcklarna_checkout.tpl',
+        '@tcklarna/templates/tcklarna_amazon_login.tpl'            => 'views/smarty/templates/checkout/tcklarna_amazon_login.tpl',
+        '@tcklarna/templates/tcklarna_checkout_voucher_data.tpl'   => 'views/smarty/templates/checkout/inc/tcklarna_checkout_voucher_data.tpl',
+        '@tcklarna/templates/tcklarna_checkout_voucher_box.tpl'    => 'views/smarty/templates/checkout/inc/tcklarna_checkout_voucher_box.tpl',
+        '@tcklarna/templates/tcklarna_checkout_voucher_errors.tpl' => 'views/smarty/templates/checkout/inc/tcklarna_checkout_voucher_errors.tpl',
+        '@tcklarna/templates/tcklarna_json.tpl'                    => 'views/smarty/templates/checkout/inc/tcklarna_json.tpl',
+        '@tcklarna/templates/tcklarna_country_select_popup.tpl'    => 'views/smarty/templates/checkout/inc/tcklarna_country_select_popup.tpl',
+        '@tcklarna/templates/tcklarna_checkout_login_box.tpl'      => 'views/smarty/templates/checkout/inc/tcklarna_checkout_login_box.tpl',
+        '@tcklarna/templates/tcklarna_checkout_address_box.tpl'    => 'views/smarty/templates/checkout/inc/tcklarna_checkout_address_box.tpl',
+        //admin
+        '@tcklarna/templates/tcklarna_general.tpl'                 => 'views/smarty/templates/admin/tcklarna_general.tpl',
+        '@tcklarna/templates/tcklarna_design.tpl'                  => 'views/smarty/templates/admin/tcklarna_design.tpl',
+        '@tcklarna/templates/tcklarna_kco_config.tpl'              => 'views/smarty/templates/admin/tcklarna_kco_config.tpl',
+        '@tcklarna/templates/tcklarna_kp_config.tpl'               => 'views/smarty/templates/admin/tcklarna_kp_config.tpl',
+        '@tcklarna/templates/tcklarna_start.tpl'                   => 'views/smarty/templates/admin/tcklarna_start.tpl',
+        '@tcklarna/templates/tcklarna_external_payments.tpl'       => 'views/smarty/templates/admin/tcklarna_external_payments.tpl',
+        '@tcklarna/templates/tcklarna_emd_admin.tpl'               => 'views/smarty/templates/admin/tcklarna_emd_admin.tpl',
+        '@tcklarna/templates/tcklarna_orders.tpl'                  => 'views/smarty/templates/admin/tcklarna_orders.tpl',
+        '@tcklarna/templates/tcklarna_messaging.tpl'               => 'views/smarty/templates/admin/tcklarna_messaging.tpl',
+        '@tcklarna/templates/tcklarna_shipping.tpl'                => 'views/smarty/templates/admin/tcklarna_shipping.tpl',
+        //admin partial
+        '@tcklarna/templates/tcklarna_country_creds.tpl'           => 'views/smarty/templates/admin/tcklarna_country_creds.tpl',
+        '@tcklarna/templates/tcklarna_header.tpl'                  => 'views/smarty/templates/admin/tcklarna_header.tpl',
+        '@tcklarna/templates/tcklarna_lang_spec_conf.tpl'          => 'views/smarty/templates/admin/tcklarna_lang_spec_conf.tpl',
+    ),
     'blocks'      => array(
         array(
             'template' => 'widget/minibasket/minibasket.tpl',
