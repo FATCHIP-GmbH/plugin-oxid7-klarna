@@ -14,6 +14,7 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Model\KlarnaOrder;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaOrders extends AdminDetailsController
 {
@@ -125,8 +126,13 @@ class KlarnaOrders extends AdminDetailsController
     {
         $blActive = false;
 
-        if ($this->getEditObject() && stripos($this->getEditObject()->getFieldData('oxpaymenttype'), 'klarna_') !== false) {
-            $blActive = true;
+        if($this->getEditObject()) {
+            $klarnaPaymentIds = KlarnaPayment::getKlarnaPaymentsIds();
+            $paymentType = $this->getEditObject()->getFieldData('oxpaymenttype');
+
+            if(in_array($paymentType,$klarnaPaymentIds)) {
+                $blActive = true;
+            }
         }
 
         return $blActive;
