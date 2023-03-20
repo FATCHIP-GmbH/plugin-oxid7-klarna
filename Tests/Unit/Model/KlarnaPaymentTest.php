@@ -36,9 +36,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     public function isKPPaymentDataProvider()
     {
         return [
-            [KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, true],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, true],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, true],
+            [KlarnaPayment::KLARNA_PAYMENT_ID, true],
             [KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID, false],
             ['bestitamazon', false],
             ['oxidcashondel', false],
@@ -54,13 +52,8 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oPayment = oxNew(Payment::class);
         $result   = $oPayment->getKPMethods();
 
-        $this->assertTrue(count($result) === 6);
-        $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, $result);
-        $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, $result);
-        $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, $result);
-        $this->assertArrayHasKey(KlarnaPayment::KLARNA_DIRECTDEBIT, $result);
-        $this->assertArrayHasKey(KlarnaPayment::KLARNA_CARD, $result);
-        $this->assertArrayHasKey(KlarnaPayment::KLARNA_SOFORT, $result);
+        $this->assertTrue(count($result) === 1);
+        $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_ID, $result);
     }
 
     /**

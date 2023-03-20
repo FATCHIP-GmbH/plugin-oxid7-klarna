@@ -118,7 +118,7 @@ class KlarnaOrders extends AdminDetailsController
     }
 
     /**
-     * Method checks is order was made with Klarna module
+     * Method checks if order was made with Klarna module
      *
      * @return bool
      */
