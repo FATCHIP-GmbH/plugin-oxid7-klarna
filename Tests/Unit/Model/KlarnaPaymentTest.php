@@ -81,24 +81,10 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     {
         return [
             [[
-                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 0,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 0,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 0,
+                 KlarnaPayment::KLARNA_PAYMENT_ID  => 0,
              ]],
             [[
-                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 1,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 0,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 0,
-             ]],
-            [[
-                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 1,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 1,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 0,
-             ]],
-            [[
-                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 1,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 1,
-                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 1,
+                 KlarnaPayment::KLARNA_PAYMENT_ID  => 1,
              ]],
         ];
     }
@@ -124,9 +110,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     public function PaymentCategoryNameDataProvider()
     {
         return [
-            [KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, 'pay_over_time'],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, 'pay_later'],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, 'pay_now'],
+            [KlarnaPayment::KLARNA_PAYMENT_ID, 'klarna'],
             [KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID, false],
             ['bestitamazon', false],
             ['oxidcashondel', false],
@@ -148,9 +132,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     public function isKlarnaPaymentDataProvider()
     {
         return [
-            [KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, true],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, true],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, true],
+            [KlarnaPayment::KLARNA_PAYMENT_ID, true],
             [KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID, true],
             ['bestitamazon', false],
             ['oxidcashondel', false],
@@ -166,13 +148,8 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $result = KlarnaPaymentHelper::getKlarnaPaymentsIds($filter);
         $this->assertEquals($expectedResult, $result);
 
-        if($expectedResult == []){
-            $expectedResult = null;
-        }
-
         $result = KlarnaPayment::getKlarnaPaymentsIds($filter);
         $this->assertEquals($expectedResult, $result);
-
     }
 
     /**
@@ -182,20 +159,10 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     {
         $expectedResult_1 = [
             KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID,
-            KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID,
-            KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID,
-            KlarnaPayment::KLARNA_PAYMENT_PAY_NOW,
-            KlarnaPayment::KLARNA_DIRECTDEBIT,
-            KlarnaPayment::KLARNA_CARD,
-            KlarnaPayment::KLARNA_SOFORT
+            KlarnaPayment::KLARNA_PAYMENT_ID,
         ];
         $expectedResult_2 = [
-            KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID,
-            KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID,
-            KlarnaPayment::KLARNA_PAYMENT_PAY_NOW,
-            KlarnaPayment::KLARNA_DIRECTDEBIT,
-            KlarnaPayment::KLARNA_CARD,
-            KlarnaPayment::KLARNA_SOFORT
+            KlarnaPayment::KLARNA_PAYMENT_ID,
         ];
 
         return [

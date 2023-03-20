@@ -50,7 +50,7 @@ class KlarnaPayment extends KlarnaPayment_parent
     /**
      * Get list of Klarna payments ids
      *
-     * @param null||string $filter KP - Klarna Payment Options
+     * @param null|string $filter KP - Klarna Payment Options
      * @return array
      */
     public static function getKlarnaPaymentsIds($filter = null)
@@ -61,10 +61,12 @@ class KlarnaPayment extends KlarnaPayment_parent
             );
         }
 
-        return array(
+        $allPayments = array(
             self::KLARNA_PAYMENT_CHECKOUT_ID,
             self::KLARNA_PAYMENT_ID,
         );
+
+        return $filter === null ? $allPayments : [];
     }
 
     /**
