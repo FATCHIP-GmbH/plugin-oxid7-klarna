@@ -198,7 +198,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $keController->expects($this->never())->method('getKlarnaOrder');
         $keController->init();
         $result = $keController->render();
-        $this->assertEquals('@tcklarna/tcklarna_checkout', $result);
+        $this->assertEquals('@tcklarna/checkout/tcklarna_checkout', $result);
     }
 
     public function testRenderException() {
@@ -217,7 +217,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $keController->init();
         $result = $keController->render();
 
-        $this->assertEquals('@tcklarna/tcklarna_checkout', $result);
+        $this->assertEquals('@tcklarna/checkout/tcklarna_checkout', $result);
     }
 
     public function testGetKlarnaClient() {
@@ -276,7 +276,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $result = $keController->render();
         $viewData = $this->getProtectedClassProperty($keController, '_aViewData');
         $this->assertTrue($viewData['confError']);
-        $this->assertEquals('@tcklarna/tcklarna_checkout', $result);
+        $this->assertEquals('@tcklarna/checkout/tcklarna_checkout', $result);
 
     }
 
@@ -297,7 +297,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $keController->method('isCountryActiveInKlarnaCheckout')->willReturn(true);
         $keController->init();
         $template = $keController->render();
-        $this->assertSame('@tcklarna/tcklarna_checkout', $template);
+        $this->assertSame('@tcklarna/checkout/tcklarna_checkout', $template);
     }
 
     /**

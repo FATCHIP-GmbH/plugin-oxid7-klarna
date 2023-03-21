@@ -140,7 +140,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     }
 
 
-    /**
+    /**testGetFlippedLangArray
      * @dataProvider KlarnaPaymentsIdDataProvider
      */
     public function testGetKlarnaPaymentsIds($filter, $expectedResult)

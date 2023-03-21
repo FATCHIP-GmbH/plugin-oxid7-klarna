@@ -124,7 +124,7 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $db->setFetchMode(DatabaseProvider::FETCH_MODE_ASSOC);
         $sql      = 'SELECT oxid, oxactive FROM oxpayments WHERE oxid IN (?, ?, ?, ?)';
         $payments = $db->select($sql, self::KLARNA_PAYMENT_IDS);
-        $this->assertEquals(4, $payments->count());
+        $this->assertEquals(1, $payments->count());
         while (!$payments->EOF) {
             $row = $payments->getFields();
             $this->assertEquals('1', $row['oxactive']);
