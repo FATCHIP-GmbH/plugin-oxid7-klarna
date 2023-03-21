@@ -10,6 +10,7 @@ class KlarnaLogsTest extends ModuleUnitTestCase
 
     public function testSave()
     {
+        $this->setModuleConfVar('blKlarnaLoggingEnabled', false, 'bool');
         $klarnaLogs = oxNew(KlarnaLogs::class);
         $result = $klarnaLogs->save();
         $this->assertFalse($result);

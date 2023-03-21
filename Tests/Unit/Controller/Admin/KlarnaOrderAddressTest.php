@@ -32,10 +32,7 @@ class KlarnaOrderAddressTest extends ModuleUnitTestCase
     public function renderDataProvider()
     {
         return [
-            ['klarna_checkout', true],
-            ['klarna_pay_later', true],
-            ['klarna_pay_now', true],
-            ['klarna_slice_it', true],
+            ['klarna', true],
             ['oxidcashondel', false],
             ['oxidpayadvance', false],
         ];

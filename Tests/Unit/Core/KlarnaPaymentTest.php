@@ -493,9 +493,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     {
         return [
             ['ss_name', null],
-            ['klarna_pay_now', 'pay_now'],
-            ['klarna_pay_later', 'pay_later'],
-            ['klarna_slice_it', 'pay_over_time'],
+            ['klarna', 'klarna'],
         ];
     }
 

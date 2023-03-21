@@ -55,10 +55,8 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
     public function testRender_KCO_client_exception()
     {
         $thankYouController = $this->getSUT();
-        // check client
-        // base code will log KlarnaWrongCredentialsException in this case, because getOrder will be called on not configured client
         $thankYouController->render();
-        $this->assertLoggedException(KlarnaWrongCredentialsException::class, '');
+        $this->assertLoggedException(KlarnaOrderNotFoundException::class);
         $this->assertInstanceOf(KlarnaCheckoutClient::class, $this->getProtectedClassProperty($thankYouController, 'client'));
     }
 
@@ -93,9 +91,6 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
     public function testRender_nonKCO()
     {
-        $payId = 'other';
-        $klSessionId = 'fake_session';
-
         $oBasketItem = oxNew(BasketItem::class);
         $this->setProtectedClassProperty($oBasketItem,'_sProductId', '_testArt');
         $oBasket = $this->getMockBuilder(Basket::class)->setMethods(['getContents', 'getProductsCount', 'getOrderId'])->getMock();

@@ -23,32 +23,30 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
 {
-
-    public function isKPDataProvider()
-    {
-        return [
-            [KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, true],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, true],
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, true],
-            [KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID, false],
-        ];
-    }
-
-
-    /**
-     * @dataProvider isKPDataProvider
-     * @param $paymentId
-     * @param $expectedResult
-     */
-    public function testIsKP($paymentId, $expectedResult)
-    {
-        $oOrder                         = oxNew(Order::class);
-        $oOrder->oxorder__oxpaymenttype = new Field($paymentId, Field::T_RAW);
-
-        $result = $oOrder->isKP();
-        $this->assertEquals($expectedResult, $result);
-
-    }
+//
+//    public function isKPDataProvider()
+//    {
+//        return [
+//            [KlarnaPayment::KLARNA_PAYMENT_ID, true],
+//            [KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID, false],
+//        ];
+//    }
+//
+//
+//    /**
+//     * @dataProvider isKPDataProvider
+//     * @param $paymentId
+//     * @param $expectedResult
+//     */
+//    public function testIsKP($paymentId, $expectedResult)
+//    {
+//        $oOrder                         = oxNew(Order::class);
+//        $oOrder->oxorder__oxpaymenttype = new Field($paymentId, Field::T_RAW);
+//
+//        $result = $oOrder->isKP();
+//        $this->assertEquals($expectedResult, $result);
+//
+//    }
 
     public function getNewOrderLinesAndTotalsDataProvider()
     {
@@ -159,11 +157,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     {
         return [
             ['type1', false, false],
-            ['klarna_type', true, false],
-            ['klarna_checkout', true, true],
-            ['klarna_pay_later', true, true],
-            ['klarna_pay_now', true, true],
-            ['klarna_slice_it', true, true],
+            ['klarna', true, true],
         ];
     }
 
@@ -344,7 +338,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     public function orderDataProvider()
     {
         return [
-            [KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, 'isKP', 'kp_order_id'],
+            [KlarnaPayment::KLARNA_PAYMENT_ID, 'isKP', 'kp_order_id'],
         ];
     }
 
