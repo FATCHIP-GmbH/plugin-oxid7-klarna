@@ -8,7 +8,6 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\EshopCommunity\Core\Registry;
-use TopConcepts\Klarna\Core\KlarnaPaymentTypes;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 
 /**
@@ -22,80 +21,6 @@ final class Version20230323131941 extends AbstractMigration
 
         $this->extendDbTables($schema);
         $this->addAlterTables($schema);
-
-        //TODO: This cannot be done in migrations, please move to module activation. Migrations are for database only.
-        //problem is visible with this line for example when resetting database
-        //bin/oe-console oe:database:reset --db-host=mysql --db-port=3306 --db-name=example --db-user=root --db-password=root --force --shop-id=1
-        //$this->addKlarnaPaymentsMethods();
-    }
-
-    /**
-     * Add Klarna payment options
-     * @throws \Exception
-     */
-    protected function addKlarnaPaymentsMethods() : void
-    {
-        $oPayment = oxNew(BaseModel::class);
-        $oPayment->init('oxpayments');
-
-        $oPayment->load('oxidinvoice');
-        $de_prefix = $oPayment->getFieldData('oxdesc') === 'Rechnung' ? 0 : 1;
-        $en_prefix = $de_prefix === 1 ? 0 : 1;
-
-        $newPayments = array(
-            KlarnaPaymentTypes::KLARNA_PAYMENT_CHECKOUT_ID  =>
-                array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
-            KlarnaPaymentTypes::KLARNA_PAYMENT_ID  =>
-                array($de_prefix => 'One Klarna', $en_prefix => 'One Klarna'),
-        );
-
-        $sort   = -350;
-        $aLangs = Registry::getLang()->getLanguageArray();
-
-        if ($aLangs) {
-            foreach ($newPayments as $oxid => $aTitle) {
-                /** @var Payment $oPayment */
-                $oPayment = oxNew(BaseModel::class);
-                $oPayment->init('oxpayments');
-
-                $oPayment->load($oxid);
-                if ($oPayment->isLoaded()) {
-                    $oPayment->oxpayments__oxactive = new Field(1, Field::T_RAW);
-                    $oPayment->save();
-
-                    continue;
-                }
-                $oPayment->setId($oxid);
-                $oPayment->oxpayments__oxactive      = new Field(1, Field::T_RAW);
-                $oPayment->oxpayments__oxaddsum      = new Field(0, Field::T_RAW);
-                $oPayment->oxpayments__oxaddsumtype  = new Field('abs', Field::T_RAW);
-                $oPayment->oxpayments__oxaddsumrules = new Field('31', Field::T_RAW);
-                $oPayment->oxpayments__oxfromboni    = new Field('0', Field::T_RAW);
-                $oPayment->oxpayments__oxfromamount  = new Field('0', Field::T_RAW);
-                $oPayment->oxpayments__oxtoamount    = new Field('1000000', Field::T_RAW);
-                $oPayment->oxpayments__oxchecked     = new Field(0, Field::T_RAW);
-                $oPayment->oxpayments__oxsort        = new Field(strval($sort), Field::T_RAW);
-                $oPayment->oxpayments__oxtspaymentid = new Field('', Field::T_RAW);
-
-                // set multi language fields
-                foreach ($aLangs as $oLang) {
-                    $sTag                                     = Registry::getLang()->getLanguageTag($oLang->id);
-                    $oPayment->{'oxpayments__oxdesc' . $sTag} = new Field($aTitle[$oLang->id], Field::T_RAW);
-                }
-
-                $oPayment->save();
-                $sort += 1;
-            }
-        }
-
-        $updateOxPayments =
-            array(
-                "UPDATE `oxpayments` SET `TCKLARNA_PAYMENTOPTION`='card' WHERE `oxid`='oxidcreditcard';",
-                "UPDATE `oxpayments` SET `TCKLARNA_PAYMENTOPTION`='direct banking' WHERE `oxid`='oxiddebitnote';",
-            );
-        foreach ($updateOxPayments as $sQuery) {
-            $this->addSql($sQuery);
-        }
     }
 
     /**
