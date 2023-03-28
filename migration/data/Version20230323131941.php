@@ -8,7 +8,6 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\EshopCommunity\Core\Registry;
-use TopConcepts\Klarna\Core\KlarnaPaymentTypes;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 
 /**
