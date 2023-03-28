@@ -96,8 +96,8 @@ class KlarnaCheckoutClient extends KlarnaClientBase
             $data,
             self::ORDERS_ENDPOINT,
             $oResponse->body,
-            $order_id,
-            $oResponse->status_code
+            $oResponse->status_code,
+            $order_id
         );
 
         $this->aOrder = $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -131,8 +131,8 @@ class KlarnaCheckoutClient extends KlarnaClientBase
             '',
             self::ORDERS_ENDPOINT,
             $oResponse->body,
-            $order_id,
-            $oResponse->status_code
+            $oResponse->status_code,
+            $order_id
         );
 
         $this->aOrder = $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);

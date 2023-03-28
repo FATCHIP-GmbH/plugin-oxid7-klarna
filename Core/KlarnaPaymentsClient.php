@@ -111,8 +111,8 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             $data,
             self::PAYMENTS_ENDPOINT,
             $oResponse->body,
-            $session_id,
-            $oResponse->status_code
+            $oResponse->status_code,
+            $session_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -168,8 +168,8 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             '',
             self::PAYMENTS_ENDPOINT,
             $oResponse->body,
-            $session_id,
-            $oResponse->status_code
+            $oResponse->status_code,
+            $session_id
         );
         try {
             $this->aSessionData = $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -206,8 +206,8 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             $currentSessionData,
             $url,
             $oResponse->body,
-            $this->aSessionData['session_id'],
-            $oResponse->status_code
+            $oResponse->status_code,
+            $this->aSessionData['session_id']
         );
 
         return $this->handleNewOrderResponse($oResponse, __CLASS__, __FUNCTION__);

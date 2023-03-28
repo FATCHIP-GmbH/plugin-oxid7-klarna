@@ -233,11 +233,11 @@ abstract class KlarnaClientBase extends Base
      * @param string|array $requestBody
      * @param $url
      * @param $responseRaw
-     * @param string $order_id
      * @param $statusCode
+     * @param string $order_id
      * @throws \Exception
      */
-    protected function logKlarnaData($action, $requestBody, $url, $responseRaw, $order_id = '', $statusCode)
+    protected function logKlarnaData($action, $requestBody, $url, $responseRaw, $statusCode, $order_id = '')
     {
         if (is_array($requestBody)) {
             $requestBody = json_encode($requestBody);

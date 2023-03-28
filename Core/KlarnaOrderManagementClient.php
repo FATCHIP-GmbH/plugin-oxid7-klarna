@@ -52,8 +52,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             '',
             self::ORDERS_ENDPOINT,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -73,8 +73,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             '',
             self::ACKNOWLEDGE_ORDER_ENDPOINT,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -99,8 +99,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             '',
             self::CANCEL_ORDER_ENDPOINT,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -131,8 +131,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             $body,
             self::UPDATE_MERCHANT_REFERENCES_ENDPOINT,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -158,8 +158,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             json_encode($data),
             self::UPDATE_ORDER_LINES_ENDPOINT,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -185,8 +185,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             json_encode($data),
             self::CAPTURE_ORDER,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -228,8 +228,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             json_encode($data),
             self::CAPTURE_ORDER,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
@@ -256,8 +256,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             json_encode($data),
             self::CAPTURE_ORDER,
             $oResponse->body,
-            $order_id,
-            $statusCode
+            $statusCode,
+            $order_id
         );
 
         return $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
