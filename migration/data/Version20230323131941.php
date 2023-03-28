@@ -21,7 +21,6 @@ final class Version20230323131941 extends AbstractMigration
 
         $this->extendDbTables($schema);
         $this->addAlterTables($schema);
-
     }
 
     /**
@@ -36,19 +35,22 @@ final class Version20230323131941 extends AbstractMigration
                       `OXID`          CHAR(32)
                                       CHARACTER SET latin1 COLLATE latin1_general_ci
                                    NOT NULL DEFAULT '',
-                    
+                      `TCKLARNA_ORDERID`  VARCHAR(128) CHARACTER SET utf8 DEFAULT '' NOT NULL,
                       `OXSHOPID`      CHAR(32)
                                       CHARACTER SET latin1 COLLATE latin1_general_ci
                                    NOT NULL DEFAULT '',
+                      `TCKLARNA_MID` VARCHAR(50) CHARACTER SET utf8 NOT NULL,
+                      `TCKLARNA_STATUSCODE` VARCHAR(16) CHARACTER SET utf8 NOT NULL,
                       `TCKLARNA_METHOD`      VARCHAR(128)
                                       CHARACTER SET utf8
                                    NOT NULL DEFAULT '',
+                      `TCKLARNA_URL` VARCHAR(256) CHARACTER SET utf8,
                       `TCKLARNA_REQUESTRAW`  TEXT CHARACTER SET utf8
                                    NOT NULL,
                       `TCKLARNA_RESPONSERAW` TEXT CHARACTER SET utf8
                                    NOT NULL,
                       `TCKLARNA_DATE`        DATETIME
-                                   NOT NULL DEFAULT '0000-00-00 00:00:00',
+                                   NOT NULL,
                       PRIMARY KEY (`OXID`),
                       KEY `TCKLARNA_DATE` (`TCKLARNA_DATE`)
                     )
@@ -63,8 +65,10 @@ final class Version20230323131941 extends AbstractMigration
                       `OXID`       VARCHAR(32)
                                    CHARACTER SET latin1 COLLATE latin1_general_ci
                                             NOT NULL,
+                      `TCKLARNA_ORDERID`  VARCHAR(128) CHARACTER SET utf8 DEFAULT '' NOT NULL,
                       `KLRECEIVED` DATETIME NOT NULL,
-                      PRIMARY KEY (`OXID`)
+                      PRIMARY KEY (`OXID`),
+                      KEY `TCKLARNA_ORDERID` (`TCKLARNA_ORDERID`)
                     )
                 ENGINE = InnoDB
                 COMMENT ='List of all Klarna acknowledge requests'
@@ -154,7 +158,9 @@ final class Version20230323131941 extends AbstractMigration
             $first = true;
 
             foreach ($aColumns as $sColumnName => $queryPart) {
-                if(!$schema->getTable($sTableName)->hasColumn($sColumnName)) {
+                if($schema->hasTable($sTableName) &&
+                    !$schema->getTable($sTableName)->hasColumn($sColumnName)
+                ) {
                     if (!$first) {
                         $query .= ', ';
                     }
