@@ -17,6 +17,7 @@ use OxidEsales\Eshop\Core\ConfigFile;
 
 use OxidEsales\Eshop\Core\ShopIdCalculator;
 use OxidEsales\EshopCommunity\Core\SubShopSpecificFileCache;
+use OxidEsales\Facts\Facts;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\UnitTestCase;
@@ -51,6 +52,9 @@ class ModuleUnitTestCase extends UnitTestCase
         $aModules[strtolower($sClass)] = $sModuleClass;
 
         $this->getModuleVariablesLocator()->setModuleVariable("aModules", $aModules);
+
+        exec((new Facts())->getShopRootPath() . '/bin/oe-console oe:module:deactivate tcklarna');
+        exec((new Facts())->getShopRootPath() . '/bin/oe-console oe:module:activate tcklarna');
     }
 
     private function getModuleVariablesLocator(): ModuleVariablesLocator
