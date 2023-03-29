@@ -44,17 +44,17 @@
                     loginOptions =  {scope: 'profile payments:widget payments:shipping_address', popup: true};
                     authRequest = amazon.Login.authorize(loginOptions, function(response) {
                         addressConsentToken = response.access_token;
-                        window.location = '{{ oViewConf.getSslSelfLink()|html_entity_decode }}cl=user&fnc=amazonLogin&redirectCl=user&' + '&access_token=' + addressConsentToken;
+                        window.location = '{{ oViewConf.getSslSelfLink()|raw() }}cl=user&fnc=amazonLogin&redirectCl=user&' + '&access_token=' + addressConsentToken;
 
                     });
                 },
 
                 onSignIn: function(orderReference) {
                     amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
-                    window.location = '{{ oViewConf.getSslSelfLink()|html_entity_decode }}cl=user&amazonOrderReferenceId=' + amazonOrderReferenceId;
+                    window.location = '{{ oViewConf.getSslSelfLink()|raw() }}cl=user&amazonOrderReferenceId=' + amazonOrderReferenceId;
                 },
                 onError: function(error) {
-                    window.location = '{{ oViewConf.getSslSelfLink()|html_entity_decode }}cl=basket&amazonOrderReferenceId=' + amazonOrderReferenceId;
+                    window.location = '{{ oViewConf.getSslSelfLink()|raw() }}cl=basket&amazonOrderReferenceId=' + amazonOrderReferenceId;
                 },
             };
 
