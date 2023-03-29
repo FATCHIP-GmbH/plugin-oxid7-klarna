@@ -7,13 +7,13 @@
             {% if _prefix == 'modal' %}
                 <script type="text/javascript">
                     var button = '<a class="btn btn-primary submitButton largeButton" ' +
-                        'href="{{ seo_url({ ident: oViewConf.getSslSelfLink()|cat("cl=KlarnaExpress")|html_entity_decode }) }}">' +
+                        'href="{{ seo_url({ ident: oViewConf.getSslSelfLink()|cat("cl=KlarnaExpress")|raw() }) }}">' +
                         '{{ translate({ ident: "TCKLARNA_GO_TO_CHECKOUT" }) }}</a>';
                 </script>
                 {{ script({ add: '$(".modal-footer").append(button);', dynamic: __oxid_include_dynamic }) }}
             {% else %}
                 <script type="text/javascript">
-                    var url = "{{ oViewConf.getSslSelfLink()|cat("cl=KlarnaExpress")|html_entity_decode }}";
+                    var url = "{{ oViewConf.getSslSelfLink()|cat("cl=KlarnaExpress")|raw() }}";
                 </script>
                 {{ script({ add: '$("p.functions .btn-primary").attr("href", url);', dynamic: __oxid_include_dynamic }) }}
             {% endif %}

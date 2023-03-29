@@ -5,7 +5,7 @@ $serviceCaller = new \OxidEsales\TestingLibrary\ServiceCaller();
 $testConfig = new \OxidEsales\TestingLibrary\TestConfig();
 
 $testDirectory = $testConfig->getEditionTestsPath($testConfig->getShopEdition());
-$klarnaTestDirectory = $testConfig->getShopPath() . 'modules//tc/tcklarna/Tests/';
+$klarnaTestDirectory = $testConfig->getShopPath() . '../vendor/fatchip-gmbh/oxid-klarna-7/Tests/';
 $serviceCaller->setParameter('importSql', '@' . $testDirectory . '/Fixtures/testdata.sql');
 $serviceCaller->setParameter('importSql', '@' . $klarnaTestDirectory . 'Unit/Testdata/klarna-settings.sql');
 
