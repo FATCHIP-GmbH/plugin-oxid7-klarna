@@ -1,5 +1,0 @@
-#Klarna Checkout and Klarna Payments Module Migrations (tcklarna)
-table_storage:
-  table_name: oxmigrations_tcklarna
-migrations_paths:
-  'TopConcepts\Klarna\Migrations': data

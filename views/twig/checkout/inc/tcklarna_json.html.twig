@@ -1,1 +1,0 @@
-{{% for key, include in aIncludes %}{% capture assign = "rendered" %}{% include $include %}{% endcapture %}"{{ key }}":"{{ rendered|escape("js", "UTF - 8")|replace("\\'", "'")|replace('\r\n', '') }}"{% if not loop.last %},{% endif %}{% endfor %}}
