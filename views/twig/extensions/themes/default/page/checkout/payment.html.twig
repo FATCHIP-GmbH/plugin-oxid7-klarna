@@ -1,0 +1,187 @@
+{% extends "page/checkout/payment.html.twig" %}
+
+{% block select_payment %}
+    {% if oViewConf.isKlarnaPaymentsEnabled() and oView.loadKlarnaPaymentWidget  %}
+        {% if oView.getCheckedPaymentId() == paymentmethod.oxpayments__oxid.value %}
+            {% set is_checked = true %}
+        {% else %}
+            {% set is_checked = false %}
+        {% endif %}
+
+        {% if sPaymentID == "klarna" %}
+            <div class="well well-sm kp-outer">
+                <dl>
+                    <dt style="padding-bottom: 12px">
+                        <input class="kp-radio form-check-input" id="kp-pl" data-payment_id="pay_later" type="radio" name="paymentid"
+                               value="{{ sPaymentID }}"
+                               {% if is_checked %}checked{% endif %}>
+                        <label for="kp-pl">{{ paymentmethod.oxpayments__oxdesc.value }}</label>
+                        <img src="{{ paymentmethod.getBadgeUrl() }}">
+
+                    </dt>
+                    <dt>
+                        {% if kpError  %}
+                            <div class="kp-method alert alert-info"
+                                 style="{% if not is_checked %}display: none; {% endif %}max-width:700px">{{  kpError  }}</div>
+                        {% else %}
+                            <div id="pay_later" class="kp-method" style="display: none;"></div>
+                        {% endif %}
+                    </dt>
+                </dl>
+            </div>
+        {% elseif sPaymentID == "klarna_pay_later" %}
+            <div class="well well-sm kp-outer">
+                <dl>
+                    <dt>
+                        <input class="kp-radio form-check-input" id="kp-pl" data-payment_id="pay_later" type="radio" name="paymentid"
+                               value="{{ sPaymentID }}"
+                               {% if is_checked %}checked{% endif %}>
+                        <label for="kp-pl">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
+                        <img src="{{ paymentmethod.getBadgeUrl() }}">
+
+                    </dt>
+                    <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_LATER_SUBTITLE" }) }}</dt>
+                    <dt>
+                        {% if kpError  %}
+                            <div class="kp-method alert alert-info"
+                                 style="{% if not is_checked %}display: none; {% endif %}max-width:700px">{{  kpError  }}</div>
+                        {% else %}
+                            <div id="pay_later" class="kp-method" style="display: none;"></div>
+                        {% endif %}
+                    </dt>
+                </dl>
+            </div>
+        {% elseif sPaymentID == "klarna_slice_it" %}
+            <div class="well well-sm kp-outer">
+                <dl>
+                    <dt>
+                        <input class="kp-radio form-check-input" id="kp-pot" data-payment_id="pay_over_time" type="radio"
+                               name="paymentid"
+                               value="{{ sPaymentID }}"
+                               {% if is_checked %}checked{% endif %}>
+                        <label for="kp-pot">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
+                        <img src="{{ paymentmethod.getBadgeUrl() }}">
+                    </dt>
+                    <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_SLICE_IT_SUBTITLE" }) }}</dt>
+                    <dt>
+                        {% if kpError  %}
+                            <div class="kp-method alert alert-info"
+                                 style="{% if not is_checked %}display: none; {% endif %}max-width:700px">{{  kpError  }}</div>
+                        {% else %}
+                            <div id="pay_over_time" class="kp-method" style="display: none;"></div>
+                        {% endif %}
+                    </dt>
+                </dl>
+            </div>
+        {% elseif sPaymentID == "klarna_directdebit" %}
+            <div class="well well-sm kp-outer">
+                <dl>
+                    <dt>
+                        <input class="kp-radio form-check-input" id="kp-dd" data-payment_id="direct_debit" type="radio"
+                               name="paymentid"
+                               value="{{ sPaymentID }}"
+                               {% if is_checked %}checked{% endif %}>
+                        <label for="kp-dd">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
+                        <img src="{{ paymentmethod.getBadgeUrl() }}">
+                    </dt>
+                    <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
+                    <dt>
+                        {% if kpError  %}
+                            <div class="kp-method alert alert-info"
+                                 style="{% if not is_checked %}display: none; {% endif %}max-width:700px">{{  kpError  }}</div>
+                        {% else %}
+                            <div id="direct_debit" class="kp-method" style="display: none;"></div>
+                        {% endif %}
+                    </dt>
+                </dl>
+            </div>
+        {% elseif sPaymentID == "klarna_card" %}
+            <div class="well well-sm kp-outer">
+                <dl>
+                    <dt>
+                        <input class="kp-radio form-check-input" id="kp-dd" data-payment_id="card" type="radio"
+                               name="paymentid"
+                               value="{{ sPaymentID }}"
+                               {% if is_checked %}checked{% endif %}>
+                        <label for="kp-dd">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
+                        <img src="{{ paymentmethod.getBadgeUrl() }}">
+                    </dt>
+                    <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
+                    <dt>
+                        {% if kpError  %}
+                            <div class="kp-method alert alert-info"
+                                 style="{% if not is_checked %}display: none; {% endif %}max-width:700px">{{  kpError  }}</div>
+                        {% else %}
+                            <div id="card" class="kp-method" style="display: none;"></div>
+                        {% endif %}
+                    </dt>
+                </dl>
+            </div>
+        {% elseif sPaymentID == "klarna_sofort" %}
+            <div class="well well-sm kp-outer">
+                <dl>
+                    <dt>
+                        <input class="kp-radio form-check-input" id="kp-so" data-payment_id="direct_bank_transfer" type="radio"
+                               name="paymentid"
+                               value="{{ sPaymentID }}"
+                               {% if is_checked %}checked{% endif %}>
+                        <label for="kp-so">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
+                        <img src="{{ paymentmethod.getBadgeUrl() }}">
+                    </dt>
+                    <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
+                    <dt>
+                        {% if kpError  %}
+                            <div class="kp-method alert alert-info"
+                                 style="{% if not is_checked %}display: none; {% endif %}max-width:700px">{{  kpError  }}</div>
+                        {% else %}
+                            <div id="direct_bank_transfer" class="kp-method" style="display: none;"></div>
+                        {% endif %}
+                    </dt>
+                </dl>
+            </div>
+        {% elseif sPaymentID == "klarna_pay_now" %}
+            <div class="kp-outer">
+                <dl>
+                    <dt>
+                        <input class="kp-radio form-check-input" id="kp-pn" data-payment_id="pay_now" type="radio"
+                               name="paymentid"
+                               value="{{ sPaymentID }}"
+                               {% if is_checked %}checked{% endif %}>
+                        <label for="kp-pn">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
+                        <img src="{{ paymentmethod.getBadgeUrl() }}">
+                    </dt>
+                    <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
+                    <dt>
+                        {% if kpError  %}
+                            <div class="kp-method alert alert-info"
+                                 style="{% if not is_checked %}display: none; {% endif %}max-width:700px">{{  kpError  }}</div>
+                        {% else %}
+                            <div id="pay_now" class="kp-method" style="display: none;"></div>
+                        {% endif %}
+                    </dt>
+                </dl>
+            </div>
+        {% else %}
+            {{ parent() }}
+        {% endif %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block change_payment %}
+    {{ parent() }}
+
+    {% if oViewConf.isKlarnaPaymentsEnabled() and oView.loadKlarnaPaymentWidget  %}
+        <div class="loading" style="display: none;">Loading&#8230;</div>
+        <div class="kp-method alert alert-info tcklarna-message"
+             style="display: none; max-width:700px">{{ translate({ ident: "KP_NOT_AVAILABLE_FOR_COMPANIES" }) }}</div>
+        <script>
+            var tcKlarnaClientToken = "{{ client_token }}";
+            var tcKlarnaIsB2B = "{{ tcKlarnaIsB2B }}";
+        </script>
+        {{ script({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/js/tcklarna_payments_handler.js', priority: 12, dynamic: __oxid_include_dynamic }) }}
+        {{ script({ include: "https://x.klarnacdn.net/kp/lib/v1/api.js", priority: 13, dynamic: __oxid_include_dynamic }) }}
+        {{ style({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/css/tcklarna_payments.css'}) }}
+    {% endif %}
+{% endblock %}

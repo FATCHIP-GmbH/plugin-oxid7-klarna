@@ -1,0 +1,56 @@
+{% extends "page/checkout/order.html.twig" %}
+
+{% block order_basket %}
+    {{ parent() }}
+
+    {% if oViewConf.isKlarnaPaymentsEnabled() and oView.loadKlarnaPaymentWidget  %}
+        <div class="loading" style="display: none;">Loading&#8230;</div>
+        <script>
+            var tcKlarnaClientToken = "{{ client_token }}";
+        </script>
+        {{ script({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/js/tcklarna_payments_handler.js', priority: 12, dynamic: __oxid_include_dynamic }) }}
+        {{ script({ include: "https://x.klarnacdn.net/kp/lib/v1/api.js", priority: 13, dynamic: __oxid_include_dynamic }) }}
+        {{ style({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/css/tcklarna_payments.css'}) }}
+    {% endif %}
+{% endblock %}
+
+{% block shippingAndPayment %}
+    {{ parent() }}
+    {% set payment = oView.getPayment() %}
+    {% if payment and payment.isKPPayment() %}
+        {% capture assign = "insertLogoJS" %}
+            var theme = '{{ oViewConf.getActiveTheme() }}';
+            if(theme === 'apex'){
+                var $parent = $('#orderPayment').find('.card-body');
+            }
+
+            if(typeof $parent !== 'undefined') {
+                var parentStyle = getComputedStyle($parent[0]);
+                var offset = 5;
+                var height = parseInt(parentStyle.height) - offset * 2;
+                var margin = parseInt(parentStyle.paddingTop) - offset;
+                if(margin > 0) {
+                    margin *= -1;
+                }
+                $('<img>')
+                    .attr('src', "{{ payment.getBadgeUrl() }}")
+                    .attr('height', height + 'px')
+                    .css({'margin': + margin + 'px 10px'})
+                    .appendTo($parent)
+            }
+        {% endcapture %}
+        {{ script({ add: insertLogoJS, priority: 10, dynamic: __oxid_include_dynamic }) }}
+    {% endif %}
+{% endblock %}
+
+{% block checkout_order_next_step_bottom %}
+    {{ parent() }}
+    {% set payment = oView.getPayment() %}
+
+    {% if payment.oxpayments__oxid.value != 'bestitamazon' %}
+        <script type="javascript/text">
+            if(typeof amazon !== 'undefined')
+                delete amazon;
+        </script>
+    {% endif %}
+{% endblock %}

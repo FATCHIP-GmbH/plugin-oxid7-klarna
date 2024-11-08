@@ -1,0 +1,57 @@
+{% extends "layout/footer.html.twig" %}
+
+{% block footer_main %}
+    {{ parent() }}
+
+    {% set aKlFooter = oViewConf.getKlarnaFooterContent() %}
+    {% if aKlFooter.script %}
+        {{ aKlFooter.script }}
+    {% endif %}
+
+    {{ script({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/js/libs/jquery.min.js', priority: 8, dynamic: __oxid_include_dynamic }) }}
+    {{ script({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/js/libs/jquery-ui.min.js', priority: 8, dynamic: __oxid_include_dynamic }) }}
+    {{ script({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/js/tcklarna_scripts.js', priority: 13, dynamic: __oxid_include_dynamic }) }}
+
+    {% if aKlFooter %}
+        {% capture assign = "klFooterContent" %}
+            {% if aKlFooter.url %}
+                <section class="klarna-logo">
+                    <style>
+                        .kl-logo { margin-top: 30px; }
+                        .kl-logo-inner { width: 80%; }
+                        .kl-logo img { max-width: 100%;}
+                    </style>
+
+                    <div class="kl-logo">
+                        <div class="{% if (aKlFooter.class is same as('logoFooter') or aKlFooter.class is same as('logoBlack') or aKlFooter.class is same as('logoWhite') ) %}kl-logo-inner{% endif %}">
+                            <img {% if (aKlFooter.class is same as('logoFooter')) %}width="135" height="75"{% endif %} src="{{ aKlFooter.url }}">
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+        {% endcapture %}
+
+        <script type="text/javascript">
+            function embedKlarnaLogo(content) {
+                var theme = '{{ oViewConf.getActiveTheme() }}';
+                var $content = $(content);
+
+                if($content.length > 0) {
+                    if(theme == 'apex'){
+                        $('.footer-newsletter').append($content);
+                    }
+                    // get logo in natural size
+                    var $img = $content.find('img');
+                    var parsedUrl = $img.attr('src').split('width=');
+
+                    if(parsedUrl.length > 1) {
+                        var prevStyle = getComputedStyle($content.prev().children().first()[0]);
+                        $img.attr('src', parsedUrl[0] + 'width=' + parseInt(prevStyle.width));
+                    }
+                }
+            }
+            var content = '{{ klFooterContent|trim|escape("js") }}';
+        </script>
+        {{ script({ add: "embedKlarnaLogo(content);", dynamic: __oxid_include_dynamic }) }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "page/shop/start.html.twig" %}
+
+{% block start_manufacturer_slider %}
+    {{ parent() }}
+    {% set aKlPromotion = oViewConf.getOnSitePromotionInfo('sKlarnaBannerPromotion') %}
+    {% set sKlarnaMessagingScript = oViewConf.getOnSitePromotionInfo('sKlarnaMessagingScript') %}
+
+    {% if aKlPromotion and sKlarnaMessagingScript|trim %}
+        <div id="banner-promotion">
+            {{ aKlPromotion }}
+        </div>
+        <div class="clear clearfix"></div>
+    {% endif %}
+
+    <style>
+        #banner-promotion {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "layout/header.html.twig" %}
+
+{% block header_main %}
+    {% set aKlPromotion = oViewConf.getOnSitePromotionInfo('sKlarnaStripPromotion') %}
+    {% set sKlarnaMessagingScript = oViewConf.getOnSitePromotionInfo('sKlarnaMessagingScript') %}
+
+    {% if aKlPromotion and oViewConf.getActiveClassName() is same as('start') and sKlarnaMessagingScript|trim %}
+        <div>
+            {{ aKlPromotion }}
+        </div>
+        <div class="clear clearfix"></div>
+    {% endif %}
+
+    <style>
+        klarna-placement{
+            display: block!important;
+        }
+    </style>
+
+    {{ parent() }}
+{% endblock %}
