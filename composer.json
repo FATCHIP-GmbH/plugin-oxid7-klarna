@@ -9,7 +9,7 @@
       "blacklist-filter": [
         "documentation/**/*.*"
       ],
-      "target-directory": "tc/tcklarna"
+      "target-directory": "fatchip-gmbh/oxid-klarna-7"
     }
   },
   "require": {
