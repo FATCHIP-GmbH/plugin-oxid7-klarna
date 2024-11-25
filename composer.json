@@ -3,7 +3,7 @@
   "description": "Klarna module for OXID eShop version 7.X",
   "type": "oxideshop-module",
   "version": "7.0.0",
-  "license": "Apache-2.2",
+  "license": "Apache-2.0",
   "extra": {
     "oxideshop": {
       "blacklist-filter": [
