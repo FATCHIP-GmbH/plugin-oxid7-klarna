@@ -54,10 +54,7 @@ final class Version20230323131941 extends AbstractMigration
         $de_prefix = $oPayment->getFieldData('oxdesc') === 'Rechnung' ? 0 : 1;
         $en_prefix = $de_prefix === 1 ? 0 : 1;
 
-        $newPayments = array(
-            KlarnaPaymentTypes::KLARNA_PAYMENT_ID  =>
-                array($de_prefix => 'Mit Klarna bezahlen', $en_prefix => 'Pay with Klarna'),
-        );
+        $newPayments = array();
 
         $sort   = -350;
         $aLangs = Registry::getLang()->getLanguageArray();
