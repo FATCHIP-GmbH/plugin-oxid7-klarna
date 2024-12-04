@@ -54,29 +54,14 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $user->expects($this->once())->method('onOrderExecute')->willReturn(true);
 
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId', 'calculateBasket'])->getMock();
-        //ManuTest TODO Prüfen was noch zu KCO gehört und entfernt werden kann
-        //$oBasket->expects($this->atLeastOnce())->method('getPaymentId')->willReturn('klarna_checkout');
         $oBasket->expects($this->once())->method('calculateBasket')->willReturn(true);
-        /*$sut = $this->getMockBuilder(OrderController::class)
-            ->setMethods(['kcoBeforeExecute', 'getDeliveryAddressMD5', 'klarnaCheckoutSecurityCheck'])
-            ->getMock();
-        $sut->expects($this->once())->method('kcoBeforeExecute')->willReturn(true);
-        $sut->expects($this->once())->method('getDeliveryAddressMD5')->willReturn('address');
-        $sut->expects($this->once())->method('klarnaCheckoutSecurityCheck')->willReturn(true);*/
-
-        /*$this->setProtectedClassProperty($sut, '_oUser', $user);
-        $this->setProtectedClassProperty($sut, '_aOrderData', ['merchant_requested' => ['additional_checkbox' => true]]);*/
         $sGetChallenge = Registry::getSession()->getSessionChallengeToken();
         $this->setRequestParameter('stoken', $sGetChallenge);
         UtilsObject::setClassInstance(Order::class, $order);
         $this->getSession()->setBasket($oBasket);
 
-        /*$sut->execute();*/
         $addressResult = $this->getSessionParam('sDelAddrMD5');
         $this->assertEquals('address', $addressResult);
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$paymentId = $this->getSessionParam('paymentid');
-        //$this->assertEquals('klarna_checkout', $paymentId);
 
     }
 
@@ -88,10 +73,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         return[
             [$sGetChallenge, 'id', 'id', $statusComplete, 1, 'thankyou'], // success
-            //ManuTest TODO Prüfen was noch zu KlarnaExpress gehört
-            /*[$sGetChallenge, 'id', 'id', $statusIncomplete, 0, 'KlarnaExpress'], // incomplete status
-            [$sGetChallenge, 'id', 'newId', $statusComplete, 0, 'KlarnaExpress'], // klarna id mismatch
-            [$sGetChallenge, null, null, $statusComplete, 0, 'KlarnaExpress'], // no klarna id*/
             [null, 'id', 'id', $statusComplete, 0, false] // no/invalid session challenge token
         ];
     }
@@ -161,8 +142,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals('de-de', $locale);
         $this->assertEquals('test', $clientToken);
         $this->assertEquals(true, $this->getProtectedClassProperty($sut, 'loadKlarnaPaymentWidget'));
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$this->setSessionParam('paymentid', 'klarna_checkout');
 
         $sut->render();
         $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl()."cl=basket", \oxUtilsHelper::$sRedirectUrl);
@@ -197,13 +176,11 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
      * @param $userClassName
      * @param $kcoExternalPayments
      */
-    public function testInit($mode, $payId, $countryISO, $externalCheckout, $userClassName/*ManuTest , $kcoExternalPayments*/)
+    public function testInit($mode, $payId, $countryISO, $externalCheckout, $userClassName)
     {
         $this->setModuleMode($mode);
         $this->setRequestParameter('externalCheckout', $externalCheckout);
         $this->setSessionParam('sCountryISO', $countryISO);
-        //ManuTest TODO Prüfen was noch zu KCO gehört und entfernt werden kann
-        //$userClassName && $this->setSessionParam('klarna_checkout_order_id', 'kcoId');
 
         $oBasket = oxNew(Basket::class);
         $oBasket->setPayment($payId);
@@ -218,10 +195,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $userClassName && $oOrderController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn(
             $client
         );
-        //ManuTest TODO Prüfen was noch zu KCO gehört und entfernt werden kann
-        /*$oOrderController->expects($this->any())->method('getKlarnaAllowedExternalPayments')->willReturn(
-            $kcoExternalPayments
-        );*/
+
         $oOrderController->init();
 
         $oUser = $oOrderController->getUser();
@@ -231,8 +205,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             $externalCheckout,
             $this->getProtectedClassProperty($oOrderController, 'isExternalCheckout')
         );
-        // back to default
-        //$this->setModuleMode('KCO');
     }
 
     public function testInit_exception()
@@ -240,8 +212,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->setSessionParam('sCountryISO', 'DE');
 
         $oBasket = oxNew(Basket::class);
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$oBasket->setPayment('klarna_checkout');
         Registry::getSession()->setBasket($oBasket);
         Registry::getSession()->freeze();
 
@@ -273,8 +243,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $newCountry = 'AT';
 
         $oBasket = oxNew(Basket::class);
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$oBasket->setPayment('klarna_checkout');
         Registry::getSession()->setBasket($oBasket);
         $oOrderController = $this->getMockBuilder(OrderController::class)->setMethods(['isCountryChanged'])->getMock();
         $oOrderController->expects($this->once())->method('isCountryChanged')->willReturn($newCountry);

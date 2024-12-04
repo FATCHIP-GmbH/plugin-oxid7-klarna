@@ -34,8 +34,6 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
         $order->expects($this->any())->method('updateKlarnaOrder')->willReturn('test');
         $order->expects($this->any())->method('captureKlarnaOrder')->willReturn(true);
         $order->oxorder__oxstorno = new Field($oxstorno, Field::T_RAW);
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$order->oxorder__oxpaymenttype = new Field('klarna_checkout', Field::T_RAW);
         $order->oxorder__tcklarna_merchantid = new Field('smid', Field::T_RAW);
         $order->oxorder_oxbillcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
         UtilsObject::setClassInstance(Order::class, $order);

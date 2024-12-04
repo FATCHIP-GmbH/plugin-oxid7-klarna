@@ -285,9 +285,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
     public function KlarnaPaymentDeliveryDataProvider()
     {
-        //ManuTest TODO Prüfen was noch zu KCO gehört und entfernt werden kann
         $oOrder = $this->getMockBuilder(Order::class)->setMethods([/*'isKCO', */'getFieldData'])->getMock();
-        //$oOrder->expects($this->once())->method('isKCO')->willReturn(true);
         $oOrder->expects($this->once())->method('getFieldData')->willReturn('asdf');
 
         return [

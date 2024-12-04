@@ -14,8 +14,6 @@ class KlarnaBasketControllerTest extends ModuleUnitTestCase
     public function testRender()
     {
         $basket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$basket->expects($this->once())->method('getPaymentId')->willReturn('klarna_checkout');
         $session = Registry::getSession();
         $session->setBasket($basket);
         $this->setRequestParameter('openAmazonLogin', true);
