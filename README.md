@@ -6,7 +6,6 @@ Klarna Payments Module for the OXID eShop
 ### Title: Klarna Payments Module for the OXID eShop
 ### Author: cgrd GmbH, https://www.fatchip.de
 ### Prefix: tcklarna
-### Version: 7.0.0
 ### Link: https://www.klarna.com/de/verkaeufer/plattformen-und-partner/oxid/
 ### Mail: oxid@klarna.com
 
