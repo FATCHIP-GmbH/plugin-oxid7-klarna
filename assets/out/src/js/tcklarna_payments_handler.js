@@ -303,18 +303,11 @@ window.klarnaAsyncCallback = function () {
             if ($kpRadio.active && $form.attr('id') === 'payment') {
                 event.preventDefault();
                 if (!$kpRadio.active.hasError) {
-                    $('.loading').show(600);
                     klarnaSendXHR({
                         action: 'checkOrderStatus',
                         paymentId: $kpRadio.active.value,
                         client_token: tcKlarnaClientToken
                     });
-                } else {
-                    // $($kpRadio.active).closest('.kp-outer')
-                    //     .find('.kp-method')
-                    //     .hide(600);
-                    // $kpRadio.active.checked = false;
-                    // delete $kpRadio.active;
                 }
 
             } else if ($form.attr('id') === 'orderConfirmAgbBottom') {

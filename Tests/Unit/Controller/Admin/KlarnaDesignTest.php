@@ -19,8 +19,6 @@ class KlarnaDesignTest extends ModuleUnitTestCase
         $viewData = $obj->getViewData();
         $this->assertEquals('@tcklarna/admin/tcklarna_design', $result);
         $this->assertEquals('de_de', $viewData['locale']);
-        //ManuTest TODO Prüfen ob die komplette testRender() gelöscht werden kann, da KCO entfernt wurde
-        //$this->assertEquals('KCO', $viewData['mode']);
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");

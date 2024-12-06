@@ -29,8 +29,6 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
         $ajaxController->init();
         $this->assertEquals('Invalid payment ID', \oxUtilsHelper::$response);
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$oBasket->expects($this->any())->method('getPaymentId')->willReturn('klarna_checkout');
         $session = Registry::getSession();
         $session->setBasket($oBasket);
 
@@ -84,8 +82,6 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
         $ajaxController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
         $this->setProtectedClassProperty($ajaxController, '_oUser', $user);
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
-        //ManuTest TODO Prüfen was noch zu KCO gehört
-        //$oBasket->expects($this->once())->method('getPaymentId')->willReturn('klarna_checkout');
         $session = Registry::getSession();
         $session->setBasket($oBasket);
         $ajaxController->render();

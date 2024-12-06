@@ -125,8 +125,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
             'locale'                   => "de-DE",
             'merchant_urls'            => [
                 'terms'              => "https://testurl",
-                //ManuTest TODO Prüfen was noch zu KlarnaExpress gehört
-                /*'checkout'           => "https://testurl?cl=KlarnaExpress",*/
                 'confirmation'       => "https://testurl?cl=order&fnc=execute&klarna_order_id={checkout.order.id}&stoken=$sGetChallenge",
                 'push'               => "https://testurl?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
                 'cancellation_terms' => "https://testurl",

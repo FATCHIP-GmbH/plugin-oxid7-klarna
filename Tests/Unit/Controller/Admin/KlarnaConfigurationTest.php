@@ -21,8 +21,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
         $payment->oxpayments__oxactive = new Field(2, Field::T_RAW);
         UtilsObject::setClassInstance(Payment::class, $payment);
         $this->setConfigParam('sSSLShopURL', null);
-        //ManuTest TODO Prüfen was noch mit KCO zusammenhängt
-        //$this->setModuleConfVar('sKlarnaActiveMode', 'KCO');
+
         $controller = new KlarnaConfiguration();
         $result = $controller->render();
 
@@ -36,8 +35,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
         $this->assertTrue($viewData['blAustriaActive']);
         $this->assertInstanceOf(KlarnaCountryList::class, $viewData['activeCountries']);
         $this->assertEquals('{}', $viewData['tcklarna_countryList']);
-        //ManuTest TODO Prüfen was noch mit KCO zusammenhängt
-        //$this->assertEquals('@tcklarna/admin/tcklarna_kco_config', $result);
+
         $this->setModuleConfVar('sKlarnaActiveMode', 'KP');
         $result = $controller->render();
         $this->assertEquals('@tcklarna/admin/tcklarna_kp_config', $result);
@@ -135,8 +133,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
     public function testSave() {
         $this->setRequestParameter('kpMethods', []);
         $config = oxNew(KlarnaConfiguration::class);
-        //ManuTest TODO Prüfen was noch mit KCO zusammenhängt
-        //$this->setModuleConfVar('sKlarnaActiveMode', 'KCO');
+
         $config->save();
 
         $this->assertFalse(KlarnaUtils::isKlarnaPaymentsEnabled());
