@@ -5,7 +5,7 @@
 
     {% set aKlFooter = oViewConf.getKlarnaFooterContent() %}
     {% if aKlFooter.script %}
-        {{ aKlFooter.script }}
+        {{ aKlFooter.script|raw }}
     {% endif %}
 
     {{ script({ include: oViewConf.getModuleUrl('tcklarna')~'out/src/js/libs/jquery.min.js', priority: 8, dynamic: __oxid_include_dynamic }) }}
