@@ -7,7 +7,7 @@
 
     {% if aKlPromotion and sKlarnaMessagingScript|trim %}
         <div id="banner-promotion">
-            {{ aKlPromotion }}
+            {{ aKlPromotion|raw }}
         </div>
         <div class="clear clearfix"></div>
     {% endif %}

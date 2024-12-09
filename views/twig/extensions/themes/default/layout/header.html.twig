@@ -6,7 +6,7 @@
 
     {% if aKlPromotion and oViewConf.getActiveClassName() is same as('start') and sKlarnaMessagingScript|trim %}
         <div>
-            {{ aKlPromotion }}
+            {{ aKlPromotion|raw }}
         </div>
         <div class="clear clearfix"></div>
     {% endif %}

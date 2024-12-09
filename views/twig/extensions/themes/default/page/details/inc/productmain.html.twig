@@ -20,7 +20,7 @@
     {% set sKlarnaMessagingScript = oViewConf.getOnSitePromotionInfo('sKlarnaMessagingScript') %}
     {% if aKlPromotion and sKlarnaMessagingScript|trim %}
         <div id="credit_promo">
-            {{ aKlPromotion }}
+            {{ aKlPromotion|raw }}
         </div>
         <div class="clear clearfix"></div>
     {% endif %}
