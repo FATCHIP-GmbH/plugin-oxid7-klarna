@@ -31,7 +31,6 @@ $aLang = [
     'TCKLARNA_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'TCKLARNA_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
     'TCKLARNA_BASIC_SETTINGS'      => 'basic settings',
-    'TCKLARNA_KP_OPTIONS_REMOVAL'  => 'Sofort bezahlen, Pay later und Ratenkauf werden zukünftig in eine Zahlungsmethode zusammengefasst: Bezahlen mit Klarna. Diese Konfiguration wird dann nicht mehr benötigt und in einer zukünftigen Version entfernt.',
     'TCKLARNA_DISCOUNT_TITLE'      => 'Rabatt',
 
     'tcklarna_tbclklarna_orders' => 'Klarna',
@@ -169,7 +168,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_IMAGE_TIP_69x24'                => 'Bildgröße: 69x24 Pixel',
     'TCKLARNA_IMAGE_TIP_276x48'               => 'Bildgröße: 276x48 Pixel',
     'TCKLARNA_USER_GUIDE_DESCRIPTION'         => 'Das Benutzerhandbuch für das Klarna Modul für den OXID eShop können Sie hier einsehen.',
-    'TCKLARNA_USER_GUIDE_LINK'         => 'https://wiki.fatchip.de/public/faqklarna',
+    'TCKLARNA_USER_GUIDE_LINK'         => 'https://wiki.fatchip.de/public/faqklarna7',
     'TCKLARNA_USER_GUIDE_BUTTON'         => 'Benutzerhandbuch',
 
     'TCKLARNA_CHOOSE' => 'Wählen',

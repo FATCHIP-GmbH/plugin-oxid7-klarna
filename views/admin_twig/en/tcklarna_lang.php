@@ -31,7 +31,6 @@ $aLang = [
     'TCKLARNA_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'TCKLARNA_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
     'TCKLARNA_BASIC_SETTINGS'      => 'basic settings',
-    'TCKLARNA_KP_OPTIONS_REMOVAL'  => 'Pay later, Financing and Pay Now will be combined into one payment method in the future: Pay with Klarna. This configuration will no longer be needed and will be removed in a future version.',
     'TCKLARNA_DISCOUNT_TITLE'      => 'Discount',
 
     'tcklarna_tbclklarna_orders'     => 'Klarna',
@@ -166,7 +165,7 @@ For a detailed description of the different settings please see the tool-tip fun
     'TCKLARNA_IMAGE_TIP_69x24'         => 'Dimensions: 69x24 Pixel',
     'TCKLARNA_IMAGE_TIP_276x48'        => 'Dimensions: 276x48 Pixel',
     'TCKLARNA_USER_GUIDE_DESCRIPTION'  => 'View the user manual for the Klarna module for OXID eShop here.',
-    'TCKLARNA_USER_GUIDE_LINK'         => 'https://wiki.fatchip.de/public/faqklarna',
+    'TCKLARNA_USER_GUIDE_LINK'         => 'https://wiki.fatchip.de/public/faqklarna7',
     'TCKLARNA_USER_GUIDE_BUTTON'         => 'User guide',
 
     'TCKLARNA_CHOOSE' => 'Choose',
