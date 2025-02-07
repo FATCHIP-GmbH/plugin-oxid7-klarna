@@ -277,10 +277,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_REACH_SUPPORT'         => 'Kontaktieren Sie Klarna‘s Merchant Support',
 
     'TCKLARNA_ON_SITE_MESSAGING'     => 'On-Site Messaging',
-    'TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC'     => 'Hier können Sie das On-Site Messaging zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. 
-Für oder wenden Sie sich an den Klarna Integration Support.  
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
-oder wenden Sie sich an den Klarna Integration Support.',
+    'TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC'     => 'Hier können Sie das On-Site Messaging zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren.',
     'TCKLARNA_ON_SITE_MESSAGING_SCRIPT'         => 'Script',
     'TCKLARNA_CREDIT_PROMOTION_PRODUCT'         => 'Credit Promotion Artikeldetailseite',
     'TCKLARNA_CREDIT_PROMOTION_BASKET'          => 'Credit Promotion Warenkorb',
