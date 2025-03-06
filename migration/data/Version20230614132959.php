@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TopConcepts\Klarna\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
