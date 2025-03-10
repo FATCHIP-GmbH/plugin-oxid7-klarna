@@ -16,8 +16,8 @@ final class Version20250306155415 extends AbstractMigration
     {
         $this->connection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
 
-        $this->extendDbTables($schema);
         $this->addAlterTables($schema);
+        $this->extendDbTables($schema);
     }
 
     /**
