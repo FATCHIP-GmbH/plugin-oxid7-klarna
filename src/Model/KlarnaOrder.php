@@ -57,10 +57,9 @@ class KlarnaOrder extends KlarnaOrder_parent
     }
 
     /**
-     * @param null|KlarnaOrderManagementClient $client for UnitTest purpose
      * @return mixed
      */
-    protected function setNumber($client = null)
+    protected function setNumber()
     {
         if ($blUpdate = parent::setNumber()) {
             if ($this->isKlarna()) {
@@ -70,9 +69,7 @@ class KlarnaOrder extends KlarnaOrder_parent
 
                 try {
                     $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
-                    if (!$client) {
-                        $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
-                    }
+                    $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
                     $client->sendOxidOrderNr($this->oxorder__oxordernr->value, $klarna_id);
                 } catch (KlarnaClientException $e) {
                     KlarnaUtils::logException($e);
