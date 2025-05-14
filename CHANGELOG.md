@@ -2,6 +2,7 @@
 * Fix metadata
 * Fix migration using unavailable function
 * remove deprecated code
+* fix _setNumber-method causing module compatability issues
 
 ### 1.0.1
 * Changes in payment method description
