@@ -198,7 +198,6 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             )
         );
 
-
         $headers = ['Klarna-Idempotency-Key' => $this->getSessionId()];
         $oResponse = $this->post($url, $currentSessionData, $headers);
 
