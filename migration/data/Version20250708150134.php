@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OxidEsales\EshopCommunity\Migrations;
+namespace TopConcepts\Klarna\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -19,6 +19,7 @@ final class Version20250708150134 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        $this->connection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         $this->addSql('ALTER TABLE `oxorder` 
                             ADD column `TCKLARNA_KLARNAPAYMENTMETHOD` 
                             VARCHAR(128) 
