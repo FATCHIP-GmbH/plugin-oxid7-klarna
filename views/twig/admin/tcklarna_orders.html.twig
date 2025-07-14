@@ -186,7 +186,7 @@
                 {% set tcklarna_paymentmethod = "unknown" %}
             {% endif %}
             <strong>Klarna order ID:</strong> <i>{{ tcklarna_orderid }}</i> <strong>Klarna reference:</strong> <i>{{ sKlarnaRef }}</i> <strong>Klarna payment method:</strong>
-            <i>{{ translate({ ident: 'TCKLARNA_AUTHPAYMENTMETHOD_' ~ (tcklarna_paymentmethod) }}</i>
+            <i>{{ translate({ ident: 'TCKLARNA_AUTHPAYMENTMETHOD_' ~ tcklarna_paymentmethod }) }}</i>
         </span>
         <div style='clear:both'></div>
     </div>
