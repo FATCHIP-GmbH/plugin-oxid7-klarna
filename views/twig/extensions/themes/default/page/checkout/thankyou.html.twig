@@ -1,0 +1,20 @@
+{% extends "page/checkout/thankyou.html.twig" %}
+
+{% block checkout_thankyou_info %}
+    {{ translate({ ident: "THANK_YOU_FOR_ORDER" }) }} {{ oxcmp_shop.oxshops__oxname.value }}.<br>
+    {{ translate({ ident: "REGISTERED_YOUR_ORDER", args: order.oxorder__oxordernr.value }) }}<br>
+
+    {% if order.oxorder__tcklarna_klarnapaymentmethod.value %}
+        {{ translate({ ident: "TCKLARNA_AUTHPAYMENTMETHOD" }) }}
+        {{ translate({ ident: 'TCKLARNA_AUTHPAYMENTMETHOD_' ~ (order.oxorder__tcklarna_klarnapaymentmethod.value ?: 'unknown') }) }}<br>
+    {% endif %}
+
+    {% if not oView.getMailError() %}
+        {{ translate({ ident: "MESSAGE_YOU_RECEIVED_ORDER_CONFIRM" }) }}<br>
+    {% else %}
+        {{ translate({ ident: "MESSAGE_CONFIRMATION_NOT_SUCCEED" }) }}<br>
+    {% endif %}
+
+    <br>
+    {{ translate({ ident: "MESSAGE_WE_WILL_INFORM_YOU" }) }}<br><br>
+{% endblock %}
