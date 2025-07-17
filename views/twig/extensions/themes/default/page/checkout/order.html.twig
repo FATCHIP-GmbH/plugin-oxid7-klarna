@@ -30,19 +30,24 @@
                 }
             }
 
-            if(typeof $parent !== 'undefined') {
+            if ($parent && $parent.length) {
                 var parentStyle = getComputedStyle($parent[0]);
                 var offset = 5;
                 var height = parseInt(parentStyle.height) - offset * 2;
                 var margin = parseInt(parentStyle.paddingTop) - offset;
-                if(margin > 0) {
+                if (margin > 0) {
                     margin *= -1;
                 }
-                $('<img>')
-                    .attr('src', "{{ payment.getBadgeUrl() }}")
-                    .attr('height', height + 'px')
-                    .css({'margin': + margin + 'px 10px'})
-                    .appendTo($parent)
+
+                // Clear existing content and append "Klarna" + badge image
+                $parent.empty().append(
+                    $('<span>')
+                        .text('Klarna '),
+                    $('<img>')
+                        .attr('src', "{{ payment.getBadgeUrl() }}")
+                        .attr('height', height + 'px')
+                        .css({ 'margin': margin + 'px 10px', 'vertical-align': 'middle' })
+                );
             }
         {% endcapture %}
         {{ script({ add: insertLogoJS, priority: 10, dynamic: __oxid_include_dynamic }) }}
