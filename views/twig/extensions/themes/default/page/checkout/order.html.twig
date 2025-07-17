@@ -21,7 +21,13 @@
         {% capture assign = "insertLogoJS" %}
             var theme = '{{ oViewConf.getActiveTheme() }}';
             if(theme === 'apex'){
-                var $parent = $('#orderPayment').find('.card-body');
+                // Try the old way first: .card-body inside #orderPayment
+                $parent = $('#orderPayment').find('.card-body');
+
+                // If not found, fall back to new structure
+                if (!$parent.length) {
+                    $parent = $('#orderPayment').closest('h2').next('.card-body');
+                }
             }
 
             if(typeof $parent !== 'undefined') {
