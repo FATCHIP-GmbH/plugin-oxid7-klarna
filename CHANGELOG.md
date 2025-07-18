@@ -1,3 +1,6 @@
+### 1.2.1
+* add selected klarna payment type to order
+
 ### 1.2.0
 * Fix metadata
 * Fix migration using unavailable function
