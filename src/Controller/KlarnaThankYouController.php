@@ -17,8 +17,6 @@
 
 namespace TopConcepts\Klarna\Controller;
 
-
-use OxidEsales\EshopCommunity\Application\Controller\FrontendController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Order;
