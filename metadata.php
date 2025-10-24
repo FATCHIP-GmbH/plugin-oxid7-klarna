@@ -134,7 +134,6 @@ $aModule = [
         ['name' => 'sKlarnaStripPromotion', 'type' => 'str', 'value' => ''],
         ['name' => 'sKlarnaMessagingScript', 'type' => 'str', 'value' => ''],
         ['name' => 'sKlarnaBannerPromotion', 'type' => 'str', 'value' => ''],
-        ['name' => 'kp_order_id', 'type' => 'str', 'value' => ''],
         // Multilang Data
         ['name' => 'aarrKlarnaAnonymizedProductTitle', 'type' => 'aarr', 'value' => [
             'sKlarnaAnonymizedProductTitle_EN' => 'Product name',

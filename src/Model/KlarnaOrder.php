@@ -64,7 +64,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         if ($blUpdate = parent::setNumber()) {
             if ($this->isKlarna()) {
                 if ($this->isKP()) {
-                    $klarna_id = KlarnaUtils::getShopConfVar('kp_order_id', KlarnaUtils::DATA_TYPE_STRING);
+                    $klarna_id  = $this->oxorder__tcklarna_orderid->value;
                 }
 
                 try {
