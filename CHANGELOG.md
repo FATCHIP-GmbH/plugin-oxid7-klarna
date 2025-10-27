@@ -1,3 +1,7 @@
+### 1.2.2
+* fix namespaces
+* fix shop config being used for order specific data
+
 ### 1.2.1
 * add selected klarna payment type to order
 
