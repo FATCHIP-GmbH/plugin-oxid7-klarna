@@ -40,7 +40,6 @@ class PaymentHandler implements PaymentHandlerInterface
 
         if ($result) {
             $this->updateOrder($oOrder, $response);
-            KlarnaUtils::saveShopConfVar('kp_order_id', $response['order_id'], KlarnaUtils::DATA_TYPE_STRING);
         }
 
         return $result;
