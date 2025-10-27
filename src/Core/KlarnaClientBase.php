@@ -30,7 +30,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ModuleConfigurationDaoBridgeInterface;
-use OxidEsales\EshopCommunity\Core\ShopVersion;
+use OxidEsales\Eshop\Core\ShopVersion;
 
 abstract class KlarnaClientBase extends Base
 {
