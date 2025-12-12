@@ -20,11 +20,11 @@ OXID eShop Plugin to integrate Klarna Payments to OXID eShop Version >= 7.0.0
 
 In the shop's main folder ( the one with composer.json file) run this command:
 
-  composer require fatchip-gmbh/oxid-klarna-7:v7.0.0
+  composer require fatchip-gmbh/oxid-klarna-7:1.2.3
 
 or add the following line within the "require" section to your composer.json file:
 
-  "fatchip-gmbh/oxid-klarna-7": "v7.0.0"
+  "fatchip-gmbh/oxid-klarna-7": "1.2.3"
 
 and run 
 
@@ -35,4 +35,4 @@ For update instructions, please check the documentation.
 
 ## Documentation ##
 
-You'll find a detailed documentation in German and English here: https://wiki.fatchip.de/public/faqklarna
+You'll find a detailed documentation in German and English here: https://wiki.fatchip.de/public/faqklarna7

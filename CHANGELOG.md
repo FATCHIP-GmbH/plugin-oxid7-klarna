@@ -1,3 +1,6 @@
+### 1.2.3
+* fix data collisions if Klarna Payments and PayPal Checkout is opened in two separate tabs
+
 ### 1.2.2
 * fix namespaces
 * fix shop config being used for order specific data
