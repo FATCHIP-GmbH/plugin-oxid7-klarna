@@ -185,6 +185,17 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
             }
 
+            if (!empty($sessionChallenge = Registry::getSession()->getVariable('sess_challenge'))) {
+                // Check if the existing session challenge exists in the database in a non-Klarna order
+                /** @var \TopConcepts\Klarna\Model\KlarnaOrder $oOrder */
+                $oOrder = oxNew(Order::class);
+                if ($oOrder->checkForeignOrderExist($sessionChallenge)) {
+                    // Session challenge already exists as a non-Klarna order, regenerate
+                    $sGetChallenge = Registry::getUtilsObject()->generateUID();
+                    Registry::getSession()->setVariable('sess_challenge', $sGetChallenge);
+                }
+            }
+
             if ($sAuthToken = Registry::get(Request::class)->getRequestEscapedParameter('sAuthToken')) {
                 // finalize apex - save authorization token
                 Registry::getSession()->setVariable('sAuthToken', $sAuthToken);

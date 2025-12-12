@@ -24,6 +24,8 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 
 /**
  * Class KlarnaOrder
@@ -279,5 +281,28 @@ class KlarnaOrder extends KlarnaOrder_parent
         }
 
         return parent::sendOrderByEmail($oUser, $oBasket, $oPayment);
+    }
+
+    /**
+     * Check if an order with the given id already exists and is not a Klarna Checkout order.
+     */
+    public function checkForeignOrderExist($oxid): bool
+    {
+        /** @var \Doctrine\DBAL\Query\QueryBuilder $qb */
+        $qb = ContainerFactory::getInstance()
+            ->getContainer()
+            ->get(QueryBuilderFactoryInterface::class)
+            ->create();
+        $qb->select('OXPAYMENTID')
+            ->from('oxorder')
+            ->where('OXID = :oxid')
+            ->setParameter(':oxid', $oxid);
+        $existingPaymentId = $qb->execute()->fetchOne();
+
+        if (!empty($existingPaymentId) && strpos($existingPaymentId, 'klarna_') !== 0) {
+            return true;
+        }
+
+        return false;
     }
 }
