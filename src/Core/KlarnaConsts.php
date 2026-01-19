@@ -82,7 +82,7 @@ class KlarnaConsts
      */
     public static function getKlarnaCoreCountries()
     {
-        return array('SE', 'NO', 'FI', 'DE', 'AT', 'NL', 'GB', 'DK', 'CH', 'ES', 'FR', 'BE', 'IT', 'IE');
+        return array('AT', 'BE', 'CH', 'CZ', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'GR', 'HU', 'IE', 'IT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE', 'SK');
     }
 
     /**
@@ -91,7 +91,7 @@ class KlarnaConsts
      */
     public static function getKlarnaKPB2BCountries()
     {
-        return ['SE', 'NO', 'FI', 'DK', 'DE'];
+        return ['AT', 'DK', 'FI', 'FR', 'DE', 'IT', 'NL', 'NO', 'ES', 'SE', 'CH', 'GB'];
     }
 
     /**
@@ -101,20 +101,27 @@ class KlarnaConsts
     public static function getCountry2CurrencyArray()
     {
         return [
-            'SE' => 'SEK',
-            'NO' => 'NOK',
-            'DK' => 'DKK',
-            'DE' => 'EUR',
-            'FI' => 'EUR',
-            'NL' => 'EUR',
             'AT' => 'EUR',
-            'GB' => 'GBP',
-            'CH' => 'CHF',
             'BE' => 'EUR',
-            'FR' => 'EUR',
+            'CH' => 'CHF',
+            'CZ' => 'CZK',
+            'DE' => 'EUR',
+            'DK' => 'DKK',
             'ES' => 'EUR',
-            'IT' => 'EUR',
+            'FI' => 'EUR',
+            'FR' => 'EUR',
+            'GB' => 'GBP',
+            'GR' => 'EUR',
+            'HU' => 'HUF',
             'IE' => 'EUR',
+            'IT' => 'EUR',
+            'NL' => 'EUR',
+            'NO' => 'NOK',
+            'PL' => 'PLN',
+            'PT' => 'EUR',
+            'RO' => 'RON',
+            'SE' => 'SEK',
+            'SK' => 'EUR',
         ];
     }
 
