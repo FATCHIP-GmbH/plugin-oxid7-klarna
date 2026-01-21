@@ -1,3 +1,6 @@
+### 1.2.4
+* expand supported country list with their specific currencies
+
 ### 1.2.3
 * fix data collisions if Klarna Payments and PayPal Checkout is opened in two separate tabs
 
