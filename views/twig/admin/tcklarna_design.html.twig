@@ -109,6 +109,81 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Product details page and basket -->
+
+                <div class="klarna-row">
+                    <div class="row-label">
+                        <div class="sign plus"></div>
+                        <div class="text ">
+                            {{ translate({ ident: "TCKLARNA_DETAILS_AND_BASKET"}) }}
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="rows-wrapper">
+                        <table class="config-options">
+                            <tbody>
+                            <tr class="no-t-border no-b-border">
+                                <td>
+                                    <table class="inner">
+                                        <tbody>
+                                        <tr class="dark">
+                                            <td class="name">
+                                                {{ translate({ ident: "TCKLARNA_KEB_THEME"}) }}
+                                            </td>
+                                            <td>
+                                                <div class="input">
+                                                    <div class="selector" id="kebthemeSelector">
+                                                        <div class="selector__menu">
+                                                            <ul class="selector__choices">
+                                                                {% for name in kebtheme %}
+                                                                    <li class="selector__item{% if confstrs.sKlarnaKEBTheme == name %}--selected{% endif %}">
+                                                                        <a href="#" data-value="{{ name }}">
+                                                                            {{ translate({ ident: "TCKLARNA_KEB_THEME_"|cat(name)}) }}
+                                                                        </a>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                            <input type="hidden" name="confstrs[sKlarnaKEBTheme]"
+                                                                   value="{{ confstrs.sKlarnaKEBTheme }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="name">
+                                                {{ translate({ ident: "TCKLARNA_KEB_SHAPE"}) }}
+                                            </td>
+                                            <td>
+                                                <div class="input">
+                                                    <div class="selector" id="kebshapeSelector">
+                                                        <div class="selector__menu">
+                                                            <ul class="selector__choices">
+                                                                {% for name in kebshape %}
+                                                                    <li class="selector__item{% if confstrs.sKlarnaKEBShape == name %}--selected{% endif %}">
+                                                                        <a href="#" data-value="{{ name }}">
+                                                                            {{ translate({ ident: "TCKLARNA_KEB_SHAPE_"|cat(name)}) }}
+                                                                        </a>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                            <input type="hidden" name="confstrs[sKlarnaKEBShape]"
+                                                                   value="{{ confstrs.sKlarnaKEBShape }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <!-- Design options -->
                 <div class="klarna-row">
                     <div class="row-label">

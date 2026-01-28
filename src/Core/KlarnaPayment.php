@@ -160,10 +160,16 @@ class KlarnaPayment extends BaseModel
             "purchase_currency" => $currencyISO,
             "merchant_urls" => [
                 "confirmation" => Registry::getConfig()->getSslShopUrl() . '?cl=thankyou' . $shopUrlParam,
+                "authorization" => Registry::getConfig()->getSslShopUrl() . "cl=KlarnaAuthCallbackEndpoint$shopUrlParam&secret=$userid",
             ],
         ];
 
         $this->_aUserData = $oUser->getKlarnaPaymentData();
+
+
+        if (Registry::getSession()->getVariable("keborderpayload")) {
+            unset($this->_aUserData["billing_address"]);
+        }
         $this->_aOrderLines = $oBasket->getKlarnaOrderLines();
         $this->_aOrderLines['locale'] = $sLocale;
         $this->_aOrderData = array_merge($this->_aOrderData, $this->_aOrderLines);
