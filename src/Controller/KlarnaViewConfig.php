@@ -94,6 +94,29 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return $response;
     }
 
+    /**
+     *
+     */
+    public function displayExpressButton()
+    {
+        return KlarnaUtils::getShopConfVar('blKlarnaDisplayExpressButton') && $this->getKEBClientId();
+    }
+
+    public function displayExpressButtonInBasket()
+    {
+        return KlarnaUtils::getShopConfVar('blKlarnaDisplayExpressButtonInBasket') && $this->getKEBClientId();
+    }
+
+    public function getKEBClientId()
+    {
+        return KlarnaUtils::getShopConfVar("sKlarnaExpressButtonClientId");
+    }
+
+    public function getLocale()
+    {
+        return oxNew(KlarnaConsts::class)->getLocale();
+    }
+
     public function getOnSitePromotionInfo($key, $detailProduct = null)
     {
         if ($this->getActiveClassName() != 'basket' && $key == "sKlarnaCreditPromotionBasket") {
@@ -135,6 +158,12 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function getMode()
     {
         return KlarnaUtils::getShopConfVar('sKlarnaActiveMode');
+    }
+
+    public function isKebPaymentInProcess()
+    {
+        $payload = Registry::getSession()->getVariable("keborderpayload");
+        return (bool) $payload;
     }
 
     /**
@@ -217,5 +246,21 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function isPrefillIframe()
     {
         return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
+    }
+
+    /**
+     * @return string
+     */
+    public function getKlarnaKEBTheme()
+    {
+        return (string)KlarnaUtils::getShopConfVar("sKlarnaKEBTheme");
+    }
+
+    /**
+     * @return string
+     */
+    public function getKlarnaKEBShape()
+    {
+        return (string)KlarnaUtils::getShopConfVar("sKlarnaKEBShape");
     }
 }

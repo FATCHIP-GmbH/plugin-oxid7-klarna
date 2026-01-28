@@ -1,7 +1,9 @@
 <?php
 
 use OxidEsales\Eshop\Application\Controller\Admin\PaymentMain;
+use TopConcepts\Klarna\Component\KlarnaBasketComponent;
 use TopConcepts\Klarna\Component\KlarnaUserComponent;
+use TopConcepts\Klarna\Component\Widgets\KlarnaArticleDetails;
 use TopConcepts\Klarna\Controller\Admin\KlarnaConfiguration;
 use TopConcepts\Klarna\Controller\Admin\KlarnaDesign;
 use TopConcepts\Klarna\Controller\Admin\KlarnaEmdAdmin;
@@ -16,7 +18,9 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
+use TopConcepts\Klarna\Controller\KlarnaAuthCallbackEndpoint;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
+use TopConcepts\Klarna\Controller\KlarnaAjaxController;
 use TopConcepts\Klarna\Controller\KlarnaBasketController;
 use TopConcepts\Klarna\Controller\KlarnaEpmDispatcher;
 use TopConcepts\Klarna\Controller\KlarnaOrderController;
@@ -37,6 +41,7 @@ use TopConcepts\Klarna\Model\KlarnaUserPayment;
 use TopConcepts\Klarna\Core\KlarnaShopControl;
 
 use OxidEsales\Eshop\Application\Component\UserComponent;
+use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Controller\Admin\OrderAddress;
 use OxidEsales\Eshop\Application\Controller\Admin\OrderArticle as AdminOrderArticle;
 use OxidEsales\Eshop\Application\Controller\Admin\OrderList;
@@ -89,8 +94,10 @@ $aModule = [
         'KlarnaMessaging'               => KlarnaMessaging::class,
         'KlarnaShipping'                => KlarnaShipping::class,
         // controllers
+        'KlarnaAjax'                    => KlarnaAjaxController::class,
         'KlarnaEpmDispatcher'           => KlarnaEpmDispatcher::class,
         'KlarnaValidate'                => KlarnaValidationController::class,
+        'KlarnaAuthCallbackEndpoint'    => KlarnaAuthCallbackEndpoint::class,
     ],
     'extend' => [
         // models
@@ -118,7 +125,9 @@ $aModule = [
         OrderOverview::class        => KlarnaOrderOverview::class,
         PaymentMain::class          => KlarnaPaymentMain::class,
         //components
+        BasketComponent::class      => KlarnaBasketComponent::class,
         UserComponent::class        => KlarnaUserComponent::class,
+        ArticleDetails::class       => KlarnaArticleDetails::class,
 
         OxidEsales\Eshop\Core\Config::class                         => Config::class,
         OxidEsales\Eshop\Application\Model\PaymentGateway::class    => PaymentGateway::class,
@@ -140,6 +149,8 @@ $aModule = [
             'sKlarnaAnonymizedProductTitle_DE' => 'Produktname'
         ]],
         ['name' => 'sKlarnaB2Option', 'type' => 'str', 'value' => 'B2C'],
+        ['name' => 'sKlarnaKEBShape', 'type' => 'str', 'value' => 'default'],
+        ['name' => 'sKlarnaKEBTheme', 'type' => 'str', 'value' => 'default'],
         // Multilang Data Ende
         ['name' => 'aarrKlarnaISButtonStyle', 'type' => 'aarr', 'value' => [
             'variation' => 'klarna',
@@ -168,6 +179,8 @@ $aModule = [
         ['name' => 'blKlarnaEnableAutofocus', 'type' => 'bool', 'value' => true],
         ['name' => 'blKlarnaEnablePreFilling', 'type' => 'bool', 'value' => true],
         ['name' => 'blKlarnaPreFillNotification', 'type' => 'bool', 'value' => true],
+        ['name' => 'blKlarnaDisplayExpressButtonInBasket', 'type' => 'bool', 'value' => false],
+        ['name' => 'blKlarnaDisplayExpressButton', 'type' => 'bool', 'value' => false],
         ['name' => 'aarrKlarnaCreds', 'type' => 'aarr', 'value' => []],
         ['name' => 'aarrKlarnaTermsConditionsURI', 'type' => 'aarr', 'value' => []],
         ['name' => 'aarrKlarnaCancellationRightsURI', 'type' => 'aarr', 'value' => []],
@@ -178,6 +191,14 @@ $aModule = [
         ['name' => 'sKlarnaCreditPromotionBasket', 'type' => 'str', 'value' => ''],
         ['name' => 'aKlarnaDesign', 'type' => 'arr', 'value' => []],
         ['name' => 'aKlarnaDesignKP', 'type' => 'arr', 'value' => []],
+        ['name' => 'sKlarnaExpressButtonClientId', 'type' => 'str', 'value' => ''],
+        ['name' => 'sKlarnaKEBMethod', 'type' => 'str', 'value' => ''],
+        ['name' => 'sKlarnaTermsConditionsURI_DE', 'type' => 'str', 'value' => ''],
+        ['name' => 'sKlarnaTermsConditionsURI_EN', 'type' => 'str', 'value' => ''],
+        ['name' => 'sKlarnaCancellationRightsURI_DE', 'type' => 'str', 'value' => ''],
+        ['name' => 'sKlarnaCancellationRightsURI_EN', 'type' => 'str', 'value' => ''],
+        ['name' => 'sKlarnaShippingDetails_DE', 'type' => 'str', 'value' => ''],
+        ['name' => 'sKlarnaShippingDetails_EN', 'type' => 'str', 'value' => ''],
     ],
     'events' => [
         'onActivate' => '\TopConcepts\Klarna\Core\KlarnaInstaller::onActivate',

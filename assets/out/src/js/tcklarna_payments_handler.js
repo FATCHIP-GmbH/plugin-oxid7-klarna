@@ -85,6 +85,16 @@ window.klarnaAsyncCallback = function () {
             } catch (e) {
                 return console.error(e)
             }
+        } else if (window.keborderpayload) {
+            try {
+                var options = {
+                    payment_method_category: 'klarna',
+                    auto_finalize: false
+                };
+                Klarna.Payments.authorize(options, {}, authorizationHandler);
+            } catch (e) {
+                return console.error(e)
+            }
         } else {
             //todo: redirect to payment .. ?
             console.error('Klarna Payment method must be selected.');
@@ -110,6 +120,10 @@ window.klarnaAsyncCallback = function () {
             var options = {
                 payment_method_category: objResponse.data.paymentMethod
             };
+
+            if (window.keborderpayload) {
+                options = {payment_method_category: 'klarna'}
+            }
             setTimeout(function () {
                 $('.loading').hide(1000);
             }, 3000);
@@ -132,6 +146,10 @@ window.klarnaAsyncCallback = function () {
                     }).appendTo($form);
                 }
 
+                if($form.attr('id') === 'orderConfirmAgbBottom' && window.keborderpayload){
+                    finalize({data: window.keborderpayload});
+                    return;
+                }
                 if($form.attr('id') === 'orderConfirmAgbBottom'){
                     finalize({data: recentResponse});
                     return;
@@ -143,6 +161,16 @@ window.klarnaAsyncCallback = function () {
                 name: 'sAuthToken',
                 value: response.authorization_token
             }).appendTo($form);
+
+            if($form.attr('id') === 'orderConfirmAgbBottom' && window.keborderpayload){
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'kexpaymentid',
+                    value: 'klarna_pay_now'
+                }).appendTo($form);
+                $('input[name="stoken"]').val(kebordertoken);
+                $('input[name="sDeliveryAddressMD5"]').val(kebordermd5);
+            }
 
             $form.submit();
 
@@ -300,7 +328,15 @@ window.klarnaAsyncCallback = function () {
 
         // Override form submission
         $sbmButton.click(function (event) {
-            if ($kpRadio.active && $form.attr('id') === 'payment') {
+            if (window.keborderpayload) {
+                event.preventDefault();
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'kexpaymentid',
+                    value: 'klarna_pay_now'
+                }).appendTo($form);
+                handleResponse({status: "finalize",data: window.keborderpayload})
+            } else if  ($kpRadio.active && $form.attr('id') === 'payment') {
                 event.preventDefault();
                 if (!$kpRadio.active.hasError) {
                     klarnaSendXHR({

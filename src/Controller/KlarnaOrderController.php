@@ -45,6 +45,7 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\UtilsView;
+use VIISON\AddressSplitter\AddressSplitter;
 
 /**
  * Extends default OXID order controller logic.
@@ -91,6 +92,39 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if (empty(Registry::getSession()->getVariable('sCountryISO')) && !empty($this->getUser())) {
             Registry::getSession()->setVariable('sCountryISO', $this->getUser()->getUserCountryISO2());
         }
+
+        $oSession = Registry::getSession();
+        if ($kebauthresponse = json_decode(Registry::getRequest()->getRequestParameter("kebauthresponse"))) {
+
+            $klarnaPaymentclient = KlarnaPaymentsClient::getInstance();
+            $address = (array)$kebauthresponse->collected_shipping_address;
+
+            // create fake user from kebauthresponse
+            /** @var KlarnaUser $fakeUser */
+            $deladrid = null;
+            if ((!$this->getUser() || $this->getUser()->isFake()) && $fakeUserId = $oSession->getVariable("kexFakeUserId")) {
+                $fakeUser = oxNew(User::class);
+                $fakeUser->load($fakeUserId);
+                $this->createFakeUserAndAssignAdress($address, $fakeUser);
+            } else {
+                $deladrid = $this->createShippingAddressAndAssignToUser($address, $this->getUser());
+            }
+
+            $klarnaPaymentclient->createKEXSession($kebauthresponse->session_id);
+
+            $oSession->deleteVariable('reauthorizeRequired');
+            if ($deladrid) {
+                $oSession->setVariable('kebmail', $address["email"]);
+                $oSession->setVariable('deladrid', $deladrid);
+            }
+            $oSession->setVariable('finalizeRequired', $kebauthresponse->finalize_required);
+
+        }
+
+
+        if ($keborderpayload = $oSession->getVariable("keborderpayload")) {
+            $this->addTplParam("keborderpayload", $keborderpayload);
+        }
     }
 
     /**
@@ -123,6 +157,17 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         ];
         $oKlarnaLog->assign($aData);
         $oKlarnaLog->save();
+    }
+
+    public function getUser()
+    {
+        if (!parent::getUser() && $fakueserID = Registry::getSession()->getVariable("kexFakeUserId")) {
+            $fakeUser = oxNew(User::class);
+            $fakeUser->load($fakueserID);
+            return $fakeUser;
+        }
+
+        return parent::getUser();
     }
 
     /**
@@ -202,6 +247,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $dt = new \DateTime();
                 Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
             }
+        } else if (Registry::getRequest()->getRequestParameter('kexpaymentid')) {
+            // executing Klarna order but basket has no klarna paymentId -> basket is not properly init'd, customer must try again
+            KlarnaUtils::fullyResetKlarnaSession();
+            Registry::getUtilsView()->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
+            return Registry::getUtils()->redirect($this->selfUrl, true, 302);
         }
 
         // if user is not logged in set the user
@@ -584,7 +634,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $oSession = Registry::getSession();
             /** @var Basket|\TopConcepts\Klarna\Model\KlarnaBasket $oBasket */
             $oBasket = $oSession->getBasket();
-            $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
+            $oKlarnaOrder = oxNew(KlarnaOrder::class, $oBasket, $this->_oUser);
             $oClient = $this->getKlarnaCheckoutClient();
             $aOrderData = $oKlarnaOrder->getOrderData();
             if ($this->forceReloadOnCountryChange
@@ -902,5 +952,142 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         return $oPayment;
+    }
+
+    /**
+     * @param array $address
+     * @param User $user
+     * @return string
+     */
+    protected function createShippingAddressAndAssignToUser(array $address, User $user)
+    {
+        $oSession = Registry::getSession();
+
+        $country = oxNew(Country::class);
+        $cId = $country->getIdByCode($address["country"]);
+
+        /** @var Address $shippingAddress */
+        $shippingAddress = oxNew(Address::class);
+        $shippingAddress->oxaddress__oxcity = new Field($address["city"], Field::T_RAW);
+        $shippingAddress->oxaddress__oxcountry = new Field($address["country"], Field::T_RAW);
+        $shippingAddress->oxaddress__oxcountryid = new Field($cId, Field::T_RAW);
+        $shippingAddress->oxaddress__oxlname = new Field($address["family_name"], Field::T_RAW);
+        $shippingAddress->oxaddress__oxfname = new Field($address["given_name"], Field::T_RAW);
+        $shippingAddress->oxaddress__oxaddinfo = new Field($address["street_address2"], Field::T_RAW);
+        $shippingAddress->oxaddress__oxfon = new Field($address["phone"], Field::T_RAW);
+        $shippingAddress->oxaddress__oxzip = new Field($address["postal_code"], Field::T_RAW);
+
+        list($street, $streetNo) = $this->getSplitAddress($address["street_address"]);
+
+        $shippingAddress->oxaddress__oxstreet = new Field($street, Field::T_RAW);
+        $shippingAddress->oxaddress__oxstreetnr = new Field($streetNo, Field::T_RAW);
+
+        $shippingAddress->oxaddress__oxuserid = new Field($user->getId(), Field::T_RAW);
+        $oSession->setVariable('blshowshipaddress', 1);
+        $shippingAddress->setSelected();
+
+        $shippingAddress->save();
+
+        //override request param
+        $shippingId = $shippingAddress->getId();
+        $_POST["deladrid"] = $shippingId;
+        $this->_aOrderData['selected_shipping_option']['id'] = $shippingId;
+
+        $oSession->setVariable('paymentid', KlarnaPaymentHelper::KLARNA_PAYMENT_PAY_NOW);
+        /** @var Basket $oBasket */
+        $oBasket = $oSession->getBasket();
+        $oBasket->setShipping(KlarnaUtils::getShopConfVar("sKlarnaKEBMethod"));
+        $oBasket->setPayment(KlarnaPaymentHelper::KLARNA_PAYMENT_PAY_NOW);
+        $oBasket->onUpdate();
+
+        return $shippingId;
+    }
+
+    /**
+     * @param array $address
+     * @param User $fakeUser
+     * @return void
+     */
+    protected function createFakeUserAndAssignAdress(array $address, User $fakeUser): void
+    {
+        //Error message: user already exists
+        $user = oxNew(User::class);
+        $oSession = Registry::getSession();
+        if ($user->checkIfEmailExists($address["email"])) {
+            $errorMessage = Registry::getLang()->translateString("TCKLARNA_ERROR_KEB_USER_EXISTS");
+            Registry::get(UtilsView::class)->addErrorToDisplay($errorMessage);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=start', false);
+        }
+
+        //if a guest user with this mail already exists, overwrite it
+        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql = "SELECT oxid FROM oxuser where oxusername = ?";
+
+        if ([$address['email']] && $fakeUserId = $db->getOne($sql,[$address['email']])) {
+            $fakeUser = oxNew(User::class);
+            $fakeUser->load($fakeUserId);
+            // remove former created tmp-user
+            if( $userToDeleteFakeId = Registry::getSession()->getVariable("kexFakeUserId")){
+                $userToDelete = oxNew(User::class);
+                $userToDelete->load($userToDeleteFakeId);
+                $userToDelete->delete();
+            }
+            Registry::getSession()->setVariable("kexFakeUserId",$fakeUserId);
+        }else {
+            $fakeUser->oxuser__oxusername = new Field($address["email"], Field::T_RAW);
+        }
+
+        //generate countryid from country
+        $oCountry = oxNew(Country::class);
+        $countryId = $oCountry->getIdByCode($address["country"]);
+
+        $fakeUser->oxuser__oxcity = new Field($address["city"], Field::T_RAW);
+        $fakeUser->oxuser__oxcountry = new Field($address["country"], Field::T_RAW);
+        $fakeUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
+        $fakeUser->oxuser__oxlname = new Field($address["family_name"], Field::T_RAW);
+        $fakeUser->oxuser__oxfname = new Field($address["given_name"], Field::T_RAW);
+        $fakeUser->oxuser__oxaddinfo = new Field($address["street_address2"], Field::T_RAW);
+        $fakeUser->oxuser__oxfon = new Field($address["phone"], Field::T_RAW);
+        $fakeUser->oxuser__oxzip = new Field($address["postal_code"], Field::T_RAW);
+
+        list($street, $streetNo) = $this->getSplitAddress($address["street_address"]);
+
+        $fakeUser->oxuser__oxstreet = new Field($street, Field::T_RAW);
+        $fakeUser->oxuser__oxstreetnr = new Field($streetNo, Field::T_RAW);
+
+        //build delivery address from billing address
+        Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
+
+        try {
+            $fakeUser->save();
+        }catch (DatabaseErrorException $e) {
+            $errorMessage = Registry::getLang()->translateString("TCKLARNA_ERROR_KEB_USER_EXISTS");
+            Registry::get(UtilsView::class)->addErrorToDisplay($errorMessage);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=start', false);
+        }
+        $fakeUser->setActiveUser();
+
+        $oSession->setVariable('paymentid', KlarnaPaymentHelper::KLARNA_PAYMENT_PAY_NOW);
+        /** @var Basket $oBasket */
+        $oBasket = $oSession->getBasket();
+        Registry::getSession()->setVariable('usr', $fakeUser->getId());
+        $oBasket->setShipping(KlarnaUtils::getShopConfVar("sKlarnaKEBMethod"));
+        $oBasket->setPayment(KlarnaPaymentHelper::KLARNA_PAYMENT_PAY_NOW);
+        $oBasket->onUpdate();
+    }
+
+    /**
+     * @param $street_address
+     * @return array
+     */
+    protected function getSplitAddress($street_address): array
+    {
+        if ($street_address) {
+            $addressData = AddressSplitter::splitAddress($street_address);
+        }
+
+        $street = $addressData['streetName'] ?? '';
+        $streetNo = $addressData['houseNumber'] ?? '';
+        return array($street, $streetNo);
     }
 }

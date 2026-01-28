@@ -195,6 +195,10 @@ var modeSelector = new Selector2({
         id: 'b2optionSelector',
         fromOptions: false
     }),
+    kebmethodSelector = new Selector2({
+        id: 'kebmethodSelector',
+        fromOptions: false
+    }),
     accSelector = new CountrySpecificCredentialsSelector({
         id: 'accSelector',
         fromOptions: false,

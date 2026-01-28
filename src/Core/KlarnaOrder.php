@@ -21,6 +21,7 @@ use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
+use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Model\EmdPayload\KlarnaPassThrough;
 use TopConcepts\Klarna\Model\KlarnaEMD;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -87,7 +88,7 @@ class KlarnaOrder extends BaseModel
      * @param User $oUser
      * @throws SystemComponentException
      */
-    public function __construct(Basket $oBasket, User $oUser)
+    public function __construct(Basket $oBasket, User $oUser, $ignoreMerchantUrls = false)
     {
         parent::__construct();
         $this->_oUser = $oUser;
@@ -105,10 +106,8 @@ class KlarnaOrder extends BaseModel
         $this->_aUserData = $this->_oUser->getKlarnaData();
         $cancellationTerms = KlarnaUtils::getShopConfVar('aarrKlarnaCancellationRightsURI')['sKlarnaCancellationRightsURI_' . $lang];
         $terms = KlarnaUtils::getShopConfVar('aarrKlarnaTermsConditionsURI')['sKlarnaTermsConditionsURI_' . $lang];
-
         if (empty($cancellationTerms) || empty($terms)) {
             Registry::getSession()->setVariable('wrong_merchant_urls', true);
-
             return false;
         }
 
@@ -118,29 +117,49 @@ class KlarnaOrder extends BaseModel
             "purchase_country" => $sCountryISO,
             "purchase_currency" => $currencyName,
             "locale" => $sLocale,
-            "merchant_urls" => [
-                "terms" =>
+        ];
+        Registry::getLogger()->error('orderData '.$this->_aOrderData["purchase_country"]);
+
+        if (!$ignoreMerchantUrls) {
+            $this->_aOrderData["merchant_urls"] = array (
+                "terms"        =>
                     $terms,
+                "checkout"     =>
+                    $sSSLShopURL . "?cl=KlarnaExpress$urlShopParam",
                 "confirmation" =>
                     $sSSLShopURL . "?cl=order$urlShopParam&fnc=execute&klarna_order_id={checkout.order.id}&stoken=$sGetChallenge",
-                "push" =>
+                "push"         =>
                     $sSSLShopURL . "?cl=KlarnaAcknowledge$urlShopParam&klarna_order_id={checkout.order.id}",
+            );
 
-            ],
-        ];
+            if ($this->isValidationEnabled()) {
+                $this->_aOrderData["merchant_urls"]["validation"] =
+                    $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId";
+            }
 
-        if ($this->isValidationEnabled()) {
-            $this->_aOrderData["merchant_urls"]["validation"] =
-                $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId";
+            if (!empty($cancellationTerms)) {
+                $this->_aOrderData["merchant_urls"]["cancellation_terms"] = $cancellationTerms;
+            }
         }
 
-        if (!empty($cancellationTerms)) {
-            $this->_aOrderData["merchant_urls"]["cancellation_terms"] = $cancellationTerms;
-        }
 
         $this->_aOrderData = array_merge(
             $this->_aOrderData,
             $this->_aUserData
+        );
+
+        if (Registry::getSession()->getVariable("keborderpayload")) {
+            unset($this->_aOrderData["billing_address"]);
+        }
+
+
+        //clean up in case of returning to the iframe with an open order
+        Registry::getSession()->deleteVariable('externalCheckout');
+
+        // merge with order_lines and totals
+        $this->_aOrderData = array_merge(
+            $this->_aOrderData,
+            $oBasket->getKlarnaOrderLines()
         );
 
         // skip all other data if there are no items in the basket
@@ -231,6 +250,21 @@ class KlarnaOrder extends BaseModel
     }
 
     /**
+     * Template variable getter. Returns all delivery sets
+     *
+     * @param Basket $oBasket
+     * @return mixed :
+     */
+    public function tcklarna_getAllSets(Basket $oBasket)
+    {
+        if ($this->_klarnaShippingSets === null) {
+            $this->_klarnaShippingSets = $this->getSupportedShippingMethods($oBasket);
+        }
+
+        return $this->_klarnaShippingSets;
+    }
+
+    /**
      * @param $oBasket
      * @return array
      */
@@ -252,6 +286,87 @@ class KlarnaOrder extends BaseModel
         return $shippingCountries;
     }
 
+
+    /**
+     * Get shipping methods that support Klarna Checkout payment
+     * @param Basket $oBasket
+     * @return array
+     * @throws KlarnaConfigException
+     * @throws \oxSystemComponentException
+     * TODO: When KCO is removed, this can be simplified to only support Klarna Express
+     */
+    protected function getSupportedShippingMethods(Basket $oBasket)
+    {
+        $allSets  = $this->_getPayment()->getCheckoutShippingSets($this->_oUser);
+        $currency = Registry::getConfig()->getActShopCurrencyObject();
+        $methods  = array();
+        if (!is_array($allSets)) {
+            return $methods;
+        }
+
+        $this->_selectedShippingSetId = $oBasket->getShippingId();
+
+        $shippingOptions = array();
+        $shippingMap = KlarnaUtils::getShopConfVar('aarrKlarnaShippingMap');
+
+        foreach ($allSets as $shippingId => $shippingMethod) {
+            $assignedShippingMethod = isset($shippingMap[$shippingId]) ? $shippingMap[$shippingId] : false;
+
+            $oBasket->setShipping($shippingId);
+            $oPrice      = $oBasket->tcklarna_calculateDeliveryCost();
+            $basketPrice = $oBasket->getPriceForPayment() / $currency->rate;
+            if ($this->isExpressEnabled()) {
+                $method = clone $shippingMethod;
+
+                $price             = KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100);
+                $tax_rate          = KlarnaUtils::parseFloatAsInt($oPrice->getVat() * 100);
+                $tax_amount        = KlarnaUtils::parseFloatAsInt($price - round($price / ($tax_rate / 10000 + 1), 0));
+                $option = array(
+                    "id"          => $shippingId,
+                    "name"        => html_entity_decode($method->oxdeliveryset__oxtitle->value, ENT_QUOTES),
+                    "description" => null,
+                    "promo"       => null,
+                    "tax_amount"  => $tax_amount,
+                    'price'       => $price,
+                    'tax_rate'    => $tax_rate,
+                    'preselected' => $shippingId === $this->_selectedShippingSetId ? true : false,
+                );
+
+                if ($assignedShippingMethod) {
+                    if (KlarnaShipping::POSTAL_WITH_DHL_PACK_STATION === $assignedShippingMethod) {
+                        $selectedShippingDuplicate = Registry::getSession()->getVariable('tcKlarnaSelectedDuplicate');
+                        $duplicate = $option;
+                        $duplicate['shipping_method'] = KlarnaShipping::DHL_PACK_STATION;
+                        $duplicate['id'] = self::PACK_STATION_PREFIX . $option['id'];
+                        $duplicate['preselected'] = $duplicate['id'] === $selectedShippingDuplicate;
+                        $shippingOptions[] = $duplicate;
+                        if ($duplicate['preselected']) {
+                            $option['preselected'] = false;
+                        }
+                    } else {
+                        $option['shipping_method'] = $assignedShippingMethod;
+                    }
+                }
+                $shippingOptions[] = $option;
+            }
+        }
+        // set basket back to selected shipping option
+        $oBasket->setShipping($this->_selectedShippingSetId);
+
+        if (empty($shippingOptions)) {
+            $oCountry = oxNew(Country::class);
+            $oCountry->load($this->_oUser->getActiveCountry());
+
+            throw new KlarnaConfigException(sprintf(
+                Registry::getLang()->translateString('TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP'),
+                $oCountry->oxcountry__oxtitle->value
+            ));
+        }
+
+        return empty($shippingOptions) ? null : $shippingOptions;
+    }
+
+
     /**
      * Creates new payment object
      *
@@ -265,7 +380,15 @@ class KlarnaOrder extends BaseModel
 
         return $this->_oPayment;
     }
+    protected function isExpressEnabled()
+    {
+        return KlarnaUtils::isKlarnaPaymentsEnabled() && (KlarnaUtils::getShopConfVar('blKlarnaDisplayExpressButton') || KlarnaUtils::getShopConfVar('blKlarnaDisplayExpressButtonInBasket')) && $this->getKEBClientId();
+    }
 
+    protected function getKEBClientId()
+    {
+        return KlarnaUtils::getShopConfVar("sKlarnaExpressButtonClientId");
+    }
     /**
      *
      */
