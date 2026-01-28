@@ -92,6 +92,38 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     }
 
     /**
+     * @param $sessionId
+     * @return void
+     * @throws Exception\KlarnaOrderReadOnlyException
+     * @throws KlarnaClientException
+     * @throws KlarnaOrderNotFoundException
+     */
+    public function createKEXSession($sessionId)
+    {
+        $oSession = Registry::getSession();
+
+        KlarnaPayment::cleanUpSession();
+        Registry::getSession()->deleteVariable('kpCheckSums');
+        $this->aSessionData = $this->getSessionData($sessionId);
+        $oSession->setVariable('sSessionTimeStamp', $this->getTimeStamp());
+        $oSession->setVariable('klarna_session_data', $this->aSessionData);
+    }
+
+    /**
+     * sends authorization request for KEX
+     * @param $data
+     * @return void
+     * @throws Exception\KlarnaOrderReadOnlyException
+     * @throws KlarnaClientException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaWrongCredentialsException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    public function postKexSession($data) {
+        $this->postSession($data);
+    }
+
+    /**
      * @param $data array
      * @param string $session_id
      * @return array
@@ -273,6 +305,12 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 if ($aChangedData) {
                     $splitted = $this->splitUserData($aChangedData);
 
+                    list($aChangedData, $splitted) = $this->modifyRequestForKeb($aChangedData, $splitted);
+                    //add auth callback to update URL
+                    $userId = $this->getUser()->getId();
+                    $aChangedData["merchant_urls"]["authorization"]
+                        = Registry::getConfig()->getSslShopUrl() . "cl=KlarnaAuthCallbackEndpoint&secret=$userId";
+
                     // update order data
                     return [json_encode($aChangedData), $splitted];
                 }
@@ -314,5 +352,28 @@ class KlarnaPaymentsClient extends KlarnaClientBase
         $dt = new \DateTime();
 
         return $dt->getTimestamp();
+    }
+
+    /**
+     * @param array $aChangedData
+     * @param array $splitted
+     * @return array
+     */
+    protected function modifyRequestForKeb(array $aChangedData, array $splitted): array
+    {
+        if (Registry::getSession()->getVariable("keborderpayload")) {
+            unset($aChangedData["billing_address"]);
+            unset($splitted["userData"]["billing_address"]);
+
+            $oBasket = Registry::getSession()->getBasket();
+            $oUser = $this->getUser();
+            $currencyName = $oBasket->getBasketCurrency()->name;
+            $sCountryISO = $oUser->resolveCountry();
+
+            $aChangedData["purchase_country"] = $sCountryISO;
+            $aChangedData["purchase_currency"] = $currencyName;
+        }
+
+        return array($aChangedData, $splitted);
     }
 }

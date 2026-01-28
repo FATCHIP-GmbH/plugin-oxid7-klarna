@@ -14,7 +14,8 @@
   },
   "require": {
     "php": ">=8.0",
-    "rmccue/requests": "^1.0"
+    "rmccue/requests": "^1.0",
+    "viison/address-splitter": "^0.3.4"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
