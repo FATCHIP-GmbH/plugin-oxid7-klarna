@@ -99,11 +99,11 @@
             <div class="well well-sm kp-outer">
                 <dl>
                     <dt>
-                        <input class="kp-radio form-check-input" id="kp-dd" data-payment_id="card" type="radio"
+                        <input class="kp-radio form-check-input" id="kp-cc" data-payment_id="card" type="radio"
                                name="paymentid"
                                value="{{ sPaymentID }}"
                                {% if is_checked %}checked{% endif %}>
-                        <label for="kp-dd">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
+                        <label for="kp-cc">{{ oView.removeKlarnaPrefix(paymentmethod.oxpayments__oxdesc.value) }}</label>
                         <img src="{{ paymentmethod.getBadgeUrl() }}">
                     </dt>
                     <dt style="font-weight: normal">{{ translate({ ident: "TCKLARNA_PAY_NOW_SUBTITLE" }) }}</dt>
