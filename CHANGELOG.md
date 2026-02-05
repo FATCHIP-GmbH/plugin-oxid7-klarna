@@ -1,3 +1,6 @@
+### 1.2.5
+* fix missing Klarna Badges
+
 ### 1.2.4
 * expand supported country list with their specific currencies
 
