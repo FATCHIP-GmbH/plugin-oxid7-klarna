@@ -45,6 +45,8 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\UtilsView;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 
 /**
  * Extends default OXID order controller logic.
@@ -167,6 +169,29 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
+     * Check if an order with the klarna order id already exists in the database. Return true if no order exists or the klarna_order_id parameter is not set.
+     */
+    private function klarnaCheckOrderId(): bool
+    {
+        $klarnaOrderId = Registry::getRequest()->getRequestParameter('klarna_order_id');
+        if (empty($klarnaOrderId)) {
+            return true;
+        }
+
+        /** @var QueryBuilderFactoryInterface $oQueryBuilderFactory */
+        $oQueryBuilderFactory = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class);
+        $oQueryBuilder = $oQueryBuilderFactory->create();
+        $oQueryBuilder
+            ->select('OXID')
+            ->from('oxorder')
+            ->where('TCKLARNA_ORDERID = :orderId')
+            ->setParameter(':orderId', $klarnaOrderId);
+        $orderId = $oQueryBuilder->execute()->fetchOne();
+
+        return empty($orderId);
+    }
+
+    /**
      * Klarna confirmation callback. Calls only parent execute (standard oxid order creation) if not klarna_checkout
      * @return string
      * @throws StandardException
@@ -183,6 +208,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
              */
             if ($this->_oUser || $this->getUser()) {
                 Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
+            }
+
+            if (!$this->klarnaCheckOrderId()) {
+                Registry::getLogger()->error("KlarnaOrderController::execute - order " . Registry::getRequest()->getRequestParameter('klarna_order_id') . " already exists");
+                return 'thankyou';
             }
 
             if (!empty($sessionChallenge = Registry::getSession()->getVariable('sess_challenge'))) {
