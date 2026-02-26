@@ -334,6 +334,8 @@ You can deactivate it anytime by removing the codes again.',
     'TCKLARNA_SHIPPING_SETTINGS' => 'Shipping sets',
     'TCKLARNA_COMPLETE_REFUND' => 'Refund complete order',
     'TCKLARNA_PACKSTATION_NO_SHIPPING_SET' => 'No active shipping sets found',
+    'TCKLARNA_SHIPPING_KEX' => 'Shipping sets assignments for  Klarna Express',
+    'TCKLARNA_SHIPPING_KEX_DESC' => 'Please assign your defined shipping sets to the corresponding Klarna labels. By this assignment you can amongst others enable Packstation deliveries.',
 
     'TCKLARNA_AUTHPAYMENTMETHOD'                       => 'Used payment type: ',
     'TCKLARNA_AUTHPAYMENTMETHOD_unknown'               => 'Klarna',

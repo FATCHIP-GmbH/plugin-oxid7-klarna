@@ -194,6 +194,22 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         return parent::getPaymentList();
     }
 
+    /** Return shipping sets for KCO
+     * @param $oUser
+     * @return
+     */
+    public function getCheckoutShippingSets($oUser)
+    {
+        $sActShipSet = Registry::get(Request::class)->getRequestEscapedParameter('sShipSet');
+        if (!$sActShipSet) {
+            $sActShipSet = Registry::getSession()->getVariable('sShipSet');
+        }
+        $oBasket = Registry::getSession()->getBasket();
+        list($aAllSets) =
+            Registry::get(DeliverySetList::class)->getDeliverySetData($sActShipSet, $oUser, $oBasket);
+
+        return $aAllSets;
+    }
     /** Saves Klarna Payment authorization_token or deleting an existing authorization
      * if payment method was changed to not KP method
      * @return null

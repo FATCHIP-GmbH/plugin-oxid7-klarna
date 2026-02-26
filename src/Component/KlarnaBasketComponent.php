@@ -59,9 +59,8 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         }
 
         if ($sProductId != null && !$this->basketHasProduct($oSession->getBasket(), $sProductId)) {
-            $this->tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
-
             $oBasket = $oSession->getBasket();
+            $oBasket->addToBasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
             $oBasket->calculateBasket(true);
         }
 

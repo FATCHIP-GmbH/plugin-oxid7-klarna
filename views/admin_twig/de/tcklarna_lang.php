@@ -345,6 +345,8 @@ Sie können es jederzeit deaktivieren, indem Sie die Codes wieder entfernen.',
     'TCKLARNA_SHIPPING_SETTINGS' => 'Versandarten',
     'TCKLARNA_COMPLETE_REFUND' => 'Komplette Bestellung gutschreiben',
     'TCKLARNA_PACKSTATION_NO_SHIPPING_SET' => 'Keine aktiven Versandarten gefunden',
+    'TCKLARNA_SHIPPING_KEX' => 'Versandarten-Zuordnung für Klarna Express',
+    'TCKLARNA_SHIPPING_KEX_DESC' => 'Bitte ordnen Sie Ihren definierten Versandarten die entsprechenden Klarna Bezeichnungen zu. Über diese Zuordnung richten Sie unter anderem die Lieferung an Packstationen ein.',
 
     'TCKLARNA_AUTHPAYMENTMETHOD'                       => 'Verwendete Zahlart: ',
     'TCKLARNA_AUTHPAYMENTMETHOD_unknown'               => 'Klarna',
