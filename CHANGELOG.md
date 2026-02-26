@@ -1,3 +1,7 @@
+### 1.2.6
+* add rtoken to confirmation-call
+* fix multiple orders with the same klarna order id
+
 ### 1.2.5
 * fix missing Klarna Badges
 
