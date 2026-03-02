@@ -33,10 +33,8 @@ class KlarnaStart extends KlarnaBaseConfig
 
         parent::render();
         $oCountryList = oxNew(CountryList::class);
-        $countries = ['DE', 'GB', 'AT', 'NO', 'NL', 'FI', 'SE', 'DK'];
-        $oSupportedCountryList = $oCountryList->getKalarnaCountriesTitles(
-            $this->getViewDataElement('adminlang'),
-            $countries
+        $oSupportedCountryList = $oCountryList->getKlarnaCountriesTitles(
+            $this->getViewDataElement('adminlang')
         );
 
         $this->addTplParam('countries', $oSupportedCountryList);

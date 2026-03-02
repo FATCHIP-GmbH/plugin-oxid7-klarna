@@ -1,3 +1,6 @@
+### 1.3.0
+* fix critical SQL injection vulnerability
+
 ### 1.2.6
 * add rtoken to confirmation-call
 * fix multiple orders with the same klarna order id
