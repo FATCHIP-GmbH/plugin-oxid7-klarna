@@ -47,12 +47,10 @@ class KlarnaCountryList extends KlarnaCountryList_parent
     {
         $oTableViewNameGenerator = oxNew(TableViewNameGenerator::class);
         $sViewName = $oTableViewNameGenerator->getViewName('oxcountry', $iLang);
-        $isoList = KlarnaConsts::getKlarnaCoreCountries();
-        $isoList = implode("','", $isoList);
         $sSelect = "SELECT {$sViewName}.oxisoalpha2, {$sViewName}.oxtitle FROM {$sViewName}
-            WHERE {$sViewName}.oxisoalpha2 IN ('{$isoList}')";
+            WHERE {$sViewName}.oxisoalpha2 IN (:countries)";
 
-        $this->selectString($sSelect);
+        $this->selectString($sSelect, [':countries' => KlarnaConsts::getKlarnaCoreCountries()]);
         $result = [];
         foreach ($this as $country) {
             $result[$country->oxcountry__oxisoalpha2->value] = $country->oxcountry__oxtitle->value;
