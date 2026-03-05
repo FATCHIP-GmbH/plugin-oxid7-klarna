@@ -63,20 +63,19 @@ class KlarnaCountryList extends KlarnaCountryList_parent
 
     public function loadActiveKlarnaCountriesByPaymentId($paymentId)
     {
-        $paymentId = "'" . $paymentId . "'";
         $oTableViewNameGenerator = oxNew(TableViewNameGenerator::class);
         $sViewName = $oTableViewNameGenerator->getViewName('oxcountry');
-        $isoList = KlarnaConsts::getKlarnaGlobalCountries();
-        $isoList = implode("','", $isoList);
         $sSelect = "SELECT {$sViewName}.oxid, {$sViewName}.oxtitle, {$sViewName}.oxisoalpha2 FROM {$sViewName}
                       JOIN oxobject2payment 
                       ON oxobject2payment.oxobjectid = {$sViewName}.oxid
-                      WHERE oxobject2payment.oxpaymentid = {$paymentId}
+                      WHERE oxobject2payment.oxpaymentid = :paymentId
                       AND oxobject2payment.oxtype = 'oxcountry'
-                      AND {$sViewName}.oxactive=1";
+                      AND {$sViewName}.oxactive = 1
+                      AND {$sViewName}.oxisoalpha2 IN (:countries)";
 
-        $sSelect .= " AND {$sViewName}.oxisoalpha2 IN ('{$isoList}')";
-
-        $this->selectString($sSelect);
+        $this->selectString($sSelect, [
+            ':paymentId' => $paymentId,
+            ':countries' => KlarnaConsts::getKlarnaGlobalCountries()
+        ]);
     }
 }
