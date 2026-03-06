@@ -1,3 +1,7 @@
+### 1.3.1
+* remove dead Klarna Instant Basket feature
+* security hardening
+
 ### 1.3.0
 * fix critical SQL injection vulnerability
 
