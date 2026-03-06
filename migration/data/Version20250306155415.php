@@ -85,21 +85,6 @@ final class Version20250306155415 extends AbstractMigration
             ");
         }
 
-        if (!$schema->hasTable('tcklarna_instant_basket')) {
-            $this->addSql("
-                CREATE TABLE `tcklarna_instant_basket` (
-                    `OXID` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                    `BASKET_INFO` MEDIUMBLOB,
-                    `STATUS`  VARCHAR(32) NOT NULL DEFAULT 'OPENED',
-                    `TYPE` VARCHAR(32) NOT NULL DEFAULT '',
-                    `TIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp',
-                    PRIMARY KEY (`OXID`)
-                )
-                ENGINE = InnoDB
-                DEFAULT CHARSET = utf8;
-            ");
-        }
-
         $updateOxPayments =
             array(
                 "UPDATE `oxpayments` SET `TCKLARNA_PAYMENTOPTION`='card' WHERE `oxid`='oxidcreditcard';",
