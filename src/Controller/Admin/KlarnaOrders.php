@@ -18,8 +18,8 @@ use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaOrders extends AdminDetailsController
 {
-    const KLARNA_PORTAL_PLAYGROUND_URL = 'https://playground.eu.portal.klarna.com/orders/merchants/%s/orders/%s';
-    const KLARNA_PORTAL_LIVE_URL = 'https://eu.portal.klarna.com/orders/merchants/%s/orders/%s';
+    const KLARNA_PORTAL_PLAYGROUND_URL = 'https://portal.playground.klarna.com/orders/merchants/%s/orders/%s';
+    const KLARNA_PORTAL_LIVE_URL = 'https://portal.klarna.com/orders/merchants/%s/orders/%s';
 
     protected $_sThisTemplate = '@tcklarna/admin/tcklarna_orders';
 
@@ -261,9 +261,9 @@ class KlarnaOrders extends AdminDetailsController
             'sCountryISO',
             KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'))
         );
-        $this->addTplParam('currentMid', $currentMid['mid']);
+        $this->addTplParam('currentMid', $currentMid['portalMid']);
 
-        if (strstr($currentMid['mid'], $this->getViewDataElement('sMid'))) {
+        if (strstr($currentMid['portalMid'], $this->getViewDataElement('sMid'))) {
             return true;
         }
 
