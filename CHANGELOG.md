@@ -1,3 +1,7 @@
+### 1.3.2
+* add config field for Klarna merchant id
+* fix portal-url
+
 ### 1.3.1
 * remove dead Klarna Instant Basket feature
 * security hardening
