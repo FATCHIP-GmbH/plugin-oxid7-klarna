@@ -1,3 +1,6 @@
+### 1.3.3
+* add translations
+
 ### 1.3.2
 * add config field for Klarna merchant id
 * fix portal-url
