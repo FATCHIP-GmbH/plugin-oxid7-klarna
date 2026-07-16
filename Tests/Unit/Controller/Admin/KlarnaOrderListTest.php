@@ -47,12 +47,12 @@ class KlarnaOrderListTest extends ModuleUnitTestCase {
         $controller->$method();
         $this->assertEquals(new Field(1), $order->oxorder__tcklarna_sync);
 
-        if ($method == 'storno') {
+        if ($method == 'cancelOrder') {
             $mockException = $this->getMockBuilder(StandardException::class)
                 ->setConstructorArgs(['is canceled.'])
                 ->getMock();
             $this->setOrder($mockException);
-            $controller->storno();
+            $controller->cancelOrder();
         }
 
         $mockException = $this->getMockBuilder(StandardException::class)

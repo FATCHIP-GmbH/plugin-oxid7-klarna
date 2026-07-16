@@ -1,5 +1,6 @@
 ### 1.3.3
 * add translations
+* Fix errors when cancelling orders via the order overview
 
 ### 1.3.2
 * add config field for Klarna merchant id
