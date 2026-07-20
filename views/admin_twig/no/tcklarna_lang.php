@@ -149,20 +149,20 @@ $aLang = [
 
     'TCKLARNA_EXTRA_MERCHANT_DATA_ADMIN_DESC'           => 'Her kan du angi om eventuelle ekstra forhandleropplysninger skal overføres til Klarna. 
 For en detaljert beskrivelse av de ulike innstillingene, se verktøytipsene 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les brukerhåndboken 
-eller ta kontakt med Klarnas integrasjonssupport.',
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les <a class="cl-pink" href="%s" target="_blank">brukerhåndboken</a> 
+eller ta kontakt med Klarna Integration Support.',
     'TCKLARNA_DESIGN_SETTINGS_ADMIN_DESC'               => 'Her kan du konfigurere designinnstillingene for bruk med Klarna-modulen for OXID eShop. 
 For en detaljert beskrivelse av de ulike innstillingene, se verktøytipsene 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les <a class="cl-pink" href="%s" target="_blank">brukerhåndb</a>oken 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les <a class="cl-pink" href="%s" target="_blank">brukerhåndboken</a> 
 eller ta kontakt med Klarna Integration Support.',
     'TCKLARNA_GENERAL_SETTINGS_ADMIN_DESC'              => 'Her kan du velge innstillinger for Klarna Payments og foreta generelle innstillinger. 
 For en detaljert beskrivelse av de ulike innstillingene, se verktøytipsene 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les <a class="cl-pink" href="%s" target="_blank">bruk</a>erh<a class="cl-pink" href="%s" target="_blank">åndb</a>oken 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les <a class="cl-pink" href="%s" target="_blank">brukerhåndboken</a> 
 eller ta kontakt med Klarna Integration Support.',
     'TCKLARNA_CONFIGURATION_KP_ADMIN_DESC'              => 'På denne siden velger du hvilke Klarna-betalingsmåter du ønsker å tilby. 
 For en detaljert beskrivelse av de ulike innstillingene, se verktøytipsene 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les <a class="cl-pink" href="%s" target="_blank">bruksanvisningen</a> 
-eller ta kontakt med Klarnas integrasjonssupport.',
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, les <a class="cl-pink" href="%s" target="_blank">brukerhåndboken</a> 
+eller ta kontakt med Klarnas Integration Support.',
 
     'TCKLARNA_PAYMENT_METHOD'                           => 'Betalingsmåte',
     'TCKLARNA_EXTERNAL_PAYMENT_METHOD'                  => 'Ekstern betalingsmåte',

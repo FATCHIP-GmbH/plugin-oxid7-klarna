@@ -149,19 +149,19 @@ $aLang = [
 
     'TCKLARNA_EXTRA_MERCHANT_DATA_ADMIN_DESC'           => 'W tym miejscu można skonfigurować, czy w razie potrzeby dodatkowe dane sprzedawcy mają być przekazywane do Klarna. 
 Aby uzyskać szczegółowy opis poszczególnych ustawień, prosimy zapoznać się z podpowiedziami 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytać <a class="cl-pink" href="%s" target="_blank">instrukcję</a> obsługi 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytać <a class="cl-pink" href="%s" target="_blank">instrukcję obsługi</a>  
 lub skontaktować się z działem wsparcia technicznego ds. integracji z Klarna.',
     'TCKLARNA_DESIGN_SETTINGS_ADMIN_DESC'               => 'W tym miejscu można skonfigurować ustawienia wyglądu do wykorzystania z modułem Klarna dla sklepu OXID eShop. 
 Aby uzyskać szczegółowy opis poszczególnych ustawień, prosimy zapoznać się z podpowiedziami 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytać <a class="cl-pink" href="%s" target="_blank">instrukcję</a> obsługi 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytać <a class="cl-pink" href="%s" target="_blank">instrukcję obsługi</a>  
 lub skontaktować się z działem wsparcia technicznego ds. integracji z Klarna.',
     'TCKLARNA_GENERAL_SETTINGS_ADMIN_DESC'              => 'W tym miejscu można dokonać wyboru opcji płatności Klarna oraz skonfigurować ustawienia ogólne. 
 Aby uzyskać szczegółowy opis poszczególnych ustawień, prosimy zapoznać się z podpowiedziami 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytać <a class="cl-pink" href="%s" target="_blank">instrukcję</a> <a class="cl-pink" href="%s" target="_blank">obsługi</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytać <a class="cl-pink" href="%s" target="_blank">instrukcję obsługi</a> 
 lub skontaktować się z działem wsparcia technicznego ds. integracji z Klarna.',
     'TCKLARNA_CONFIGURATION_KP_ADMIN_DESC'              => 'Na tej stronie można wybrać, które opcje płatności Klarna chcesz udostępnić. 
 Aby uzyskać szczegółowy opis poszczególnych ustawień, zapoznaj się z podpowiedziami 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytaj <a class="cl-pink" href="%s" target="_blank">instrukcję</a> <a class="cl-pink" href="%s" target="_blank">obsługi</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, przeczytaj <a class="cl-pink" href="%s" target="_blank">instrukcję obsługi</a> 
 lub skontaktuj się z działem wsparcia technicznego ds. integracji z Klarna.',
 
     'TCKLARNA_PAYMENT_METHOD'                           => 'Sposób płatności',
