@@ -20,6 +20,8 @@ namespace TopConcepts\Klarna\Model;
 
 use OxidEsales\Eshop\Core\TableViewNameGenerator;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 
 class KlarnaCountryList extends KlarnaCountryList_parent
 {
@@ -45,35 +47,33 @@ class KlarnaCountryList extends KlarnaCountryList_parent
 
     public function getKlarnaCountriesTitles($iLang)
     {
-        $oTableViewNameGenerator = oxNew(TableViewNameGenerator::class);
-        $sViewName = $oTableViewNameGenerator->getViewName('oxcountry', $iLang);
-        $sSelect = "SELECT {$sViewName}.oxisoalpha2, {$sViewName}.oxtitle FROM {$sViewName}
-            WHERE {$sViewName}.oxisoalpha2 IN (:countries)";
+        $tableViewNameGenerator = oxNew(TableViewNameGenerator::class);
+        $sViewName = $tableViewNameGenerator->getViewName(
+            'oxcountry',
+            $iLang
+        );
+        $isoList = KlarnaConsts::getKlarnaCoreCountries();
 
-        $this->selectString($sSelect, [':countries' => KlarnaConsts::getKlarnaCoreCountries()]);
-        $result = [];
-        foreach ($this as $country) {
-            $result[$country->oxcountry__oxisoalpha2->value] = $country->oxcountry__oxtitle->value;
+        /** @var QueryBuilderFactoryInterface $oQueryBuilderFactory */
+        $oQueryBuilderFactory = $this->getQueryBuilder();
+        $oQueryBuilder = $oQueryBuilderFactory->create();
+        $oQueryBuilder
+            ->select('oxisoalpha2, oxtitle')
+            ->from($sViewName, 'c')
+            ->where('oxisoalpha2 IN ("' . implode('","', $isoList) . '")');
+        $aResult = $oQueryBuilder->execute();
+        $aResult = $aResult->fetchAllAssociative();
+
+        foreach ($aResult as $aCountry) {
+            $aKlarnaCountries[$aCountry['OXISOALPHA2']] = $aCountry['OXTITLE'];
         }
 
-        return $result;
+        return $aKlarnaCountries;
     }
 
-    public function loadActiveKlarnaCountriesByPaymentId($paymentId)
-    {
-        $oTableViewNameGenerator = oxNew(TableViewNameGenerator::class);
-        $sViewName = $oTableViewNameGenerator->getViewName('oxcountry');
-        $sSelect = "SELECT {$sViewName}.oxid, {$sViewName}.oxtitle, {$sViewName}.oxisoalpha2 FROM {$sViewName}
-                      JOIN oxobject2payment 
-                      ON oxobject2payment.oxobjectid = {$sViewName}.oxid
-                      WHERE oxobject2payment.oxpaymentid = :paymentId
-                      AND oxobject2payment.oxtype = 'oxcountry'
-                      AND {$sViewName}.oxactive = 1
-                      AND {$sViewName}.oxisoalpha2 IN (:countries)";
-
-        $this->selectString($sSelect, [
-            ':paymentId' => $paymentId,
-            ':countries' => KlarnaConsts::getKlarnaGlobalCountries()
-        ]);
+    protected function getQueryBuilder() {
+        $oContainer = ContainerFactory::getInstance()->getContainer();
+        /** @var QueryBuilderFactoryInterface $oQueryBuilderFactory */
+        return $oContainer->get(QueryBuilderFactoryInterface::class);
     }
 }
