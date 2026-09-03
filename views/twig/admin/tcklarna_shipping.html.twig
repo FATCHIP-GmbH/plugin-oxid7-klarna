@@ -28,7 +28,7 @@
             <table class="klarna-conf-table fix1">
                 <tr class="bg-grey">
                     <td colspan="3" class="inner-table-wrapper">
-                        {% if KEXShippingSets|@count > 0 %}
+                        {% if KEXShippingSets|length > 0 %}
                             {% for shippingId, oDelSet in KEXShippingSets %}
                                 <table class="inner">
                                     <tbody>
@@ -40,7 +40,7 @@
                                                     <div class="selector__menu">
                                                         <ul class="selector__choices">
                                                             {% for i, methodName in KCOShippingMethods %}
-                                                                <li class="selector__item{% if confaarrs.aarrKlarnaShippingMap.[shippingId] === {{ methodName }}--selected{% endif %}">
+                                                                <li class="selector__item{% if confaarrs.aarrKlarnaShippingMap.[shippingId] === {{ methodName }} %}--selected{% endif %}">
                                                                     <a href="#" data-value="{{ methodName }}">
                                                                         {{ methodName }}
                                                                     </a>
@@ -79,16 +79,3 @@
 
 <script src="{{ oViewConf.getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }}"></script>
 
-<script>
-[{capture assign="jsCode"}]
-$('.shipping-method-selector').each(function () {
-    new Selector2({
-        node: this,
-        fromOptions: false,
-        emptyOption: 'keep'
-    });
-});
-[{/capture}]
-[{oxscript add=$jsCode}]
-</script>
-[{oxscript}]
