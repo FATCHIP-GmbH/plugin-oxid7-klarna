@@ -186,6 +186,7 @@ $aModule = [
         ['name' => 'aarrKlarnaTermsConditionsURI', 'type' => 'aarr', 'value' => []],
         ['name' => 'aarrKlarnaCancellationRightsURI', 'type' => 'aarr', 'value' => []],
         ['name' => 'aarrKlarnaShippingDetails', 'type' => 'aarr', 'value' => []],
+        ['name' => 'aarrKlarnaShippingMap', 'type' => 'aarr', 'value' => []],
         ['name' => 'blKlarnaDisplayBuyNow', 'type' => 'bool', 'value' => true],
         ['name' => 'sKlarnaFooterValue', 'type' => 'str', 'value' => ''],
         ['name' => 'sKlarnaCreditPromotionProduct', 'type' => 'str', 'value' => ''],

@@ -500,7 +500,7 @@
                                             {% endfor %}
                                         </ul>
                                         <input type="hidden" name="confstrs[sKlarnaKEBMethod]"
-                                               value="{{  confstrs.sKlarnaKEBMethod }}">
+                                               value="{{ confstrs.sKlarnaKEBMethod }}">
                                     </div>
                                 </div>
                             </div>
@@ -518,7 +518,7 @@
                                 <tr>
                                     <td class="conf-label-2">{{ translate({ ident: "TCKLARNA_SET_TAC_URI"  }) }}</td>
                                     <td class="lang-input">
-                                        {% set confVarName = "sKlarnaTermsConditionsURI_"|cat(lang_tag) %}
+                                        {% set confVarName = "sKlarnaTermsConditionsURI_" ~ lang_tag %}
                                         <div class="input">
                                             <input type="text" class="url-input m-lang"
                                                    id="klarnaConditionUri"
@@ -537,7 +537,7 @@
                                 <tr>
                                     <td class="conf-label-2">{{ translate({ ident: "TCKLARNA_SET_CANCEL_URI"  }) }}</td>
                                     <td class="lang-input">
-                                        {% set confVarName = "sKlarnaTermsConditionsURI_"|cat(lang_tag) %}
+                                        {% set confVarName = "sKlarnaTermsConditionsURI_" ~ lang_tag %}
                                         <div class="input">
                                             <input type="text" class="url-input m-lang"
                                                    id="klarnaCancellationUri"
@@ -556,7 +556,7 @@
                                 <tr>
                                     <td class="conf-label-2">{{ translate({ ident: "TCKLARNA_SHIPPING_DETAILS" }) }}</td>
                                     <td class="lang-input">
-                                        {% set confVarName = "sKlarnaTermsConditionsURI_"|cat(lang_tag) %}
+                                        {% set confVarName = "sKlarnaTermsConditionsURI_" ~ lang_tag %}
                                         <div class="input">
                                             <input type="text" class="m-lang"
                                                    name="confstrs[sKlarnaShippingDetails_{{ lang_tag }}]"
