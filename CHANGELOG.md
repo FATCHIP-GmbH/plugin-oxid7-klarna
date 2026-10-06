@@ -1,3 +1,6 @@
+### 1.3.4
+* fix mangling of capture failed error message
+
 ### 1.3.3
 * add translations
 * fix errors when cancelling orders via the order overview
