@@ -80,6 +80,27 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function getKlarnaOrderLines($orderMgmtId = null)
     {
+        // Normalize potentially non-scalar shipping identifiers before any OXID core calculations
+        try {
+            $shipId = $this->getShippingId();
+            if ($shipId !== null && $shipId !== '') {
+                $normalizedShipId = (string) $shipId;
+                if ($normalizedShipId !== $shipId) {
+                    \TopConcepts\Klarna\Core\KlarnaUtils::log('debug', 'Normalize basket shippingId in getKlarnaOrderLines from ' . gettype($shipId) . ' to string');
+                }
+                $this->setShipping($normalizedShipId);
+            }
+
+            // Ensure session sShipSet is native string (DeliverySetList reads it)
+            $oSession = \OxidEsales\Eshop\Core\Registry::getSession();
+            $sessShip = $oSession->getVariable('sShipSet');
+            if ($sessShip !== null) {
+                $oSession->setVariable('sShipSet', (string) $sessShip);
+            }
+        } catch (\Throwable $e) {
+            // non-fatal, continue
+        }
+
         $this->calculateBasket(true);
         $this->klarnaOrderLines = [];
         $this->calcItemsPrice();
@@ -218,9 +239,9 @@ class KlarnaBasket extends KlarnaBasket_parent
             $oDelivery = parent::getCosts('oxdelivery');
             $oDeliverySet = oxNew(DeliverySet::class);
             if ($iLang) {
-                $oDeliverySet->loadInLang($iLang, $this->getShippingId());
+                $oDeliverySet->loadInLang($iLang, (string) $this->getShippingId());
             } else {
-                $oDeliverySet->load($this->getShippingId());
+                $oDeliverySet->load((string) $this->getShippingId());
             }
 
             $this->klarnaOrderLines[] = $this->getKlarnaPaymentDelivery($oDelivery, $oOrder, $oDeliverySet);
@@ -525,6 +546,21 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function tcklarna_calculateDeliveryCost()
     {
+        // Defensive: normalize active shipping set in basket and session before core delivery calc
+        try {
+            $shipId = $this->getShippingId();
+            if ($shipId !== null && $shipId !== '') {
+                $this->setShipping((string) $shipId);
+            }
+            $oSession = Registry::getSession();
+            $sessShip = $oSession->getVariable('sShipSet');
+            if ($sessShip !== null) {
+                $oSession->setVariable('sShipSet', (string) $sessShip);
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
         $oDeliveryList = oxNew(DeliveryList::class);
         Registry::set(DeliveryList::class, $oDeliveryList);
 

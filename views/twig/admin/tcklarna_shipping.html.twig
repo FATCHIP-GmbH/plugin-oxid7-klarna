@@ -15,7 +15,7 @@
 <div class="{{ box|default('box') }}" style="{% if not box and not bottom_buttons %}height: 100%;{% endif %}">
     <div class="main-container">
         {% set tabName = "TCKLARNA_SHIPPING_KEX"|translate %}
-        {% include "@tcklarna/admin/tcklarna_header.html.twig" with {title: "TCKLARNA_SHIPPING_KEX_DESC"|translate} %}
+        {% include "@tcklarna/admin/tcklarna_header.html.twig" with {title: "TCKLARNA_SHIPPING_KEX"|translate} %}
         <hr>
 
         <div class="klarna-expandable-list">
@@ -33,14 +33,14 @@
                                 <table class="inner">
                                     <tbody>
                                     <tr class="dark">
-                                        <td class="conf-label-2">[{$oDelSet->oxdeliveryset__oxtitle->value}]</td>
+                                        <td class="conf-label-2">{{ oDelSet.oxdeliveryset__oxtitle.value }}</td>
                                         <td>
                                             <div class="input">
-                                                <div class="selector shipping-method-selector">
+                                                <div class="selector shipping-method-selector" id="kebshippingSelector">
                                                     <div class="selector__menu">
                                                         <ul class="selector__choices">
-                                                            {% for i, methodName in KCOShippingMethods %}
-                                                                <li class="selector__item{% if confaarrs.aarrKlarnaShippingMap.[shippingId] === {{ methodName }} %}--selected{% endif %}">
+                                                            {% for i, methodName in KEXShippingMethods %}
+                                                                <li class="selector__item{% if confaarrs.aarrKlarnaShippingMap[shippingId] == methodName %}--selected{% endif %}">
                                                                     <a href="#" data-value="{{ methodName }}">
                                                                         {{ methodName }}
                                                                     </a>
@@ -49,7 +49,7 @@
                                                         </ul>
                                                         <input type="hidden"
                                                                name="confaarrs[aarrKlarnaShippingMap][{{ shippingId }}]"
-                                                               value="{{ confaarrs.aarrKlarnaShippingMap.[shippingId] }}">
+                                                               value="{{ confaarrs.aarrKlarnaShippingMap[shippingId] }}">
                                                     </div>
                                                 </div>
                                             </div>

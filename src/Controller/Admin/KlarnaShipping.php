@@ -6,6 +6,7 @@ namespace TopConcepts\Klarna\Controller\Admin;
 
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaShipping extends KlarnaBaseConfig
@@ -41,11 +42,12 @@ class KlarnaShipping extends KlarnaBaseConfig
     
     public function render() {
         parent::render();
-        $this->_aViewData += array(
-            'KEXShippingSets' => $this->getKEXShippingSets(),
-            'KEXShippingMethods' => $this->getKEXShippingMethods(),
+        $this->addTplParam('KEXShippingSets', $this->getKEXShippingSets());
+        $this->addTplParam('KEXShippingMethods', $this->getKEXShippingMethods());
+        $this->addTplParam(
+            'confaarrs',
+            KlarnaUtils::getModuleSettingsAarrs($this->getViewDataElement('confaarrs'))
         );
-        
         return $this->_sThisTemplate;
     }
 

@@ -29,16 +29,17 @@ class ShippingAdapter extends BasketCostAdapter
      */
     public function prepareItemData($iLang)
     {
-        $this->selectedShippingSetId = $this->oBasket->getShippingId();
+        // Normalize potential Symfony UnicodeString to native string
+        $this->selectedShippingSetId = (string) $this->oBasket->getShippingId();
         if ((bool)$this->oOrder) {
-            $this->selectedShippingSetId = $this->oOrder->getFieldData('oxdeltype');
+            $this->selectedShippingSetId = (string) $this->oOrder->getFieldData('oxdeltype');
         }
 
         $oDeliverySet = oxNew(DeliverySet::class);
         if ($iLang !== null) {
-            $oDeliverySet->loadInLang($iLang, $this->selectedShippingSetId);
+            $oDeliverySet->loadInLang($iLang, (string) $this->selectedShippingSetId);
         } else {
-            $oDeliverySet->load($this->selectedShippingSetId);
+            $oDeliverySet->load((string) $this->selectedShippingSetId);
         }
         $this->oDeliverySet = $oDeliverySet;
 
@@ -54,7 +55,7 @@ class ShippingAdapter extends BasketCostAdapter
 
     public function getReference()
     {
-        return $this->selectedShippingSetId;
+        return (string) $this->selectedShippingSetId;
     }
 
     protected function getActiveShippingSet()
@@ -64,7 +65,8 @@ class ShippingAdapter extends BasketCostAdapter
             $sActShipSet = Registry::getSession()->getVariable('sShipSet');
         }
 
-        return $sActShipSet;
+        // Ensure native string is returned (avoid Symfony UnicodeString in core calls)
+        return $sActShipSet !== null ? (string) $sActShipSet : $sActShipSet;
     }
 
     /**
@@ -74,7 +76,7 @@ class ShippingAdapter extends BasketCostAdapter
     {
         list($aAllSets) = Registry::get(DeliverySetList::class)
             ->getDeliverySetData(
-                $this->getActiveShippingSet(),
+                (string) $this->getActiveShippingSet(),
                 $this->oUser,
                 $this->oBasket
             );
@@ -115,9 +117,9 @@ class ShippingAdapter extends BasketCostAdapter
             return $this->shippingOptions;
         }
 
-        $this->selectedShippingSetId = $this->oBasket->getShippingId();
+        $this->selectedShippingSetId = (string) $this->oBasket->getShippingId();
         foreach ($allSets as $shippingId => $oDeliverySet) {
-            $this->oBasket->setShipping($shippingId);
+            $this->oBasket->setShipping((string) $shippingId);
             $oCost = $this->oBasket->tcklarna_calculateDeliveryCost();
             $basketPrice = $this->oBasket->getPriceForPayment() / $currency->rate;
             if ($this->isShippingForPayment($shippingId, $paymentId, $basketPrice)) {
@@ -126,19 +128,19 @@ class ShippingAdapter extends BasketCostAdapter
                 $tax_rate          = $this->formatAsInt($oCost->getVat());
                 $tax_amount        = $this->calcTax($price, $tax_rate);
                 $this->shippingOptions[] = array(
-                    "id"          => $shippingId,
+                    "id"          => (string) $shippingId,
                     "name"        => html_entity_decode($method->oxdeliveryset__oxtitle->value, ENT_QUOTES),
                     "description" => '',
                     "tax_amount"  => $tax_amount,
                     'price'       => $price,
                     'tax_rate'    => $tax_rate,
-                    'preselected' => $shippingId === $this->selectedShippingSetId ? true : false,
+                    'preselected' => (string) $shippingId === (string) $this->selectedShippingSetId ? true : false,
                 );
             }
         }
 
         // set basket back to selected shipping option
-        $this->oBasket->setShipping($this->selectedShippingSetId);
+        $this->oBasket->setShipping((string) $this->selectedShippingSetId);
 
         if (empty($this->shippingOptions)) {
             $oCountry = oxNew(Country::class);
