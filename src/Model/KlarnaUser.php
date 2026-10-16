@@ -24,6 +24,7 @@ use TopConcepts\Klarna\Core\KlarnaFormatter;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
@@ -481,6 +482,12 @@ class KlarnaUser extends KlarnaUser_parent
         return $this->_type = self::NOT_REGISTERED;
     }
 
+    public function setActiveUser()
+    {
+        if ($this->isFake()) {
+            self::$_oActUser = $this;
+        }
+    }
     public function tcklrnaHasValidInfo()
     {
         $checkFields = [
@@ -501,6 +508,64 @@ class KlarnaUser extends KlarnaUser_parent
             }
         }
         return true;
+    }
+    public function exists($sOXID = null)
+    {
+        // skip reloading user by username because it overwrites external payment users
+        if ($this->isFake()) {
+            if (!$sOXID) {
+                $sOXID = $this->getId();
+            }
+            if (!$sOXID) {
+                return false;
+            }
+
+            $viewName = $this->getCoreTableName();
+            $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
+            $query = "select {$this->_sExistKey} from {$viewName} where {$this->_sExistKey} = :oxid";
+
+            if ($database->getOne($query, [':oxid' => $sOXID])) {
+                $this->setId($sOXID);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        return parent::exists($sOXID);
+    }
+
+    /**
+     * Klarna modification: outsources the part form User::exists() which is meant only for the newsletter
+     *
+     * @return bool
+     */
+    public function userExistsByMail()
+    {
+        $params = [];
+
+        $sShopSelect = '';
+        if (!$this->_blMallUsers && $this->oxuser__oxrights->value != 'malladmin') {
+            $sShopSelect = ' AND oxshopid = :oxshopid ';
+            $params[':oxshopid'] = $this->getConfig()->getShopId();
+        }
+
+        // We force reading from master to prevent issues with slow replications or open transactions (see ESDEV-3804).
+        $masterDb = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster();
+        $sSelect = 'SELECT oxid FROM ' . $this->getViewName() . '
+                    WHERE oxusername = :oxusername ';
+        $sSelect .= $sShopSelect;
+        $params[':oxusername'] = (string) $this->oxuser__oxusername->value;
+
+        if (($sOxid = $masterDb->getOne($sSelect, $params))) {
+            // update - set oxid
+            $this->setId($sOxid);
+
+            return true;
+        }
+
+        return false;
     }
 
     protected function getQueryBuilder() {
