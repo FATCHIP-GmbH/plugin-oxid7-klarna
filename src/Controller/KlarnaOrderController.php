@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Controller;
 
 
+use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
@@ -245,7 +246,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     public function execute()
     {
         $oBasket = Registry::getSession()->getBasket();
-        $paymentId = $oBasket->getPaymentId();
+        $paymentId = $oBasket->getPaymentId() ?? Registry::getRequest()->getRequestParameter("kexpaymentid");
 
         if (KlarnaPaymentHelper::isKlarnaPayment($paymentId)) {
             /**
@@ -278,7 +279,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $dt = new \DateTime();
                 Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
             }
-        } else if (Registry::getRequest()->getRequestParameter('kexpaymentid')) {
+        } else if (Registry::getRequest()->getRequestParameter('klarna_order_id') || Registry::getRequest()->getRequestParameter('kexpaymentid')) {
             // executing Klarna order but basket has no klarna paymentId -> basket is not properly init'd, customer must try again
             KlarnaUtils::fullyResetKlarnaSession();
             Registry::getUtilsView()->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
@@ -291,6 +292,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         $result = parent::execute();  // @codeCoverageIgnore
+
+        // remove express payload after Order->execute to prevent possible double orders
+        Registry::getSession()->deleteVariable("keborderpayload");
 
         return $result; // @codeCoverageIgnore
     }
@@ -868,6 +872,17 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 }
             }
             $this->addTplParam("sLocale", strtolower(KlarnaConsts::getLocale()));
+        }
+
+        if (
+            !Registry::getRequest()->getRequestParameter("kcoreloaded")
+            && (
+                empty(Registry::getRequest()->getRequestParameter('fnc'))
+                || Registry::getRequest()->getRequestParameter('fnc') == "klarnaExternalPayment"
+            )
+        ) {
+            $queryString = $_SERVER['QUERY_STRING'];
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . $queryString . "&kcoreloaded=1", false);
         }
 
         return $template;

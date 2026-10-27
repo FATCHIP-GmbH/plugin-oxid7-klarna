@@ -155,7 +155,6 @@ window.klarnaAsyncCallback = function () {
                     return;
                 }
             }
-            $sbmButton.attr('disabled', true);
             $('<input>').attr({
                 type: 'hidden',
                 name: 'sAuthToken',
@@ -172,9 +171,12 @@ window.klarnaAsyncCallback = function () {
                 $('input[name="sDeliveryAddressMD5"]').val(kebordermd5);
             }
 
+            $sbmButton.attr('disabled', true);
             $form.submit();
-
-
+            // cleanup data to prevent possible form resubmit
+            window.keborderpayload = null;
+            window.kebordertoken = null;
+            window.kebordermd5 = null;
         } else if (response.show_form === false) {
             $($kpRadio.active).closest('.kp-outer').hide(600);
         }
@@ -195,7 +197,6 @@ window.klarnaAsyncCallback = function () {
         })
 
     }
-
 
     function handleResponse(objResponse) {
         console.log(objResponse);
@@ -309,11 +310,11 @@ window.klarnaAsyncCallback = function () {
                     $sbmButton.attr('onclick','document.getElementById(\'payment\').submit();');
                 }
             });
-            
+
             // react to aggrosoft paypal plus changes
             $('body').on('ppplus-payment-selected', function() {
-               delete $kpRadio.active;
-               $('.kp-method').hide(600);
+                delete $kpRadio.active;
+                $('.kp-method').hide(600);
             });
         }
 
@@ -321,7 +322,7 @@ window.klarnaAsyncCallback = function () {
         $bodyClassOrder = document.querySelector('body.cl-order');
         if(tcKlarnaClientToken && $bodyClassOrder) {
             $orderBtn = document.querySelector('button.btn-highlight');
-            if($orderBtn.getAttribute('onclick') == "document.getElementById('orderConfirmAgbBottom').submit();") {
+            if($orderBtn.getAttribute('onclick') === "document.getElementById('orderConfirmAgbBottom').submit();") {
                 $orderBtn.setAttribute('onclick', 'false;')
             }
         }
@@ -336,7 +337,7 @@ window.klarnaAsyncCallback = function () {
                     value: 'klarna_pay_now'
                 }).appendTo($form);
                 handleResponse({status: "finalize",data: window.keborderpayload})
-            } else if  ($kpRadio.active && $form.attr('id') === 'payment') {
+            } else if ($kpRadio.active && $form.attr('id') === 'payment') {
                 event.preventDefault();
                 if (!$kpRadio.active.hasError) {
                     klarnaSendXHR({
