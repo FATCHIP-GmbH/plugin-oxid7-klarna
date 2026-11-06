@@ -396,6 +396,8 @@ class KlarnaUtils
         Registry::getSession()->deleteVariable('finalizeRequired');
         Registry::getSession()->deleteVariable('sCountryISO');
         Registry::getSession()->deleteVariable('sFakeUserId');
+        Registry::getSession()->deleteVariable("kexFakeUserId");
+        Registry::getSession()->deleteVariable("keborderpayload");
     }
 
     /**
