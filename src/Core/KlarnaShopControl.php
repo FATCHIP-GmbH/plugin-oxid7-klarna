@@ -3,7 +3,7 @@
 
 namespace TopConcepts\Klarna\Core;
 
-
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaShopControl extends KlarnaShopControl_parent
@@ -18,5 +18,39 @@ class KlarnaShopControl extends KlarnaShopControl_parent
         });
 
         return parent::initializeViewObject($sClass, $sFunction, $aParams, $aViewsChain);
+    }
+
+    protected function executeAction($view, $functionName)
+    {
+        // Logout and delete fake user if user is KEX fake-user and if customer leaves checkout
+        if (
+            ($userToDeleteFakeId = Registry::getSession()->getVariable("kexFakeUserId")) &&
+            !$this->isCheckoutController()
+        ) {
+            $userToDelete = oxNew(User::class);
+            $userToDelete->load($userToDeleteFakeId);
+            $userToDelete->delete();
+
+            KlarnaUtils::fullyResetKlarnaSession();
+        }
+
+        parent::executeAction($view, $functionName);
+    }
+
+    protected function isCheckoutController(): bool
+    {
+        $sController = Registry::getConfig()->getTopActiveView()->getClassKey();
+
+        return in_array($sController, [
+            'klarnaexpress',
+            'order',
+            'thankyou',
+            'ajaxpay',
+            'oscpaypalproxy',
+            'makaira_connect_endpoint',
+            'tpl',
+            'oepaypalstandarddispatcher',
+            'content'
+        ]);
     }
 }
